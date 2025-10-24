@@ -2242,6 +2242,12 @@ def _split_compound_value(
 
 def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
     normalized_line = _normalize_stats_totals_line(line)
+    compact_result = _extract_compact_value_tokens(
+        _tokenize_compact_stats_text(normalized_line)
+    )
+    if compact_result:
+        tokens, _ = compact_result
+        return _build_metrics_from_compact_tokens(tokens)
     match = _MATCH_STATS_LINE_PATTERN.search(normalized_line)
     if not match:
         tokens = re.findall(r"\d+%|\d+\+\d+|\d+", normalized_line)
@@ -2322,6 +2328,95 @@ def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsM
 
 
 _PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
+_COMPACT_VALUE_PATTERN = re.compile(r"^(?:[+\-\u2212]?\d+(?:[.,]\d+)?%?|\.)$")
+
+
+def _tokenize_compact_stats_text(text: str) -> List[str]:
+    sanitized = text.replace("\u00a0", " ")
+    sanitized = sanitized.replace("·", " ")
+    sanitized = sanitized.replace("\u2212", "-")
+    sanitized = re.sub(r"[()]+", " ", sanitized)
+    parts = [part for part in sanitized.split() if part and part != "*"]
+    return parts
+
+
+def _extract_compact_value_tokens(parts: Sequence[str]) -> Optional[Tuple[List[str], int]]:
+    values: List[str] = []
+    consumed = 0
+    for token in reversed(parts):
+        if not token:
+            continue
+        normalized = token.strip()
+        if _COMPACT_VALUE_PATTERN.match(normalized):
+            values.append(normalized)
+            consumed += 1
+            if len(values) == 16:
+                break
+        elif values:
+            break
+    if not values:
+        return None
+    values.reverse()
+    if len(values) < 16:
+        values.extend(["."] * (16 - len(values)))
+    return values, consumed
+
+
+def _build_metrics_from_compact_tokens(tokens: Sequence[str]) -> MatchStatsMetrics:
+    return MatchStatsMetrics(
+        serves_attempts=_parse_int_token(tokens[3]),
+        serves_errors=_parse_int_token(tokens[4]),
+        serves_points=_parse_int_token(tokens[5]),
+        receptions_attempts=_parse_int_token(tokens[6]),
+        receptions_errors=_parse_int_token(tokens[7]),
+        receptions_positive_pct=_parse_percentage_token(tokens[8]),
+        receptions_perfect_pct=_parse_percentage_token(tokens[9]),
+        attacks_attempts=_parse_int_token(tokens[10]),
+        attacks_errors=_parse_int_token(tokens[11]),
+        attacks_blocked=_parse_int_token(tokens[12]),
+        attacks_points=_parse_int_token(tokens[13]),
+        attacks_success_pct=_parse_percentage_token(tokens[14]),
+        blocks_points=_parse_int_token(tokens[15]),
+    )
+
+
+def _parse_compact_player_stats(
+    rest: str, team_name: str, jersey_number: Optional[int]
+) -> Optional[MatchPlayerStats]:
+    parts = _tokenize_compact_stats_text(rest)
+    extracted = _extract_compact_value_tokens(parts)
+    if not extracted:
+        return None
+    value_tokens, consumed_count = extracted
+    metrics = _build_metrics_from_compact_tokens(value_tokens)
+    prefix_length = len(parts) - consumed_count
+    name_tokens = parts[:prefix_length]
+    if not name_tokens:
+        return None
+    pre_str = " ".join(name_tokens).strip()
+    cutoff = re.search(r"\s[.\d+-]", pre_str)
+    if cutoff:
+        name_segment = pre_str[: cutoff.start()].strip(" .:-")
+    else:
+        name_segment = pre_str.strip(" .:-")
+    if not name_segment:
+        return None
+    cleaned_parts = [
+        part
+        for part in name_segment.split()
+        if not (len(part) == 1 and part.isalpha() and part.isupper())
+    ]
+    if cleaned_parts:
+        name_segment = " ".join(cleaned_parts)
+    player_name = pretty_name(name_segment)
+    total_points = _parse_int_token(value_tokens[0])
+    return MatchPlayerStats(
+        team_name=team_name,
+        player_name=player_name,
+        jersey_number=jersey_number,
+        metrics=metrics,
+        total_points=total_points,
+    )
 
 
 def _parse_int_token(token: str) -> int:
@@ -2379,6 +2474,9 @@ def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerS
         rest = cleaned
     if not rest:
         return None
+    compact_parsed = _parse_compact_player_stats(rest, team_name, jersey_number)
+    if compact_parsed is not None:
+        return compact_parsed
     value_matches = list(_PLAYER_VALUE_PATTERN.finditer(rest))
     if len(value_matches) < 13:
         return None
