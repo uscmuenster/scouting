@@ -4686,11 +4686,54 @@ def _indent_html(content: str, spaces: int) -> str:
     return "\n".join(f"{indent}{line}" if line else "" for line in content.splitlines())
 
 
+def _summarize_set_results(sets: Sequence[str]) -> Optional[str]:
+    home_sets = 0
+    away_sets = 0
+    parsed_any = False
+
+    for raw_value in sets:
+        parts = raw_value.split(":", 1)
+        if len(parts) != 2:
+            continue
+        left, right = parts
+        try:
+            left_points = int(left.strip())
+            right_points = int(right.strip())
+        except ValueError:
+            continue
+
+        if left_points == right_points:
+            continue
+
+        parsed_any = True
+        if left_points > right_points:
+            home_sets += 1
+        else:
+            away_sets += 1
+
+    if not parsed_any:
+        return None
+
+    return f"{home_sets}:{away_sets}"
+
+
 def _format_match_sets_label(match: Mapping[str, Any]) -> str:
     result = match.get("result") or {}
+
+    score_value = (result.get("score") or "").strip()
+    if score_value:
+        return score_value
+
     sets = result.get("sets") or []
     cleaned = [str(item).strip() for item in sets if str(item).strip()]
-    return " ".join(cleaned) if cleaned else "–"
+    if not cleaned:
+        return "–"
+
+    summarized = _summarize_set_results(cleaned)
+    if summarized:
+        return summarized
+
+    return " ".join(cleaned)
 
 
 def _resolve_match_metric(match: Mapping[str, Any], key: str) -> Any:
@@ -5737,14 +5780,47 @@ def build_html_report(
       return `<<date>> · <<opponent>> <<venueMarker>>: <<resultSummary>>`;
     }}
 
-    function formatSetScores(match) {{
-      if (!match || !match.result) return '–';
-      const sets = Array.isArray(match.result.sets) ? match.result.sets : [];
-      const cleaned = sets
-        .map(item => (item === null || item === undefined ? '' : String(item).trim()))
-        .filter(Boolean);
-      return cleaned.length ? cleaned.join(' ') : '–';
-    }}
+      function summarizeSetResults(sets) {{
+        let homeSets = 0;
+        let awaySets = 0;
+        let parsedAny = false;
+
+        for (const value of sets) {{
+          const parts = value.split(':');
+          if (parts.length !== 2) continue;
+          const left = Number.parseInt(parts[0].trim(), 10);
+          const right = Number.parseInt(parts[1].trim(), 10);
+          if (Number.isNaN(left) || Number.isNaN(right) || left === right) continue;
+
+          parsedAny = true;
+          if (left > right) {{
+            homeSets += 1;
+          }} else {{
+            awaySets += 1;
+          }}
+        }}
+
+        if (!parsedAny) return null;
+        return `${homeSets}:${awaySets}`;
+      }}
+
+      function formatSetScores(match) {{
+        if (!match || !match.result) return '–';
+
+        const scoreValue = match.result.score ? String(match.result.score).trim() : '';
+        if (scoreValue) return scoreValue;
+
+        const sets = Array.isArray(match.result.sets) ? match.result.sets : [];
+        const cleaned = sets
+          .map(item => (item === null || item === undefined ? '' : String(item).trim()))
+          .filter(Boolean);
+        if (!cleaned.length) return '–';
+
+        const summarized = summarizeSetResults(cleaned);
+        if (summarized) return summarized;
+
+        return cleaned.join(' ');
+      }}
 
     function getMatchMetric(match, key) {{
       if (!match || !match.metrics || typeof match.metrics !== 'object') return undefined;
