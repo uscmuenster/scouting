@@ -14,6 +14,11 @@ def test_parse_player_stats_line_single_line() -> None:
     assert parsed is not None
     assert parsed.player_name == "Jordan, Emilia"
     assert parsed.jersey_number == 9
+    assert parsed.total_points == 12
+    assert parsed.break_points == 2
+    assert parsed.plus_minus == 1
+    assert parsed.metrics.receptions_positive == 0
+    assert parsed.metrics.receptions_perfect == 0
 
 
 def test_parse_team_player_lines_handles_multiline_rows() -> None:
@@ -39,3 +44,14 @@ def test_parse_team_player_lines_handles_multiline_rows() -> None:
 
     players = _parse_team_player_lines(lines, "USC Münster")
     assert players == [expected_first, expected_second]
+
+
+def test_parse_compact_player_stats_includes_counts() -> None:
+    line = "5 MALM Cecilia 1 2 * * 6 4 +2 13 1 2 10 . 40% ( 20%) 12 3 . 4 33% ."
+    parsed = _parse_player_stats_line(line, "USC Münster")
+    assert parsed is not None
+    assert parsed.total_points == 6
+    assert parsed.break_points == 4
+    assert parsed.plus_minus == 2
+    assert parsed.metrics.receptions_positive == 4
+    assert parsed.metrics.receptions_perfect == 2
