@@ -4740,7 +4740,6 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
 
     if not matches and totals is None:
         return '<p class="empty-state">Keine Spiele verfügbar.</p>'
-
     columns: list[tuple[str, bool]] = [
         ("Datum", False),
         ("Gegner", False),
@@ -4882,6 +4881,94 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
         lines.append(
             f"      <td class=\"numeric\">{escape(_format_int_value(player.get('plus_minus_total'), default='–'))}</td>"
         )
+        lines.append("    </tr>")
+
+    lines.extend(['  </tbody>', '</table>'])
+    return "\n".join(lines)
+
+
+def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str:
+    valid_players = [player for player in players if isinstance(player, Mapping)]
+    if not valid_players:
+        return ""
+
+    columns: Sequence[tuple[str, Optional[str], bool]] = (
+        ("#", "Rückennummer", True),
+        ("Spielerin", None, False),
+        ("Sp.", "Spiele mit Statistikdaten", True),
+        ("Srv\u00a0V", "Aufschlag-Versuche", True),
+        ("Srv\u00a0F", "Aufschlag-Fehler", True),
+        ("Srv\u00a0Asse", "Aufschlag-Asse", True),
+        ("Ann\u00a0V", "Annahme-Versuche", True),
+        ("Ann\u00a0F", "Annahme-Fehler", True),
+        ("Ann\u00a0+%", "Positive Annahmen", True),
+        ("Ann\u00a0Perf%", "Perfekte Annahmen", True),
+        ("Ang\u00a0V", "Angriffs-Versuche", True),
+        ("Ang\u00a0F", "Angriffs-Fehler", True),
+        ("Ang\u00a0gebl.", "Geblockte Angriffe", True),
+        ("Ang\u00a0Pkt.", "Angriffspunkte", True),
+        ("Ang\u00a0%", "Angriffsquote", True),
+        ("Block", "Blockpunkte", True),
+        ("Pkt.", "Gesamtpunkte", True),
+        ("Breakpkt.", "Breakpunkte", True),
+        ("+/−", "Plus/Minus", True),
+    )
+
+    lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
+    for label, title, is_numeric in columns:
+        attrs = ['scope="col"']
+        if is_numeric:
+            attrs.append('class="numeric"')
+        if title:
+            attrs.append(f'title="{escape(title, quote=True)}"')
+        lines.append(f"      <th {' '.join(attrs)}>{escape(label)}</th>")
+    lines.extend(['    </tr>', '  </thead>', '  <tbody>'])
+
+    for player in valid_players:
+        totals = player.get("totals") if isinstance(player.get("totals"), Mapping) else {}
+        matches = [match for match in player.get("matches") or [] if isinstance(match, Mapping)]
+        match_count_value = player.get("match_count")
+        if isinstance(match_count_value, (int, float)):
+            match_count = match_count_value
+        else:
+            match_count = len(matches)
+
+        jersey = player.get("jersey_number")
+        if jersey in (None, ""):
+            jersey_label = "–"
+        else:
+            jersey_label = str(jersey)
+
+        player_name = player.get("name")
+        if not player_name:
+            player_name = "Unbekannt"
+
+        values: Sequence[tuple[str, bool]] = (
+            (jersey_label, True),
+            (str(player_name), False),
+            (_format_int_value(match_count), True),
+            (_format_int_value(totals.get("serves_attempts")), True),
+            (_format_int_value(totals.get("serves_errors")), True),
+            (_format_int_value(totals.get("serves_points")), True),
+            (_format_int_value(totals.get("receptions_attempts")), True),
+            (_format_int_value(totals.get("receptions_errors")), True),
+            (_format_pct_value(totals.get("receptions_positive_pct"), default="–"), True),
+            (_format_pct_value(totals.get("receptions_perfect_pct"), default="–"), True),
+            (_format_int_value(totals.get("attacks_attempts")), True),
+            (_format_int_value(totals.get("attacks_errors")), True),
+            (_format_int_value(totals.get("attacks_blocked")), True),
+            (_format_int_value(totals.get("attacks_points")), True),
+            (_format_pct_value(totals.get("attacks_success_pct"), default="–"), True),
+            (_format_int_value(totals.get("blocks_points")), True),
+            (_format_int_value(player.get("total_points"), default="–"), True),
+            (_format_int_value(player.get("break_points_total"), default="–"), True),
+            (_format_int_value(player.get("plus_minus_total"), default="–"), True),
+        )
+
+        lines.append("    <tr>")
+        for value, is_numeric in values:
+            cell_class = ' class="numeric"' if is_numeric else ""
+            lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.append("    </tr>")
 
     lines.extend(['  </tbody>', '</table>'])
