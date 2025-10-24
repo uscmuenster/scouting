@@ -4797,8 +4797,9 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
     if totals is not None:
         lines.append('    <tr class="stats-table__total player-match-table__total-row">')
         lines.append('      <th scope="row">Summe</th>')
-        lines.append('      <td>–</td>')
-        lines.append('      <td>–</td>')
+        lines.append('      <td></td>')
+        lines.append('      <td></td>')
+        lines.append('      <td></td>')
         lines.append(
             f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_attempts')))}</td>"
         )
