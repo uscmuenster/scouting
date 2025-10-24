@@ -4914,7 +4914,7 @@ def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str
     )
 
     lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
-    for index, (label, title, is_numeric) in enumerate(header_specs):
+    for index, (label, title, is_numeric) in enumerate(columns):
         title_attr = f' title="{escape(title)}"' if title else ""
         if is_numeric:
             class_name = "numeric-center" if index >= 3 else "numeric"
