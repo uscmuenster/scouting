@@ -4763,8 +4763,12 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
     ]
 
     lines = ['<table class="stats-table player-match-table">', '  <thead>', '    <tr>']
-    for label, is_numeric in columns:
-        cell_class = ' class="numeric"' if is_numeric else ""
+    for index, (label, is_numeric) in enumerate(columns):
+        if is_numeric:
+            class_name = "numeric-center" if index >= 3 else "numeric"
+            cell_class = f' class="{class_name}"'
+        else:
+            cell_class = ""
         lines.append(
             f"      <th scope=\"col\"{cell_class}>{escape(label)}</th>"
         )
