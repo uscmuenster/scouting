@@ -4899,9 +4899,13 @@ def _build_match_table_html(
     ]
 
     lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
-    for label, title, is_numeric in header_specs:
+    for index, (label, title, is_numeric) in enumerate(header_specs):
         title_attr = f' title="{escape(title)}"' if title else ""
-        numeric_class = " class=\"numeric\"" if is_numeric else ""
+        if is_numeric:
+            class_name = "numeric-center" if index >= 3 else "numeric"
+            numeric_class = f' class=\"{class_name}\"'
+        else:
+            numeric_class = ""
         lines.append(
             f"      <th scope=\"col\"{numeric_class}{title_attr}>{escape(label)}</th>"
         )
@@ -4945,8 +4949,12 @@ def _build_match_table_html(
             (_format_int_value(metric_values.get("blocks_points")), True),
         ]
         lines.append("    <tr>")
-        for value, is_numeric in row_values:
-            cell_class = " class=\"numeric\"" if is_numeric else ""
+        for index, (value, is_numeric) in enumerate(row_values):
+            if is_numeric:
+                class_name = "numeric-center" if index >= 3 else "numeric"
+                cell_class = f' class=\"{class_name}\"'
+            else:
+                cell_class = ""
             lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.append("    </tr>")
 
@@ -4955,8 +4963,8 @@ def _build_match_table_html(
     if isinstance(totals, Mapping):
         total_row = [
             ("Summe", False, True),
-            ("–", False, False),
-            ("–", False, False),
+            ("", False, False),
+            ("", False, False),
             (_format_int_value(totals.get("serves_attempts")), True, False),
             (_format_int_value(totals.get("serves_errors")), True, False),
             (_format_int_value(totals.get("serves_points")), True, False),
@@ -4990,7 +4998,11 @@ def _build_match_table_html(
                     f"      <th scope=\"row\">{escape(value)}</th>"
                 )
                 continue
-            cell_class = " class=\"numeric\"" if is_numeric else ""
+            if is_numeric:
+                class_name = "numeric-center" if index >= 3 else "numeric"
+                cell_class = f' class=\"{class_name}\"'
+            else:
+                cell_class = ""
             lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.extend(['    </tr>', '  </tfoot>'])
 
@@ -5460,6 +5472,12 @@ def build_html_report(
     .stats-table td.numeric,
     .stats-table th.numeric {{
       text-align: right;
+      font-variant-numeric: tabular-nums;
+    }}
+
+    .stats-table td.numeric-center,
+    .stats-table th.numeric-center {{
+      text-align: center;
       font-variant-numeric: tabular-nums;
     }}
 
