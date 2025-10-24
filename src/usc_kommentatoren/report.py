@@ -5392,6 +5392,10 @@ def build_html_report(
       --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
     }}
 
+    html {{
+      font-size: 100%;
+    }}
+
     @media (prefers-color-scheme: dark) {{
       :root {{
         --bg: #0f1f24;
@@ -5452,7 +5456,7 @@ def build_html_report(
       background: var(--accent-soft);
       color: var(--accent);
       font-weight: 600;
-      font-size: 0.92rem;
+      font-size: 0.65rem;
       border: 1px solid var(--card-border);
     }}
 
