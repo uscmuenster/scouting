@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import csv
+import json
 import time
 from dataclasses import dataclass, replace
 import re
@@ -3806,6 +3807,352 @@ def _format_season_results_section(
     return "\n".join(section_lines)
 
 
+def _parse_scouting_datetime(value: Optional[str]) -> Optional[datetime]:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=BERLIN_TZ)
+    return parsed.astimezone(BERLIN_TZ)
+
+
+def _format_scouting_date(value: Optional[str]) -> str:
+    parsed = _parse_scouting_datetime(value)
+    if not parsed:
+        return "–"
+    return parsed.strftime("%d.%m.%Y")
+
+
+def _format_home_away_label(is_home: Optional[bool]) -> str:
+    return "Heim" if is_home else "Auswärts"
+
+
+def _format_int_value(value: Any, default: str = "0") -> str:
+    if value is None:
+        return default
+    if isinstance(value, (int, float)):
+        if isinstance(value, float) and value.is_integer():
+            value = int(value)
+        return str(value)
+    if isinstance(value, str):
+        stripped = value.strip()
+        if not stripped:
+            return default
+        try:
+            return str(int(stripped))
+        except ValueError:
+            return stripped
+    return str(value)
+
+
+def _format_pct_value(value: Any) -> str:
+    if value in (None, ""):
+        return "0%"
+    return str(value)
+
+
+def _format_match_meta_text(match: Mapping[str, Any]) -> str:
+    result = match.get("result") or {}
+    segments: list[str] = []
+    summary = result.get("summary")
+    if summary:
+        segments.append(f"Ergebnis: {summary}")
+    total_points = result.get("total_points")
+    if total_points:
+        segments.append(f"Ballpunkte: {total_points}")
+    if not segments:
+        segments.append("Noch kein Ergebnis verfügbar")
+    return " · ".join(segments)
+
+
+def _format_match_result_label(match: Mapping[str, Any]) -> str:
+    result = match.get("result") or {}
+    summary = result.get("summary") or "Ergebnis offen"
+    opponent = match.get("opponent") or "Unbekannt"
+    date_label = _format_scouting_date(match.get("kickoff"))
+    venue = _format_home_away_label(match.get("is_home"))
+    return f"{date_label} · {venue} · {opponent}: {summary}"
+
+
+def _format_match_heading_text(index: int, match: Mapping[str, Any]) -> str:
+    date_label = _format_scouting_date(match.get("kickoff"))
+    opponent = match.get("opponent") or "Unbekannt"
+    venue = _format_home_away_label(match.get("is_home"))
+    return f"Spiel {index + 1}: {date_label} · {venue} vs. {opponent}"
+
+
+def _indent_html(content: str, spaces: int) -> str:
+    indent = " " * spaces
+    return "\n".join(f"{indent}{line}" if line else "" for line in content.splitlines())
+
+
+def _build_metric_table_html(
+    metrics: Mapping[str, Any], total_points: Optional[Any]
+) -> str:
+    rows: list[tuple[str, str]] = [
+        (
+            "Aufschlag",
+            " · ".join(
+                [
+                    f"{_format_int_value(metrics.get('serves_attempts'))} Versuche",
+                    f"{_format_int_value(metrics.get('serves_errors'))} Fehler",
+                    f"{_format_int_value(metrics.get('serves_points'))} Asse",
+                ]
+            ),
+        ),
+        (
+            "Annahme",
+            " · ".join(
+                [
+                    f"{_format_int_value(metrics.get('receptions_attempts'))} Annahmen",
+                    f"{_format_int_value(metrics.get('receptions_errors'))} Fehler",
+                    f"{_format_pct_value(metrics.get('receptions_positive_pct'))} positiv",
+                    f"{_format_pct_value(metrics.get('receptions_perfect_pct'))} perfekt",
+                ]
+            ),
+        ),
+        (
+            "Angriff",
+            " · ".join(
+                [
+                    f"{_format_int_value(metrics.get('attacks_attempts'))} Versuche",
+                    f"{_format_int_value(metrics.get('attacks_errors'))} Fehler",
+                    f"{_format_int_value(metrics.get('attacks_blocked'))} geblockt",
+                    f"{_format_int_value(metrics.get('attacks_points'))} Punkte",
+                    f"{_format_pct_value(metrics.get('attacks_success_pct'))} Erfolgsquote",
+                ]
+            ),
+        ),
+        (
+            "Block",
+            f"{_format_int_value(metrics.get('blocks_points'))} Blockpunkte",
+        ),
+    ]
+    if total_points is not None:
+        rows.append(("Gesamtpunkte", _format_int_value(total_points)))
+
+    lines = ["<table class=\"metrics-table\">", "  <tbody>"]
+    for label, value in rows:
+        lines.append(
+            f"    <tr><th>{escape(label)}</th><td>{escape(value)}</td></tr>"
+        )
+    lines.extend(["  </tbody>", "</table>"])
+    return "\n".join(lines)
+
+
+def _build_team_cards_html(totals: Mapping[str, Any]) -> str:
+    cards: list[str] = []
+    specs = [
+        (
+            "Aufschlag",
+            " · ".join(
+                [
+                    f"{_format_int_value(totals.get('serves_attempts'))} Versuche",
+                    f"{_format_int_value(totals.get('serves_errors'))} Fehler",
+                    f"{_format_int_value(totals.get('serves_points'))} Asse",
+                ]
+            ),
+        ),
+        (
+            "Annahme",
+            " · ".join(
+                [
+                    f"{_format_int_value(totals.get('receptions_attempts'))} Annahmen",
+                    f"{_format_int_value(totals.get('receptions_errors'))} Fehler",
+                    f"{_format_pct_value(totals.get('receptions_positive_pct'))} positiv",
+                    f"{_format_pct_value(totals.get('receptions_perfect_pct'))} perfekt",
+                ]
+            ),
+        ),
+        (
+            "Angriff",
+            " · ".join(
+                [
+                    f"{_format_int_value(totals.get('attacks_attempts'))} Versuche",
+                    f"{_format_int_value(totals.get('attacks_errors'))} Fehler",
+                    f"{_format_int_value(totals.get('attacks_blocked'))} geblockt",
+                    f"{_format_int_value(totals.get('attacks_points'))} Punkte",
+                    f"{_format_pct_value(totals.get('attacks_success_pct'))} Erfolgsquote",
+                ]
+            ),
+        ),
+        (
+            "Block",
+            f"{_format_int_value(totals.get('blocks_points'))} Blockpunkte",
+        ),
+    ]
+    for title, body in specs:
+        lines = [
+            '<article class="metric-card">',
+            f"  <h3>{escape(title)}</h3>",
+            f"  <p>{escape(body)}</p>",
+            "</article>",
+        ]
+        cards.append("\n".join(lines))
+    return _indent_html("\n".join(cards), 8)
+
+
+def _build_team_meta_html(
+    matches: Sequence[Mapping[str, Any]], match_count: int
+) -> str:
+    if not matches:
+        if match_count <= 0:
+            return "        Keine abgeschlossenen Spiele vorhanden."
+        if match_count == 1:
+            return "        1 Spiel berücksichtigt."
+        return f"        {match_count} Spiele berücksichtigt."
+
+    summary_text = (
+        "1 Spiel berücksichtigt:"
+        if match_count == 1
+        else f"{match_count} Spiele berücksichtigt:"
+    )
+    lines = [f"<span>{escape(summary_text)}</span>", '<ul class="match-result-list">']
+    for match in matches:
+        lines.append(f"  <li>{escape(_format_match_result_label(match))}</li>")
+    lines.append("</ul>")
+    return _indent_html("\n".join(lines), 8)
+
+
+def _build_player_match_links_html(match: Mapping[str, Any]) -> str:
+    links: list[tuple[str, str]] = []
+    info_url = match.get("info_url")
+    if info_url:
+        links.append(("Spielinfos", str(info_url)))
+    stats_url = match.get("stats_url")
+    if stats_url:
+        links.append(("Statistik (PDF)", str(stats_url)))
+    scoresheet_url = match.get("scoresheet_url")
+    if scoresheet_url:
+        links.append(("Spielbericht", str(scoresheet_url)))
+    if not links:
+        return ""
+
+    lines = ['      <div class="player-match__links">']
+    for label, url in links:
+        lines.append(
+            f"        <a href=\"{escape(url, quote=True)}\" target=\"_blank\" rel=\"noopener\">{escape(label)}</a>"
+        )
+    lines.append("      </div>")
+    return "\n".join(lines)
+
+
+def _build_player_card_html(player: Mapping[str, Any]) -> str:
+    name = player.get("name") or "Unbekannt"
+    jersey = player.get("jersey_number")
+    title = name
+    if jersey not in (None, ""):
+        title = f"#{jersey} {name}"
+
+    lines = ["<article class=\"player-card\">", "  <header class=\"player-card__header\">"]
+    lines.append(f"    <h3>{escape(title)}</h3>")
+
+    totals = player.get("totals")
+    if isinstance(totals, Mapping):
+        lines.append('    <div class="player-card__totals">')
+        lines.append("      <h4>Summe</h4>")
+        table_html = _indent_html(
+            _build_metric_table_html(totals, player.get("total_points")), 6
+        )
+        lines.append(table_html)
+        lines.append("    </div>")
+
+    lines.append("  </header>")
+    lines.append('  <div class="player-card__matches">')
+
+    matches = player.get("matches") or []
+    if not matches:
+        lines.append('    <p class="empty-state">Keine Spiele verfügbar.</p>')
+    else:
+        for index, match in enumerate(matches):
+            if not isinstance(match, Mapping):
+                continue
+            lines.append('    <div class="player-match">')
+            lines.append('      <div class="player-match__header">')
+            lines.append(
+                f"        <h4>{escape(_format_match_heading_text(index, match))}</h4>"
+            )
+            lines.append(
+                f"        <p class=\"player-match__meta\">{escape(_format_match_meta_text(match))}</p>"
+            )
+            lines.append("      </div>")
+
+            metrics = match.get("metrics")
+            if isinstance(metrics, Mapping):
+                lines.append(
+                    _indent_html(
+                        _build_metric_table_html(metrics, match.get("total_points")),
+                        6,
+                    )
+                )
+
+            links_html = _build_player_match_links_html(match)
+            if links_html:
+                lines.append(links_html)
+
+            lines.append('    </div>')
+
+    lines.append('  </div>')
+    lines.append('</article>')
+    return "\n".join(lines)
+
+
+def _render_team_overview_content(
+    usc_scouting: Optional[Mapping[str, Any]]
+) -> tuple[str, str]:
+    default_summary = '        <p class="empty-state">Keine Daten verfügbar.</p>'
+    default_meta = "        Die Daten werden geladen…"
+    if not usc_scouting:
+        return default_meta, default_summary
+
+    totals = usc_scouting.get("totals")
+    matches = usc_scouting.get("matches") or []
+    match_count = usc_scouting.get("match_count")
+    if not isinstance(match_count, int):
+        match_count = len(matches)
+
+    meta_html = _build_team_meta_html(matches, match_count)
+    summary_html = (
+        _build_team_cards_html(totals)
+        if isinstance(totals, Mapping)
+        else '        <p class="empty-state">Keine Teamstatistiken verfügbar.</p>'
+    )
+    return meta_html, summary_html
+
+
+def _render_player_overview_content(
+    usc_scouting: Optional[Mapping[str, Any]]
+) -> tuple[str, str]:
+    default_meta = "Die Daten werden geladen…"
+    default_list = '        <p class="empty-state">Keine Spielerinnendaten geladen.</p>'
+    if not usc_scouting:
+        return default_meta, default_list
+
+    players = usc_scouting.get("players") or []
+    if not players:
+        return "Keine Spielerinnendaten verfügbar.", default_list
+
+    meta_text = (
+        "1 Spielerin mit Statistikdaten."
+        if len(players) == 1
+        else f"{len(players)} Spielerinnen mit Statistikdaten."
+    )
+    cards = []
+    for player in players:
+        if not isinstance(player, Mapping):
+            continue
+        cards.append(_build_player_card_html(player))
+
+    if not cards:
+        return meta_text, default_list
+
+    cards_html = _indent_html("\n\n".join(cards), 8)
+    return meta_text, cards_html
+
+
 def build_html_report(
     *,
     next_home=None,
@@ -3835,6 +4182,13 @@ def build_html_report(
     generated_at = generated_at or datetime.now(tz=BERLIN_TZ)
     generated_label = format_generation_timestamp(generated_at)
     generated_iso = generated_at.astimezone(BERLIN_TZ).isoformat()
+
+    team_meta_html, team_summary_html = _render_team_overview_content(usc_scouting)
+    player_meta_text, player_list_html = _render_player_overview_content(usc_scouting)
+    preloaded_overview_json = "null"
+    if usc_scouting:
+        preloaded_overview_json = json.dumps(usc_scouting, ensure_ascii=False)
+        preloaded_overview_json = preloaded_overview_json.replace("</", "<\\/")
 
     html = """<!DOCTYPE html>
 <html lang="de">
@@ -4111,23 +4465,26 @@ def build_html_report(
 
     <section>
       <h2>Team-Überblick</h2>
-      <div class="section-hint" data-team-meta>Die Daten werden geladen…</div>
+      <div class="section-hint" data-team-meta>
+{team_meta}
+      </div>
       <div class="metrics-grid" data-team-summary>
-        <p class="empty-state">Keine Daten verfügbar.</p>
+{team_summary}
       </div>
     </section>
 
     <section>
       <h2>Spielerinnen</h2>
-      <p class="section-hint" data-player-meta>Die Daten werden geladen…</p>
+      <p class="section-hint" data-player-meta>{player_meta}</p>
       <div class="player-list" data-player-list>
-        <p class="empty-state">Keine Spielerinnendaten geladen.</p>
+{player_list}
       </div>
       <p class="empty-state" data-error hidden>Beim Laden der Scouting-Daten ist ein Fehler aufgetreten.</p>
     </section>
   </main>
   <script>
     const OVERVIEW_PATH = 'data/usc_stats_overview.json';
+    const PRELOADED_OVERVIEW = __PRELOADED_OVERVIEW__;
 
     function formatDate(value) {{
       if (!value) return '–';
@@ -4365,28 +4722,43 @@ def build_html_report(
       }}
     }}
 
+    function applyOverview(data) {{
+      if (!data) return;
+      renderTeamOverview(data);
+      renderPlayers(data);
+      const note = document.querySelector('[data-update-note] span:last-child');
+      if (note && data.generated) {{
+        note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>>`;
+      }}
+    }}
+
     async function bootstrap() {{
+      let hasData = false;
+      if (PRELOADED_OVERVIEW) {{
+        applyOverview(PRELOADED_OVERVIEW);
+        hasData = true;
+      }}
       try {{
         const response = await fetch(OVERVIEW_PATH, {{ cache: 'no-store' }});
         if (!response.ok) {{
           throw new Error(`HTTP <<response.status>>`);
         }}
         const data = await response.json();
-        renderTeamOverview(data);
-        renderPlayers(data);
-        const note = document.querySelector('[data-update-note] span:last-child');
-        if (note && data.generated) {{
-          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>>`;
-        }}
+        applyOverview(data);
+        hasData = true;
       }} catch (error) {{
-        const container = document.querySelector('[data-player-list]');
-        if (container) {{
-          container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
-        }}
-        const errorNode = document.querySelector('[data-error]');
-        if (errorNode) {{
-          errorNode.hidden = false;
-          errorNode.textContent = `Fehler beim Laden: <<error instanceof Error ? error.message : String(error)>>`;
+        if (!hasData) {{
+          const container = document.querySelector('[data-player-list]');
+          if (container) {{
+            container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+          }}
+          const errorNode = document.querySelector('[data-error]');
+          if (errorNode) {{
+            errorNode.hidden = false;
+            errorNode.textContent = `Fehler beim Laden: <<error instanceof Error ? error.message : String(error)>>`;
+          }}
+        }} else {{
+          console.error(error);
         }}
       }}
     }}
@@ -4397,7 +4769,12 @@ def build_html_report(
 </html>""".format(
         generated_iso=escape(generated_iso),
         generated_label=escape(generated_label),
+        team_meta=team_meta_html,
+        team_summary=team_summary_html,
+        player_meta=escape(player_meta_text),
+        player_list=player_list_html,
     )
+    html = html.replace("__PRELOADED_OVERVIEW__", preloaded_overview_json)
     html = html.replace("<<", "${").replace(">>", "}")
     return html
 
