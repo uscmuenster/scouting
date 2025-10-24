@@ -4914,13 +4914,16 @@ def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str
     )
 
     lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
-    for label, title, is_numeric in columns:
-        attrs = ['scope="col"']
+    for index, (label, title, is_numeric) in enumerate(header_specs):
+        title_attr = f' title="{escape(title)}"' if title else ""
         if is_numeric:
-            attrs.append('class="numeric"')
-        if title:
-            attrs.append(f'title="{escape(title, quote=True)}"')
-        lines.append(f"      <th {' '.join(attrs)}>{escape(label)}</th>")
+            class_name = "numeric-center" if index >= 3 else "numeric"
+            numeric_class = f' class="{class_name}"'
+        else:
+            numeric_class = ""
+        lines.append(
+            f"      <th scope=\"col\"{numeric_class}{title_attr}>{escape(label)}</th>"
+        )
     lines.extend(['    </tr>', '  </thead>', '  <tbody>'])
 
     for player in valid_players:
