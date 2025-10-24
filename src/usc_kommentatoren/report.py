@@ -4040,6 +4040,87 @@ def _build_player_match_links_html(match: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _format_scouting_datetime_label(value: Optional[str]) -> str:
+    parsed = _parse_scouting_datetime(value)
+    if not parsed:
+        return ""
+    return parsed.strftime("%d.%m.%Y · %H:%M Uhr")
+
+
+def _format_match_detail_line(match: Mapping[str, Any]) -> str:
+    parts: list[str] = []
+    datetime_label = _format_scouting_datetime_label(match.get("kickoff"))
+    if datetime_label:
+        parts.append(datetime_label)
+    location = match.get("location")
+    if location:
+        parts.append(str(location))
+    return " • ".join(parts)
+
+
+def _format_match_card_title(match: Mapping[str, Any]) -> str:
+    opponent = match.get("opponent") or "Unbekannt"
+    is_home = match.get("is_home")
+    if is_home:
+        pairing = f"{USC_CANONICAL_NAME} vs. {opponent}"
+    else:
+        pairing = f"{opponent} vs. {USC_CANONICAL_NAME}"
+    datetime_label = _format_scouting_datetime_label(match.get("kickoff"))
+    if datetime_label:
+        return f"{pairing} ({datetime_label})"
+    return pairing
+
+
+def _build_match_links_html(match: Mapping[str, Any]) -> str:
+    links: list[tuple[str, str]] = []
+    info_url = match.get("info_url")
+    if info_url:
+        links.append(("Spielinfos", str(info_url)))
+    stats_url = match.get("stats_url")
+    if stats_url:
+        links.append(("Statistik (PDF)", str(stats_url)))
+    scoresheet_url = match.get("scoresheet_url")
+    if scoresheet_url:
+        links.append(("Spielbericht", str(scoresheet_url)))
+    if not links:
+        return ""
+
+    lines = ['    <div class="match-card__links">']
+    for label, url in links:
+        lines.append(f'      <a href="{escape(url)}" target="_blank" rel="noopener">{escape(label)}</a>')
+    lines.append("    </div>")
+    return "\n".join(lines)
+
+
+def _build_match_card_html(match: Mapping[str, Any]) -> str:
+    title = _format_match_card_title(match)
+    meta = _format_match_detail_line(match)
+    result_text = _format_match_meta_text(match)
+    attendance = _format_int_value(match.get("attendance"), default="")
+
+    lines = ['<article class="match-card">', f"  <h3>{escape(title)}</h3>"]
+    if meta:
+        lines.append(f"  <p class=\"match-card__meta\">{escape(meta)}</p>")
+    if attendance:
+        lines.append(f"  <p class=\"match-card__meta\">Zuschauer: {escape(attendance)}</p>")
+    if result_text:
+        lines.append(f"  <p class=\"match-card__result\">{escape(result_text)}</p>")
+
+    links_html = _build_match_links_html(match)
+    if links_html:
+        lines.append(links_html)
+
+    metrics = match.get("metrics")
+    if isinstance(metrics, Mapping):
+        table_html = _indent_html(
+            _build_metric_table_html(metrics, match.get("total_points")), 2
+        )
+        lines.append(table_html)
+
+    lines.append("</article>")
+    return "\n".join(lines)
+
+
 def _build_player_card_html(player: Mapping[str, Any]) -> str:
     name = player.get("name") or "Unbekannt"
     jersey = player.get("jersey_number")
@@ -4153,6 +4234,26 @@ def _render_player_overview_content(
     return meta_text, cards_html
 
 
+def _render_match_overview_content(
+    usc_scouting: Optional[Mapping[str, Any]]
+) -> str:
+    default_html = '        <p class="empty-state">Keine Spiele verfügbar.</p>'
+    if not usc_scouting:
+        return default_html
+
+    matches = usc_scouting.get("matches") or []
+    cards: list[str] = []
+    for match in matches:
+        if not isinstance(match, Mapping):
+            continue
+        cards.append(_build_match_card_html(match))
+
+    if not cards:
+        return default_html
+
+    return _indent_html("\n\n".join(cards), 8)
+
+
 def build_html_report(
     *,
     next_home=None,
@@ -4185,6 +4286,7 @@ def build_html_report(
 
     team_meta_html, team_summary_html = _render_team_overview_content(usc_scouting)
     player_meta_text, player_list_html = _render_player_overview_content(usc_scouting)
+    match_list_html = _render_match_overview_content(usc_scouting)
     preloaded_overview_json = "null"
     if usc_scouting:
         preloaded_overview_json = json.dumps(usc_scouting, ensure_ascii=False)
@@ -4307,6 +4409,62 @@ def build_html_report(
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
       gap: clamp(1rem, 3vw, 1.6rem);
+    }}
+
+    .match-list {{
+      display: grid;
+      gap: clamp(1.1rem, 3vw, 1.8rem);
+    }}
+
+    .match-card {{
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      padding: clamp(1rem, 3vw, 1.5rem);
+      display: grid;
+      gap: 0.75rem;
+    }}
+
+    .match-card h3 {{
+      margin: 0;
+      font-size: clamp(1.15rem, 3vw, 1.5rem);
+    }}
+
+    .match-card__meta {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }}
+
+    .match-card__result {{
+      margin: 0;
+      font-weight: 600;
+      color: var(--accent);
+    }}
+
+    .match-card__links {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }}
+
+    .match-card__links a {{
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }}
+
+    .match-card__links a:hover,
+    .match-card__links a:focus-visible {{
+      text-decoration: underline;
     }}
 
     .metric-card {{
@@ -4474,6 +4632,13 @@ def build_html_report(
     </section>
 
     <section>
+      <h2>Spiele</h2>
+      <div class="match-list" data-match-list>
+{match_list}
+      </div>
+    </section>
+
+    <section>
       <h2>Spielerinnen</h2>
       <p class="section-hint" data-player-meta>{player_meta}</p>
       <div class="player-list" data-player-list>
@@ -4576,6 +4741,112 @@ def build_html_report(
       }}
       table.appendChild(tbody);
       return table;
+    }}
+
+    function formatMatchTitle(match) {{
+      const opponent = match.opponent || 'Unbekannt';
+      const isHome = Boolean(match.is_home);
+      const pairing = isHome
+        ? `USC Münster vs. <<opponent>>`
+        : `<<opponent>> vs. USC Münster`;
+      const datetime = formatDateTime(match.kickoff);
+      return datetime && datetime !== '–' ? `${pairing} (${datetime})` : pairing;
+    }}
+
+    function formatMatchDetails(match) {{
+      const details = [];
+      const datetime = formatDateTime(match.kickoff);
+      if (datetime && datetime !== '–') {{
+        details.push(datetime);
+      }}
+      if (match.location) {{
+        details.push(match.location);
+      }}
+      return details.join(' • ');
+    }}
+
+    function buildMatchLinks(match) {{
+      const links = [];
+      if (match.info_url) {{
+        links.push(['Spielinfos', match.info_url]);
+      }}
+      if (match.stats_url) {{
+        links.push(['Statistik (PDF)', match.stats_url]);
+      }}
+      if (match.scoresheet_url) {{
+        links.push(['Spielbericht', match.scoresheet_url]);
+      }}
+      if (!links.length) {{
+        return null;
+      }}
+      const container = document.createElement('div');
+      container.className = 'match-card__links';
+      for (const [label, url] of links) {{
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener';
+        anchor.textContent = label;
+        container.appendChild(anchor);
+      }}
+      return container;
+    }}
+
+    function buildMatchCard(match) {{
+      const card = document.createElement('article');
+      card.className = 'match-card';
+
+      const heading = document.createElement('h3');
+      heading.textContent = formatMatchTitle(match);
+      card.appendChild(heading);
+
+      const details = formatMatchDetails(match);
+      if (details) {{
+        const meta = document.createElement('p');
+        meta.className = 'match-card__meta';
+        meta.textContent = details;
+        card.appendChild(meta);
+      }}
+
+      if (match.attendance) {{
+        const attendance = document.createElement('p');
+        attendance.className = 'match-card__meta';
+        attendance.textContent = `Zuschauer: <<match.attendance>>`;
+        card.appendChild(attendance);
+      }}
+
+      const result = formatMatchMeta(match);
+      if (result) {{
+        const resultNode = document.createElement('p');
+        resultNode.className = 'match-card__result';
+        resultNode.textContent = result;
+        card.appendChild(resultNode);
+      }}
+
+      const links = buildMatchLinks(match);
+      if (links) {{
+        card.appendChild(links);
+      }}
+
+      if (match.metrics) {{
+        card.appendChild(buildMetricTable(match.metrics, match.total_points));
+      }}
+
+      return card;
+    }}
+
+    function renderMatches(data) {{
+      const container = document.querySelector('[data-match-list]');
+      if (!container) return;
+      container.innerHTML = '';
+      const matches = Array.isArray(data.matches) ? data.matches : [];
+      if (!matches.length) {{
+        container.innerHTML = '<p class="empty-state">Keine Spiele verfügbar.</p>';
+        return;
+      }}
+      matches.forEach(match => {{
+        container.appendChild(buildMatchCard(match));
+      }});
     }}
 
     function renderTeamOverview(data) {{
@@ -4725,6 +4996,7 @@ def build_html_report(
     function applyOverview(data) {{
       if (!data) return;
       renderTeamOverview(data);
+      renderMatches(data);
       renderPlayers(data);
       const note = document.querySelector('[data-update-note] span:last-child');
       if (note && data.generated) {{
@@ -4769,6 +5041,7 @@ def build_html_report(
 </html>""".format(
         generated_iso=escape(generated_iso),
         generated_label=escape(generated_label),
+        match_list=match_list_html,
         team_meta=team_meta_html,
         team_summary=team_summary_html,
         player_meta=escape(player_meta_text),
