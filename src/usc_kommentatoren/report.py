@@ -2260,6 +2260,11 @@ _MATCH_STATS_LINE_PATTERN = re.compile(
     r"(?P<block_points>\d+)"
 )
 
+_TOTALS_LABEL_PATTERN = re.compile(
+    r"\b(Aufschlag|Annahme|Angriff|Block|Punkte)\b",
+    re.IGNORECASE,
+)
+
 
 def _split_compound_value(
     value: str,
@@ -2285,6 +2290,7 @@ def _split_compound_value(
 
 def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
     normalized_line = _normalize_stats_totals_line(line)
+    normalized_line = _TOTALS_LABEL_PATTERN.sub(" ", normalized_line)
     compact_result = _extract_compact_value_tokens(
         _tokenize_compact_stats_text(normalized_line)
     )
@@ -2773,19 +2779,37 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
             cursor -= 1
         header_entries.reverse()
         header_lines = [entry[1] for entry in header_entries]
-        totals_line: Optional[str] = None
+        totals_candidates: List[str] = []
         for probe in range(marker + 1, len(lines)):
             candidate = lines[probe].strip()
             if not candidate:
+                if totals_candidates:
+                    break
                 continue
             if candidate.startswith("Satz"):
                 break
-            if re.search(r"[A-Za-zÄÖÜäöüß]", candidate):
+            if "Spieler insgesamt" in candidate:
+                break
+            if not re.search(r"\d", candidate):
+                if totals_candidates:
+                    break
                 continue
-            if re.search(r"\d", candidate):
-                totals_line = candidate
-        if not totals_line:
+            totals_candidates.append(candidate)
+            # Continue collecting lines in case the totals are split across multiple rows.
+        if not totals_candidates:
             continue
+        points_lines = [
+            entry
+            for entry in totals_candidates
+            if re.search(r"\bPunkte\b", entry, re.IGNORECASE)
+        ]
+        other_lines = [
+            entry
+            for entry in totals_candidates
+            if entry not in points_lines
+        ]
+        ordered_totals = points_lines + other_lines if points_lines else totals_candidates
+        totals_line = " ".join(ordered_totals)
         normalized_totals = _normalize_stats_totals_line(totals_line)
         team_name = (
             team_names[marker_index]
