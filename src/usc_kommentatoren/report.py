@@ -4833,7 +4833,6 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
         lines.append('      <th scope="row">Summe</th>')
         lines.append('      <td></td>')
         lines.append('      <td></td>')
-        lines.append('      <td></td>')
         lines.append(
             f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_attempts')))}</td>"
         )
