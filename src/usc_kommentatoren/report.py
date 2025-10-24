@@ -4750,7 +4750,7 @@ def build_html_report(
         ? `USC Münster vs. <<opponent>>`
         : `<<opponent>> vs. USC Münster`;
       const datetime = formatDateTime(match.kickoff);
-      return datetime && datetime !== '–' ? `${pairing} (${datetime})` : pairing;
+      return datetime && datetime !== '–' ? `<<pairing>> (<<datetime>>)` : pairing;
     }}
 
     function formatMatchDetails(match) {{
