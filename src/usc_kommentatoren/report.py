@@ -5525,16 +5525,6 @@ def build_html_report(
     </header>
 
     <section>
-      <h2>Team-Überblick</h2>
-      <div class="section-hint" data-team-meta>
-{team_meta}
-      </div>
-      <div class="metrics-grid" data-team-summary>
-{team_summary}
-      </div>
-    </section>
-
-    <section>
       <h2>Spiele</h2>
       <div class="table-container" data-match-table-container>
 {match_list}
