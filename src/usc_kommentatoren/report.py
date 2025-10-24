@@ -5654,13 +5654,18 @@ def build_html_report(
     document.addEventListener('DOMContentLoaded', bootstrap);
   </script>
 </body>
-</html>""".format(
+</html>"""
+    class _SafeFormatDict(dict):
+        def __missing__(self, key):
+            return "{" + key + "}"
+
+    html = html.format_map(_SafeFormatDict(
         generated_iso=escape(generated_iso),
         generated_label=escape(generated_label),
         player_meta=escape(player_meta_text),
         player_table=player_table_html,
         player_list=player_list_html,
-    )
+    ))
     html = html.replace("__PRELOADED_OVERVIEW__", preloaded_overview_json)
     html = html.replace("<<", "${").replace(">>", "}")
     return html
