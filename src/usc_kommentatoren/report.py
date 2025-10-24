@@ -4634,6 +4634,10 @@ def _format_home_away_label(is_home: Optional[bool]) -> str:
     return "Heim" if is_home else "Auswärts"
 
 
+def _format_home_away_marker(is_home: Optional[bool]) -> str:
+    return "(H)" if is_home else "(A)"
+
+
 def _format_int_value(value: Any, default: str = "0") -> str:
     if value is None:
         return default
@@ -4677,8 +4681,8 @@ def _format_match_result_label(match: Mapping[str, Any]) -> str:
     summary = result.get("summary") or "Ergebnis offen"
     opponent = match.get("opponent") or "Unbekannt"
     date_label = _format_scouting_date(match.get("kickoff"))
-    venue = _format_home_away_label(match.get("is_home"))
-    return f"{date_label} · {venue} · {opponent}: {summary}"
+    venue_marker = _format_home_away_marker(match.get("is_home"))
+    return f"{date_label} · {opponent} {venue_marker}: {summary}"
 
 
 def _format_match_heading_text(index: int, match: Mapping[str, Any]) -> str:
@@ -4814,10 +4818,15 @@ def _build_team_meta_html(
         if match_count == 1
         else f"{match_count} Spiele berücksichtigt:"
     )
-    lines = [f"<span>{escape(summary_text)}</span>", '<ul class="match-result-list">']
+    lines = [
+        '<div class="match-summary-card">',
+        f"  <p class=\"match-summary-card__title\">{escape(summary_text)}</p>",
+        '  <ul class="match-summary-card__list">',
+    ]
     for match in matches:
-        lines.append(f"  <li>{escape(_format_match_result_label(match))}</li>")
-    lines.append("</ul>")
+        lines.append(f"    <li>{escape(_format_match_result_label(match))}</li>")
+    lines.append("  </ul>")
+    lines.append("</div>")
     return _indent_html("\n".join(lines), 8)
 
 
@@ -5197,16 +5206,32 @@ def build_html_report(
       font-size: 0.95rem;
     }}
 
-    .match-result-list {{
-      margin: 0.3rem 0 0;
-      padding-left: 1.2rem;
-      list-style: disc;
-      color: var(--muted);
-      font-size: 0.95rem;
+    .match-summary-card {{
+      margin-top: 0.5rem;
+      padding: clamp(0.75rem, 2.5vw, 1.25rem);
+      border-radius: 0.9rem;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 0.65rem;
+      color: var(--text);
     }}
 
-    .match-result-list li {{
-      margin: 0.2rem 0;
+    .match-summary-card__title {{
+      margin: 0;
+      font-weight: 600;
+      color: inherit;
+    }}
+
+    .match-summary-card__list {{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 0.35rem;
+      color: inherit;
+      font-size: 0.95rem;
     }}
 
     .metrics-grid {{
@@ -5513,12 +5538,12 @@ def build_html_report(
     function formatMatchResultLine(match) {{
       const date = formatDate(match.kickoff);
       const opponent = match.opponent || 'Unbekannt';
-      const venue = match.is_home ? 'Heim' : 'Auswärts';
+      const venueMarker = match.is_home ? '(H)' : '(A)';
       let resultSummary = 'Ergebnis offen';
       if (match.result && match.result.summary) {{
         resultSummary = match.result.summary;
       }}
-      return `<<date>> · <<venue>> · <<opponent>>: <<resultSummary>>`;
+      return `<<date>> · <<opponent>> <<venueMarker>>: <<resultSummary>>`;
     }}
 
     function buildMetricTable(metrics, totalPoints) {{
@@ -5672,20 +5697,26 @@ def build_html_report(
             ? '1 Spiel berücksichtigt.'
             : `<<count>> Spiele berücksichtigt.`;
         }} else {{
-          const summaryText = document.createElement('span');
-          summaryText.textContent = count === 1
+          const card = document.createElement('div');
+          card.className = 'match-summary-card';
+
+          const title = document.createElement('p');
+          title.className = 'match-summary-card__title';
+          title.textContent = count === 1
             ? '1 Spiel berücksichtigt:'
             : `<<count>> Spiele berücksichtigt:`;
-          metaNode.appendChild(summaryText);
+          card.appendChild(title);
 
           const list = document.createElement('ul');
-          list.className = 'match-result-list';
+          list.className = 'match-summary-card__list';
           for (const match of matches) {{
             const item = document.createElement('li');
             item.textContent = formatMatchResultLine(match);
             list.appendChild(item);
           }}
-          metaNode.appendChild(list);
+          card.appendChild(list);
+
+          metaNode.appendChild(card);
         }}
       }}
       const cards = [
