@@ -16,7 +16,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Erstellt eine Scouting-Übersicht aller USC-Statistiken aus den offiziellen "
-            "VBL-PDFs und schreibt die Daten als JSON-Datei."
+            "VBL-PDFs und schreibt Team- sowie Spielerinnenwerte als JSON-Datei."
         ),
     )
     parser.add_argument(

@@ -12,6 +12,7 @@ from .report import (
     DEFAULT_SCHEDULE_URL,
     Match,
     MatchResult,
+    MatchPlayerStats,
     MatchStatsMetrics,
     MatchStatsTotals,
     SCHEDULE_PAGE_URL,
@@ -67,6 +68,39 @@ class USCMatchStatsEntry:
             ],
             "result": result_payload,
             "metrics": asdict(self.metrics),
+        }
+
+
+@dataclass(frozen=True)
+class USCPlayerMatchEntry:
+    """Per-match scouting metrics for an individual USC player."""
+
+    player_name: str
+    jersey_number: Optional[int]
+    match: Match
+    opponent: str
+    is_home: bool
+    metrics: MatchStatsMetrics
+    total_points: Optional[int]
+
+    def to_dict(self) -> Dict[str, object]:
+        result_payload: Optional[Dict[str, object]] = None
+        if self.match.result:
+            result_payload = _serialize_result(self.match.result)
+
+        return {
+            "player": self.player_name,
+            "jersey_number": self.jersey_number,
+            "match_number": self.match.match_number,
+            "match_id": self.match.match_id,
+            "kickoff": self.match.kickoff.isoformat(),
+            "is_home": self.is_home,
+            "opponent": self.opponent,
+            "info_url": self.match.info_url,
+            "stats_url": self.match.stats_url,
+            "result": result_payload,
+            "metrics": asdict(self.metrics),
+            "total_points": self.total_points,
         }
 
 
@@ -197,6 +231,44 @@ def collect_usc_match_stats(
     return entries
 
 
+def collect_usc_player_stats(
+    matches: Sequence[Match],
+    *,
+    stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
+) -> List[USCPlayerMatchEntry]:
+    lookup = stats_lookup or collect_match_stats_totals(matches)
+    entries: List[USCPlayerMatchEntry] = []
+    for match in matches:
+        if not match.is_finished or not match.stats_url:
+            continue
+        summaries = lookup.get(match.stats_url)
+        if not summaries:
+            continue
+        usc_summary: Optional[MatchStatsTotals] = None
+        for summary in summaries:
+            if is_usc(summary.team_name):
+                usc_summary = summary
+                break
+        if usc_summary is None:
+            continue
+        is_home = is_usc(match.home_team)
+        opponent = pretty_name(match.away_team if is_home else match.home_team)
+        for player in usc_summary.players:
+            entries.append(
+                USCPlayerMatchEntry(
+                    player_name=player.player_name,
+                    jersey_number=player.jersey_number,
+                    match=match,
+                    opponent=opponent,
+                    is_home=is_home,
+                    metrics=player.metrics,
+                    total_points=player.total_points,
+                )
+            )
+    entries.sort(key=lambda entry: (entry.player_name.lower(), entry.match.kickoff))
+    return entries
+
+
 def _load_enriched_matches(
     *,
     schedule_csv_url: str = DEFAULT_SCHEDULE_URL,
@@ -235,8 +307,43 @@ def build_stats_overview(
 
     stats_lookup = collect_match_stats_totals(matches)
     usc_entries = collect_usc_match_stats(matches, stats_lookup=stats_lookup)
+    player_entries = collect_usc_player_stats(matches, stats_lookup=stats_lookup)
     metrics_list = [entry.metrics for entry in usc_entries]
     totals = summarize_metrics(metrics_list)
+
+    player_groups: Dict[str, List[USCPlayerMatchEntry]] = {}
+    for entry in player_entries:
+        player_groups.setdefault(entry.player_name, []).append(entry)
+
+    players_payload: List[Dict[str, object]] = []
+    for player_name, entries_list in player_groups.items():
+        entries_list.sort(key=lambda item: item.match.kickoff)
+        player_metrics = [item.metrics for item in entries_list]
+        player_totals = summarize_metrics(player_metrics)
+        total_points_values = [
+            item.total_points for item in entries_list if item.total_points is not None
+        ]
+        jersey_number = entries_list[0].jersey_number
+        players_payload.append(
+            {
+                "name": player_name,
+                "jersey_number": jersey_number,
+                "match_count": len(entries_list),
+                "matches": [item.to_dict() for item in entries_list],
+                "totals": player_totals.to_dict() if player_totals else None,
+                "total_points": sum(total_points_values)
+                if total_points_values
+                else None,
+            }
+        )
+
+    players_payload.sort(
+        key=lambda item: (
+            item.get("jersey_number") is None,
+            item.get("jersey_number") or 0,
+            str(item.get("name", "")).lower(),
+        )
+    )
 
     payload = {
         "generated": datetime.now(tz=timezone.utc).isoformat(),
@@ -244,6 +351,8 @@ def build_stats_overview(
         "match_count": len(usc_entries),
         "matches": [entry.to_dict() for entry in usc_entries],
         "totals": totals.to_dict() if totals else None,
+        "player_count": len(players_payload),
+        "players": players_payload,
     }
 
     if output_path is None:
@@ -259,7 +368,9 @@ __all__ = [
     "DEFAULT_OUTPUT_PATH",
     "STATS_OUTPUT_PATH",
     "USCMatchStatsEntry",
+    "USCPlayerMatchEntry",
     "build_stats_overview",
     "collect_usc_match_stats",
+    "collect_usc_player_stats",
     "summarize_metrics",
 ]
