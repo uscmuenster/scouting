@@ -4672,20 +4672,6 @@ def _format_pct_value(value: Any, default: str = "0%") -> str:
     return str(value)
 
 
-def _format_match_meta_text(match: Mapping[str, Any]) -> str:
-    result = match.get("result") or {}
-    segments: list[str] = []
-    summary = result.get("summary")
-    if summary:
-        segments.append(f"Ergebnis: {summary}")
-    total_points = result.get("total_points")
-    if total_points:
-        segments.append(f"Ballpunkte: {total_points}")
-    if not segments:
-        segments.append("Noch kein Ergebnis verfügbar")
-    return " · ".join(segments)
-
-
 def _format_match_result_label(match: Mapping[str, Any]) -> str:
     result = match.get("result") or {}
     summary = result.get("summary") or "Ergebnis offen"
@@ -4695,69 +4681,175 @@ def _format_match_result_label(match: Mapping[str, Any]) -> str:
     return f"{date_label} · {opponent} {venue_marker}: {summary}"
 
 
-def _format_match_heading_text(index: int, match: Mapping[str, Any]) -> str:
-    date_label = _format_scouting_date(match.get("kickoff"))
-    opponent = _resolve_opponent_label(match)
-    venue = _format_home_away_label(match.get("is_home"))
-    return f"Spiel {index + 1}: {date_label} · {venue} vs. {opponent}"
-
-
 def _indent_html(content: str, spaces: int) -> str:
     indent = " " * spaces
     return "\n".join(f"{indent}{line}" if line else "" for line in content.splitlines())
 
 
-def _build_metric_table_html(
-    metrics: Mapping[str, Any], total_points: Optional[Any]
-) -> str:
-    rows: list[tuple[str, str]] = [
-        (
-            "Aufschlag",
-            " · ".join(
-                [
-                    f"{_format_int_value(metrics.get('serves_attempts'))} Versuche",
-                    f"{_format_int_value(metrics.get('serves_errors'))} Fehler",
-                    f"{_format_int_value(metrics.get('serves_points'))} Asse",
-                ]
-            ),
-        ),
-        (
-            "Annahme",
-            " · ".join(
-                [
-                    f"{_format_int_value(metrics.get('receptions_attempts'))} Annahmen",
-                    f"{_format_int_value(metrics.get('receptions_errors'))} Fehler",
-                    f"{_format_pct_value(metrics.get('receptions_positive_pct'))} positiv",
-                    f"{_format_pct_value(metrics.get('receptions_perfect_pct'))} perfekt",
-                ]
-            ),
-        ),
-        (
-            "Angriff",
-            " · ".join(
-                [
-                    f"{_format_int_value(metrics.get('attacks_attempts'))} Versuche",
-                    f"{_format_int_value(metrics.get('attacks_errors'))} Fehler",
-                    f"{_format_int_value(metrics.get('attacks_blocked'))} geblockt",
-                    f"{_format_int_value(metrics.get('attacks_points'))} Punkte",
-                    f"{_format_pct_value(metrics.get('attacks_success_pct'))} Erfolgsquote",
-                ]
-            ),
-        ),
-        (
-            "Block",
-            f"{_format_int_value(metrics.get('blocks_points'))} Blockpunkte",
-        ),
-    ]
-    if total_points is not None:
-        rows.append(("Gesamtpunkte", _format_int_value(total_points)))
+def _format_match_sets_label(match: Mapping[str, Any]) -> str:
+    result = match.get("result") or {}
+    sets = result.get("sets") or []
+    cleaned = [str(item).strip() for item in sets if str(item).strip()]
+    return " ".join(cleaned) if cleaned else "–"
 
-    lines = ["<table class=\"metrics-table\">", "  <tbody>"]
-    for label, value in rows:
+
+def _resolve_match_metric(match: Mapping[str, Any], key: str) -> Any:
+    metrics = match.get("metrics")
+    if isinstance(metrics, Mapping):
+        return metrics.get(key)
+    return None
+
+
+def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
+    matches = [match for match in player.get("matches") or [] if isinstance(match, Mapping)]
+    totals = player.get("totals") if isinstance(player.get("totals"), Mapping) else None
+
+    if not matches and totals is None:
+        return '<p class="empty-state">Keine Spiele verfügbar.</p>'
+
+    columns: list[tuple[str, bool]] = [
+        ("Datum", False),
+        ("Gegner", False),
+        ("Sätze", False),
+        ("Srv\u00a0V", True),
+        ("Srv\u00a0F", True),
+        ("Srv\u00a0Asse", True),
+        ("Ann\u00a0V", True),
+        ("Ann\u00a0F", True),
+        ("Ann\u00a0+%", True),
+        ("Ann\u00a0Perf%", True),
+        ("Ang\u00a0V", True),
+        ("Ang\u00a0F", True),
+        ("Ang\u00a0gebl.", True),
+        ("Ang\u00a0Pkt.", True),
+        ("Ang\u00a0%", True),
+        ("Block", True),
+        ("Pkt.", True),
+        ("Breakpkt.", True),
+        ("+/−", True),
+    ]
+
+    lines = ['<table class="stats-table player-match-table">', '  <thead>', '    <tr>']
+    for label, is_numeric in columns:
+        cell_class = ' class="numeric"' if is_numeric else ""
         lines.append(
-            f"    <tr><th>{escape(label)}</th><td>{escape(value)}</td></tr>"
+            f"      <th scope=\"col\"{cell_class}>{escape(label)}</th>"
         )
-    lines.extend(["  </tbody>", "</table>"])
+    lines.extend(['    </tr>', '  </thead>', '  <tbody>'])
+
+    for match in matches:
+        opponent = _resolve_opponent_label(match)
+        row_values: list[tuple[str, bool]] = [
+            (_format_scouting_date(match.get("kickoff")), False),
+            (opponent, False),
+            (_format_match_sets_label(match), False),
+            (_format_int_value(_resolve_match_metric(match, "serves_attempts")), True),
+            (_format_int_value(_resolve_match_metric(match, "serves_errors")), True),
+            (_format_int_value(_resolve_match_metric(match, "serves_points")), True),
+            (_format_int_value(_resolve_match_metric(match, "receptions_attempts")), True),
+            (_format_int_value(_resolve_match_metric(match, "receptions_errors")), True),
+            (
+                _format_pct_value(
+                    _resolve_match_metric(match, "receptions_positive_pct"),
+                    default="–",
+                ),
+                True,
+            ),
+            (
+                _format_pct_value(
+                    _resolve_match_metric(match, "receptions_perfect_pct"),
+                    default="–",
+                ),
+                True,
+            ),
+            (_format_int_value(_resolve_match_metric(match, "attacks_attempts")), True),
+            (_format_int_value(_resolve_match_metric(match, "attacks_errors")), True),
+            (_format_int_value(_resolve_match_metric(match, "attacks_blocked")), True),
+            (_format_int_value(_resolve_match_metric(match, "attacks_points")), True),
+            (
+                _format_pct_value(
+                    _resolve_match_metric(match, "attacks_success_pct"),
+                    default="–",
+                ),
+                True,
+            ),
+            (_format_int_value(_resolve_match_metric(match, "blocks_points")), True),
+            (
+                _format_int_value(match.get("total_points"), default="–"),
+                True,
+            ),
+            (
+                _format_int_value(match.get("break_points"), default="–"),
+                True,
+            ),
+            (
+                _format_int_value(match.get("plus_minus"), default="–"),
+                True,
+            ),
+        ]
+
+        lines.append("    <tr>")
+        for value, is_numeric in row_values:
+            cell_class = " class=\"numeric\"" if is_numeric else ""
+            lines.append(f"      <td{cell_class}>{escape(value)}</td>")
+        lines.append("    </tr>")
+
+    if totals is not None:
+        lines.append('    <tr class="stats-table__total player-match-table__total-row">')
+        lines.append('      <th scope="row">Summe</th>')
+        lines.append('      <td>–</td>')
+        lines.append('      <td>–</td>')
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_attempts')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_errors')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_points')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('receptions_attempts')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('receptions_errors')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_pct_value(totals.get('receptions_positive_pct'), default='–'))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_pct_value(totals.get('receptions_perfect_pct'), default='–'))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_attempts')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_errors')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_blocked')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_points')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_pct_value(totals.get('attacks_success_pct'), default='–'))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('blocks_points')))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(player.get('total_points'), default='–'))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(player.get('break_points_total'), default='–'))}</td>"
+        )
+        lines.append(
+            f"      <td class=\"numeric\">{escape(_format_int_value(player.get('plus_minus_total'), default='–'))}</td>"
+        )
+        lines.append("    </tr>")
+
+    lines.extend(['  </tbody>', '</table>'])
     return "\n".join(lines)
 
 
@@ -4838,29 +4930,6 @@ def _build_team_meta_html(
     lines.append("  </ul>")
     lines.append("</div>")
     return _indent_html("\n".join(lines), 8)
-
-
-def _build_player_match_links_html(match: Mapping[str, Any]) -> str:
-    links: list[tuple[str, str]] = []
-    info_url = match.get("info_url")
-    if info_url:
-        links.append(("Spielinfos", str(info_url)))
-    stats_url = match.get("stats_url")
-    if stats_url:
-        links.append(("Statistik (PDF)", str(stats_url)))
-    scoresheet_url = match.get("scoresheet_url")
-    if scoresheet_url:
-        links.append(("Spielbericht", str(scoresheet_url)))
-    if not links:
-        return ""
-
-    lines = ['      <div class="player-match__links">']
-    for label, url in links:
-        lines.append(
-            f"        <a href=\"{escape(url, quote=True)}\" target=\"_blank\" rel=\"noopener\">{escape(label)}</a>"
-        )
-    lines.append("      </div>")
-    return "\n".join(lines)
 
 
 def _build_match_table_html(
@@ -5111,52 +5180,13 @@ def _build_player_card_html(player: Mapping[str, Any]) -> str:
 
     lines = ["<article class=\"player-card\">", "  <header class=\"player-card__header\">"]
     lines.append(f"    <h3>{escape(title)}</h3>")
-
-    totals = player.get("totals")
-    if isinstance(totals, Mapping):
-        lines.append('    <div class="player-card__totals">')
-        lines.append("      <h4>Summe</h4>")
-        table_html = _indent_html(
-            _build_metric_table_html(totals, player.get("total_points")), 6
-        )
-        lines.append(table_html)
-        lines.append("    </div>")
-
     lines.append("  </header>")
-    lines.append('  <div class="player-card__matches">')
-
-    matches = player.get("matches") or []
-    if not matches:
-        lines.append('    <p class="empty-state">Keine Spiele verfügbar.</p>')
+    lines.append('  <div class="player-card__table-wrapper">')
+    table_html = _build_player_match_table_html(player)
+    if table_html:
+        lines.append(_indent_html(table_html, 4))
     else:
-        for index, match in enumerate(matches):
-            if not isinstance(match, Mapping):
-                continue
-            lines.append('    <div class="player-match">')
-            lines.append('      <div class="player-match__header">')
-            lines.append(
-                f"        <h4>{escape(_format_match_heading_text(index, match))}</h4>"
-            )
-            lines.append(
-                f"        <p class=\"player-match__meta\">{escape(_format_match_meta_text(match))}</p>"
-            )
-            lines.append("      </div>")
-
-            metrics = match.get("metrics")
-            if isinstance(metrics, Mapping):
-                lines.append(
-                    _indent_html(
-                        _build_metric_table_html(metrics, match.get("total_points")),
-                        6,
-                    )
-                )
-
-            links_html = _build_player_match_links_html(match)
-            if links_html:
-                lines.append(links_html)
-
-            lines.append('    </div>')
-
+        lines.append('    <p class="empty-state">Keine Spiele verfügbar.</p>')
     lines.append('  </div>')
     lines.append('</article>')
     return "\n".join(lines)
@@ -5532,94 +5562,14 @@ def build_html_report(
       font-size: clamp(1.25rem, 3vw, 1.6rem);
     }}
 
-    .player-card__totals h4 {{
-      margin: 0 0 0.4rem 0;
-      font-size: 1rem;
-      color: var(--accent);
+    .player-card__table-wrapper {{
+      overflow-x: auto;
     }}
 
-    .player-card__matches {{
-      display: grid;
-      gap: clamp(0.8rem, 2vw, 1.1rem);
+    .player-match-table {{
+      min-width: 52rem;
     }}
 
-    .player-match {{
-      border-radius: 0.9rem;
-      border: 1px solid rgba(15, 118, 110, 0.15);
-      padding: clamp(0.8rem, 2.6vw, 1.2rem);
-      background: rgba(255, 255, 255, 0.92);
-      display: grid;
-      gap: 0.6rem;
-    }}
-
-    @media (prefers-color-scheme: dark) {{
-      .player-match {{
-        background: rgba(19, 42, 48, 0.92);
-      }}
-    }}
-
-    .player-match__header {{
-      display: grid;
-      gap: 0.25rem;
-    }}
-
-    .player-match__header h4 {{
-      margin: 0;
-      font-size: 1.05rem;
-    }}
-
-    .player-match__meta {{
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.95rem;
-    }}
-
-    .metrics-table {{
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }}
-
-    .metrics-table th,
-    .metrics-table td {{
-      text-align: left;
-      padding: 0.35rem 0;
-      vertical-align: top;
-    }}
-
-    .metrics-table th {{
-      font-weight: 600;
-      color: var(--accent);
-      width: 7.5rem;
-    }}
-
-    .metrics-table td {{
-      color: var(--muted);
-    }}
-
-    .player-match__links {{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }}
-
-    .player-match__links a {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }}
-
-    .player-match__links a:hover,
-    .player-match__links a:focus-visible {{
-      text-decoration: underline;
-    }}
 
     .empty-state {{
       margin: 0;
@@ -5722,34 +5672,6 @@ def build_html_report(
       return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time;
     }}
 
-    function formatMatchHeading(index, match) {{
-      const date = formatDate(match.kickoff);
-      const opponent = getOpponentLabel(match);
-      const homeAway = match.is_home ? 'Heim' : 'Auswärts';
-      return `Spiel <<index + 1>>: <<date>> · <<homeAway>> vs. <<opponent>>`;
-    }}
-
-    function formatResult(match) {{
-      if (match.result && match.result.summary) {{
-        return `Ergebnis: <<match.result.summary>>`;
-      }}
-      return 'Ergebnis: offen';
-    }}
-
-    function formatMatchMeta(match) {{
-      const items = [];
-      if (match.result && match.result.summary) {{
-        items.push(`Ergebnis: <<match.result.summary>>`);
-      }}
-      if (match.result && match.result.total_points) {{
-        items.push(`Ballpunkte: <<match.result.total_points>>`);
-      }}
-      if (!items.length) {{
-        items.push('Noch kein Ergebnis verfügbar');
-      }}
-      return items.join(' · ');
-    }}
-
     function formatMatchResultLine(match) {{
       const date = formatDate(match.kickoff);
       const opponent = getOpponentLabel(match);
@@ -5761,28 +5683,147 @@ def build_html_report(
       return `<<date>> · <<opponent>> <<venueMarker>>: <<resultSummary>>`;
     }}
 
-    function buildMetricTable(metrics, totalPoints) {{
-      const table = document.createElement('table');
-      table.className = 'metrics-table';
-      const tbody = document.createElement('tbody');
-      const rows = [
-        ['Aufschlag', `<<formatInt(metrics.serves_attempts)>> Versuche · <<formatInt(metrics.serves_errors)>> Fehler · <<formatInt(metrics.serves_points)>> Asse`],
-        ['Annahme', `<<formatInt(metrics.receptions_attempts)>> Annahmen · <<formatInt(metrics.receptions_errors)>> Fehler · <<formatPct(metrics.receptions_positive_pct)>> positiv · <<formatPct(metrics.receptions_perfect_pct)>> perfekt`],
-        ['Angriff', `<<formatInt(metrics.attacks_attempts)>> Versuche · <<formatInt(metrics.attacks_errors)>> Fehler · <<formatInt(metrics.attacks_blocked)>> geblockt · <<formatInt(metrics.attacks_points)>> Punkte · <<formatPct(metrics.attacks_success_pct)>> Erfolgsquote`],
-        ['Block', `<<formatInt(metrics.blocks_points)>> Blockpunkte`],
+    function formatSetScores(match) {{
+      if (!match || !match.result) return '–';
+      const sets = Array.isArray(match.result.sets) ? match.result.sets : [];
+      const cleaned = sets
+        .map(item => (item === null || item === undefined ? '' : String(item).trim()))
+        .filter(Boolean);
+      return cleaned.length ? cleaned.join(' ') : '–';
+    }}
+
+    function getMatchMetric(match, key) {{
+      if (!match || !match.metrics || typeof match.metrics !== 'object') return undefined;
+      return match.metrics[key];
+    }}
+
+    function buildPlayerMatchesTable(player) {{
+      const matches = Array.isArray(player.matches)
+        ? player.matches.filter(match => match && typeof match === 'object')
+        : [];
+      const totals = player && typeof player.totals === 'object' ? player.totals : null;
+      if (!matches.length && !totals) {{
+        return null;
+      }}
+
+      const columns = [
+        {{ label: 'Datum' }},
+        {{ label: 'Gegner' }},
+        {{ label: 'Sätze' }},
+        {{ label: 'Srv\u00a0V', numeric: true }},
+        {{ label: 'Srv\u00a0F', numeric: true }},
+        {{ label: 'Srv\u00a0Asse', numeric: true }},
+        {{ label: 'Ann\u00a0V', numeric: true }},
+        {{ label: 'Ann\u00a0F', numeric: true }},
+        {{ label: 'Ann\u00a0+%', numeric: true }},
+        {{ label: 'Ann\u00a0Perf%', numeric: true }},
+        {{ label: 'Ang\u00a0V', numeric: true }},
+        {{ label: 'Ang\u00a0F', numeric: true }},
+        {{ label: 'Ang\u00a0gebl.', numeric: true }},
+        {{ label: 'Ang\u00a0Pkt.', numeric: true }},
+        {{ label: 'Ang\u00a0%', numeric: true }},
+        {{ label: 'Block', numeric: true }},
+        {{ label: 'Pkt.', numeric: true }},
+        {{ label: 'Breakpkt.', numeric: true }},
+        {{ label: '+/-', numeric: true }},
       ];
-      if (totalPoints !== null && totalPoints !== undefined) {{
-        rows.push(['Gesamtpunkte', formatInt(totalPoints)]);
-      }}
-      for (const [label, value] of rows) {{
-        const tr = document.createElement('tr');
+
+      const table = document.createElement('table');
+      table.className = 'stats-table player-match-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {{
         const th = document.createElement('th');
-        th.textContent = label;
-        const td = document.createElement('td');
-        td.textContent = value;
-        tr.append(th, td);
-        tbody.appendChild(tr);
+        th.scope = 'col';
+        if (column.numeric) th.className = 'numeric';
+        th.textContent = column.label;
+        headerRow.appendChild(th);
+      }});
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      matches.forEach(match => {{
+        const row = document.createElement('tr');
+        const cells = [
+          {{ value: formatDate(match.kickoff) }},
+          {{ value: getOpponentLabel(match) }},
+          {{ value: formatSetScores(match) }},
+          {{ value: formatInt(getMatchMetric(match, 'serves_attempts')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'serves_errors')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'serves_points')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'receptions_attempts')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'receptions_errors')), numeric: true }},
+          {{ value: formatPctOrDash(getMatchMetric(match, 'receptions_positive_pct')), numeric: true }},
+          {{ value: formatPctOrDash(getMatchMetric(match, 'receptions_perfect_pct')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'attacks_attempts')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'attacks_errors')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'attacks_blocked')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'attacks_points')), numeric: true }},
+          {{ value: formatPctOrDash(getMatchMetric(match, 'attacks_success_pct')), numeric: true }},
+          {{ value: formatInt(getMatchMetric(match, 'blocks_points')), numeric: true }},
+          {{ value: formatIntOrDash(match.total_points), numeric: true }},
+          {{ value: formatIntOrDash(match.break_points), numeric: true }},
+          {{ value: formatIntOrDash(match.plus_minus), numeric: true }},
+        ];
+        cells.forEach((cell, index) => {{
+          const td = document.createElement('td');
+          if (cell.numeric || (columns[index] && columns[index].numeric)) {{
+            td.className = 'numeric';
+          }}
+          td.textContent = cell.value;
+          row.appendChild(td);
+        }});
+        tbody.appendChild(row);
+      }});
+
+      if (totals) {{
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'stats-table__total player-match-table__total-row';
+
+        const totalCells = [
+          {{ type: 'th', value: 'Summe', attrs: {{ scope: 'row' }} }},
+          {{ value: '–' }},
+          {{ value: '–' }},
+          {{ value: formatInt(totals.serves_attempts), numeric: true }},
+          {{ value: formatInt(totals.serves_errors), numeric: true }},
+          {{ value: formatInt(totals.serves_points), numeric: true }},
+          {{ value: formatInt(totals.receptions_attempts), numeric: true }},
+          {{ value: formatInt(totals.receptions_errors), numeric: true }},
+          {{ value: formatPctOrDash(totals.receptions_positive_pct), numeric: true }},
+          {{ value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true }},
+          {{ value: formatInt(totals.attacks_attempts), numeric: true }},
+          {{ value: formatInt(totals.attacks_errors), numeric: true }},
+          {{ value: formatInt(totals.attacks_blocked), numeric: true }},
+          {{ value: formatInt(totals.attacks_points), numeric: true }},
+          {{ value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
+          {{ value: formatInt(totals.blocks_points), numeric: true }},
+          {{ value: formatIntOrDash(player.total_points), numeric: true }},
+          {{ value: formatIntOrDash(player.break_points_total), numeric: true }},
+          {{ value: formatIntOrDash(player.plus_minus_total), numeric: true }},
+        ];
+
+        totalCells.forEach((cell, index) => {{
+          const isNumeric = cell.numeric || (columns[index] && columns[index].numeric);
+          if (cell.type === 'th') {{
+            const th = document.createElement('th');
+            if (cell.attrs && cell.attrs.scope) {{
+              th.scope = cell.attrs.scope;
+            }}
+            th.textContent = cell.value;
+            totalRow.appendChild(th);
+          }} else {{
+            const td = document.createElement('td');
+            if (isNumeric) td.className = 'numeric';
+            td.textContent = cell.value;
+            totalRow.appendChild(td);
+          }}
+        }});
+
+        tbody.appendChild(totalRow);
       }}
+
       table.appendChild(tbody);
       return table;
     }}
@@ -6094,72 +6135,21 @@ def build_html_report(
         const header = document.createElement('header');
         header.className = 'player-card__header';
         const title = document.createElement('h3');
-        title.textContent = player.jersey_number ? `#<<player.jersey_number>> <<player.name>>` : player.name;
+        const playerName = player && player.name ? player.name : 'Unbekannt';
+        title.textContent = player.jersey_number ? `#<<player.jersey_number>> <<playerName>>` : playerName;
         header.appendChild(title);
-
-        if (player.totals) {{
-          const totalsWrapper = document.createElement('div');
-          totalsWrapper.className = 'player-card__totals';
-          const totalsHeading = document.createElement('h4');
-          totalsHeading.textContent = 'Summe';
-          totalsWrapper.appendChild(totalsHeading);
-          totalsWrapper.appendChild(buildMetricTable(player.totals, player.total_points));
-          header.appendChild(totalsWrapper);
-        }}
         card.appendChild(header);
 
-        const matchesWrapper = document.createElement('div');
-        matchesWrapper.className = 'player-card__matches';
-        const matches = Array.isArray(player.matches) ? player.matches : [];
-        if (!matches.length) {{
-          const empty = document.createElement('p');
-          empty.className = 'empty-state';
-          empty.textContent = 'Keine Spiele verfügbar.';
-          matchesWrapper.appendChild(empty);
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'player-card__table-wrapper';
+        const table = buildPlayerMatchesTable(player);
+        if (table) {{
+          tableWrapper.appendChild(table);
         }} else {{
-          matches.forEach((match, index) => {{
-            const matchBlock = document.createElement('div');
-            matchBlock.className = 'player-match';
-
-            const matchHeader = document.createElement('div');
-            matchHeader.className = 'player-match__header';
-            const heading = document.createElement('h4');
-            heading.textContent = formatMatchHeading(index, match);
-            const meta = document.createElement('p');
-            meta.className = 'player-match__meta';
-            meta.textContent = formatMatchMeta(match);
-            matchHeader.append(heading, meta);
-            matchBlock.appendChild(matchHeader);
-
-            if (match.metrics) {{
-              matchBlock.appendChild(buildMetricTable(match.metrics, match.total_points));
-            }}
-
-            const links = [];
-            if (match.info_url) {{
-              links.push(['Spielinfos', match.info_url]);
-            }}
-            if (match.stats_url) {{
-              links.push(['Statistik (PDF)', match.stats_url]);
-            }}
-            if (links.length) {{
-              const linkWrapper = document.createElement('div');
-              linkWrapper.className = 'player-match__links';
-              links.forEach(([label, url]) => {{
-                const anchor = document.createElement('a');
-                anchor.href = url;
-                anchor.target = '_blank';
-                anchor.rel = 'noopener';
-                anchor.textContent = label;
-                linkWrapper.appendChild(anchor);
-              }});
-              matchBlock.appendChild(linkWrapper);
-            }}
-
-            matchesWrapper.appendChild(matchBlock);
-          }});
+          tableWrapper.innerHTML = '<p class="empty-state">Keine Spiele verfügbar.</p>';
         }}
-        card.appendChild(matchesWrapper);
+        card.appendChild(tableWrapper);
+
         container.appendChild(card);
       }}
     }}
