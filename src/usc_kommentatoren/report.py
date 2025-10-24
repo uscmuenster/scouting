@@ -4998,6 +4998,110 @@ def _build_match_table_html(
     return "\n".join(lines)
 
 
+def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str:
+    valid_players: list[Mapping[str, Any]] = [
+        player for player in players if isinstance(player, Mapping)
+    ]
+    if not valid_players:
+        return ""
+
+    header_specs: Sequence[tuple[str, Optional[str], bool]] = [
+        ("#", "Rückennummer", True),
+        ("Spielerin", None, False),
+        ("Sp.", "Spiele mit Statistikdaten", True),
+        ("Srv\u00a0V", "Aufschlag-Versuche", True),
+        ("Srv\u00a0F", "Aufschlag-Fehler", True),
+        ("Srv\u00a0Asse", "Aufschlag-Asse", True),
+        ("Ann\u00a0V", "Annahme-Versuche", True),
+        ("Ann\u00a0F", "Annahme-Fehler", True),
+        ("Ann\u00a0+%", "Positive Annahmen", True),
+        ("Ann\u00a0Perf%", "Perfekte Annahmen", True),
+        ("Ang\u00a0V", "Angriffs-Versuche", True),
+        ("Ang\u00a0F", "Angriffs-Fehler", True),
+        ("Ang\u00a0gebl.", "Geblockte Angriffe", True),
+        ("Ang\u00a0Pkt.", "Angriffspunkte", True),
+        ("Ang\u00a0%", "Angriffsquote", True),
+        ("Block", "Blockpunkte", True),
+        ("Pkt.", "Gesamtpunkte", True),
+        ("Breakpkt.", "Breakpunkte", True),
+        ("+/-", "Plus/Minus", True),
+    ]
+
+    lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
+    for label, title, is_numeric in header_specs:
+        title_attr = f' title="{escape(title)}"' if title else ""
+        numeric_class = " class=\"numeric\"" if is_numeric else ""
+        lines.append(
+            f"      <th scope=\"col\"{numeric_class}{title_attr}>{escape(label)}</th>"
+        )
+    lines.extend(['    </tr>', '  </thead>', '  <tbody>'])
+
+    for player in valid_players:
+        totals_mapping = player.get("totals")
+        totals = totals_mapping if isinstance(totals_mapping, Mapping) else {}
+
+        jersey = player.get("jersey_number")
+        if jersey in (None, ""):
+            jersey_label = "–"
+        else:
+            jersey_label = _format_int_value(jersey, default="–")
+        name = player.get("name") or "Unbekannt"
+        match_count = player.get("match_count")
+        if not isinstance(match_count, int):
+            matches_list = player.get("matches")
+            if isinstance(matches_list, Sequence):
+                match_count = len(matches_list)
+            else:
+                match_count = 0
+
+        row_values: Sequence[tuple[str, bool]] = [
+            (jersey_label, True),
+            (name, False),
+            (_format_int_value(match_count), True),
+            (_format_int_value(totals.get("serves_attempts")), True),
+            (_format_int_value(totals.get("serves_errors")), True),
+            (_format_int_value(totals.get("serves_points")), True),
+            (_format_int_value(totals.get("receptions_attempts")), True),
+            (_format_int_value(totals.get("receptions_errors")), True),
+            (
+                _format_pct_value(
+                    totals.get("receptions_positive_pct"), default="–"
+                ),
+                True,
+            ),
+            (
+                _format_pct_value(
+                    totals.get("receptions_perfect_pct"), default="–"
+                ),
+                True,
+            ),
+            (_format_int_value(totals.get("attacks_attempts")), True),
+            (_format_int_value(totals.get("attacks_errors")), True),
+            (_format_int_value(totals.get("attacks_blocked")), True),
+            (_format_int_value(totals.get("attacks_points")), True),
+            (
+                _format_pct_value(totals.get("attacks_success_pct"), default="–"),
+                True,
+            ),
+            (_format_int_value(totals.get("blocks_points")), True),
+            (_format_int_value(player.get("total_points"), default="–"), True),
+            (
+                _format_int_value(player.get("break_points_total"), default="–"),
+                True,
+            ),
+            (_format_int_value(player.get("plus_minus_total"), default="–"), True),
+        ]
+
+        lines.append("    <tr>")
+        for value, is_numeric in row_values:
+            cell_class = " class=\"numeric\"" if is_numeric else ""
+            lines.append(f"      <td{cell_class}>{escape(value)}</td>")
+        lines.append("    </tr>")
+
+    lines.extend(['  </tbody>', '</table>'])
+    return "\n".join(lines)
+
+
 def _build_player_card_html(player: Mapping[str, Any]) -> str:
     name = player.get("name") or "Unbekannt"
     jersey = player.get("jersey_number")
@@ -5083,21 +5187,28 @@ def _render_team_overview_content(
 
 def _render_player_overview_content(
     usc_scouting: Optional[Mapping[str, Any]]
-) -> tuple[str, str]:
+) -> tuple[str, str, str]:
     default_meta = "Die Daten werden geladen…"
-    default_list = '        <p class="empty-state">Keine Spielerinnendaten geladen.</p>'
+    default_table = '        <p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>'
+    default_list = '        <p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>'
     if not usc_scouting:
-        return default_meta, default_list
+        return default_meta, default_table, default_list
 
     players = usc_scouting.get("players") or []
     if not players:
-        return "Keine Spielerinnendaten verfügbar.", default_list
+        return "Keine Spielerinnendaten verfügbar.", default_table, default_list
 
     meta_text = (
         "1 Spielerin mit Statistikdaten."
         if len(players) == 1
         else f"{len(players)} Spielerinnen mit Statistikdaten."
     )
+
+    table_html_raw = _build_player_totals_table_html(players)
+    table_html = (
+        _indent_html(table_html_raw, 8) if table_html_raw else default_table
+    )
+
     cards = []
     for player in players:
         if not isinstance(player, Mapping):
@@ -5105,10 +5216,10 @@ def _render_player_overview_content(
         cards.append(_build_player_card_html(player))
 
     if not cards:
-        return meta_text, default_list
+        return meta_text, table_html, default_list
 
     cards_html = _indent_html("\n\n".join(cards), 8)
-    return meta_text, cards_html
+    return meta_text, table_html, cards_html
 
 
 def _render_match_overview_content(
@@ -5158,7 +5269,11 @@ def build_html_report(
     generated_iso = generated_at.astimezone(BERLIN_TZ).isoformat()
 
     team_meta_html, team_summary_html = _render_team_overview_content(usc_scouting)
-    player_meta_text, player_list_html = _render_player_overview_content(usc_scouting)
+    (
+        player_meta_text,
+        player_table_html,
+        player_list_html,
+    ) = _render_player_overview_content(usc_scouting)
     match_list_html = _render_match_overview_content(usc_scouting)
     preloaded_overview_json = "null"
     if usc_scouting:
@@ -5544,6 +5659,9 @@ def build_html_report(
     <section>
       <h2>Spielerinnen</h2>
       <p class="section-hint" data-player-meta>{player_meta}</p>
+      <div class="table-container" data-player-table-container>
+{player_table}
+      </div>
       <div class="player-list" data-player-list>
 {player_list}
       </div>
@@ -5574,6 +5692,21 @@ def build_html_report(
     function formatInt(value) {{
       if (value === null || value === undefined) return '0';
       return Number(value).toString();
+    }}
+
+    function formatIntOrDash(value) {{
+      if (value === null || value === undefined || value === '') return '–';
+      if (typeof value === 'number') {{
+        if (!Number.isFinite(value)) return '–';
+        return Number.isInteger(value) ? value.toString() : value.toString();
+      }}
+      const trimmed = String(value).trim();
+      if (!trimmed) return '–';
+      const parsed = Number(trimmed);
+      if (!Number.isNaN(parsed)) {{
+        return Number.isInteger(parsed) ? Math.trunc(parsed).toString() : parsed.toString();
+      }}
+      return trimmed;
     }}
 
     function formatPct(value) {{
@@ -5660,6 +5793,96 @@ def build_html_report(
         tr.append(th, td);
         tbody.appendChild(tr);
       }}
+      table.appendChild(tbody);
+      return table;
+    }}
+
+    function buildPlayerSummaryTable(players) {{
+      const validPlayers = Array.isArray(players)
+        ? players.filter(player => player && typeof player === 'object')
+        : [];
+      if (!validPlayers.length) {{
+        return null;
+      }}
+
+      const columns = [
+        {{ label: '#', title: 'Rückennummer', numeric: true }},
+        {{ label: 'Spielerin' }},
+        {{ label: 'Sp.', title: 'Spiele mit Statistikdaten', numeric: true }},
+        {{ label: 'Srv\u00a0V', title: 'Aufschlag-Versuche', numeric: true }},
+        {{ label: 'Srv\u00a0F', title: 'Aufschlag-Fehler', numeric: true }},
+        {{ label: 'Srv\u00a0Asse', title: 'Aufschlag-Asse', numeric: true }},
+        {{ label: 'Ann\u00a0V', title: 'Annahme-Versuche', numeric: true }},
+        {{ label: 'Ann\u00a0F', title: 'Annahme-Fehler', numeric: true }},
+        {{ label: 'Ann\u00a0+%', title: 'Positive Annahmen', numeric: true }},
+        {{ label: 'Ann\u00a0Perf%', title: 'Perfekte Annahmen', numeric: true }},
+        {{ label: 'Ang\u00a0V', title: 'Angriffs-Versuche', numeric: true }},
+        {{ label: 'Ang\u00a0F', title: 'Angriffs-Fehler', numeric: true }},
+        {{ label: 'Ang\u00a0gebl.', title: 'Geblockte Angriffe', numeric: true }},
+        {{ label: 'Ang\u00a0Pkt.', title: 'Angriffspunkte', numeric: true }},
+        {{ label: 'Ang\u00a0%', title: 'Angriffsquote', numeric: true }},
+        {{ label: 'Block', title: 'Blockpunkte', numeric: true }},
+        {{ label: 'Pkt.', title: 'Gesamtpunkte', numeric: true }},
+        {{ label: 'Breakpkt.', title: 'Breakpunkte', numeric: true }},
+        {{ label: '+/-', title: 'Plus/Minus', numeric: true }},
+      ];
+
+      const table = document.createElement('table');
+      table.className = 'stats-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {{
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) th.className = 'numeric';
+        if (column.title) th.title = column.title;
+        th.textContent = column.label;
+        headerRow.appendChild(th);
+      }});
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      validPlayers.forEach(player => {{
+        const totals = player && typeof player.totals === 'object' ? player.totals : {{}};
+        const matches = Array.isArray(player.matches) ? player.matches : [];
+        const matchCount = typeof player.match_count === 'number'
+          ? player.match_count
+          : matches.length;
+        const row = document.createElement('tr');
+        const jersey = player.jersey_number;
+        const values = [
+          {{ value: jersey === null || jersey === undefined || jersey === '' ? '–' : String(jersey), numeric: true }},
+          {{ value: player.name || 'Unbekannt' }},
+          {{ value: formatInt(matchCount), numeric: true }},
+          {{ value: formatInt(totals.serves_attempts), numeric: true }},
+          {{ value: formatInt(totals.serves_errors), numeric: true }},
+          {{ value: formatInt(totals.serves_points), numeric: true }},
+          {{ value: formatInt(totals.receptions_attempts), numeric: true }},
+          {{ value: formatInt(totals.receptions_errors), numeric: true }},
+          {{ value: formatPctOrDash(totals.receptions_positive_pct), numeric: true }},
+          {{ value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true }},
+          {{ value: formatInt(totals.attacks_attempts), numeric: true }},
+          {{ value: formatInt(totals.attacks_errors), numeric: true }},
+          {{ value: formatInt(totals.attacks_blocked), numeric: true }},
+          {{ value: formatInt(totals.attacks_points), numeric: true }},
+          {{ value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
+          {{ value: formatInt(totals.blocks_points), numeric: true }},
+          {{ value: formatIntOrDash(player.total_points), numeric: true }},
+          {{ value: formatIntOrDash(player.break_points_total), numeric: true }},
+          {{ value: formatIntOrDash(player.plus_minus_total), numeric: true }},
+        ];
+        values.forEach((entry, index) => {{
+          const cell = document.createElement('td');
+          if (entry.numeric || (columns[index] && columns[index].numeric)) {{
+            cell.className = 'numeric';
+          }}
+          cell.textContent = entry.value;
+          row.appendChild(cell);
+        }});
+        tbody.appendChild(row);
+      }});
       table.appendChild(tbody);
       return table;
     }}
@@ -5849,17 +6072,30 @@ def build_html_report(
 
     function renderPlayers(data) {{
       const container = document.querySelector('[data-player-list]');
+      const tableContainer = document.querySelector('[data-player-table-container]');
       const metaNode = document.querySelector('[data-player-meta]');
       const errorNode = document.querySelector('[data-error]');
       container.innerHTML = '';
+      if (tableContainer) tableContainer.innerHTML = '';
       if (errorNode) errorNode.hidden = true;
       const players = Array.isArray(data.players) ? data.players : [];
       if (metaNode) {{
         metaNode.textContent = players.length === 1 ? '1 Spielerin mit Statistikdaten.' : `<<players.length>> Spielerinnen mit Statistikdaten.`;
       }}
       if (!players.length) {{
+        if (tableContainer) {{
+          tableContainer.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        }}
         container.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
         return;
+      }}
+      if (tableContainer) {{
+        const table = buildPlayerSummaryTable(players);
+        if (table) {{
+          tableContainer.appendChild(table);
+        }} else {{
+          tableContainer.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        }}
       }}
       for (const player of players) {{
         const card = document.createElement('article');
@@ -5969,6 +6205,10 @@ def build_html_report(
           if (container) {{
             container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
           }}
+          const tableContainer = document.querySelector('[data-player-table-container]');
+          if (tableContainer) {{
+            tableContainer.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+          }}
           const errorNode = document.querySelector('[data-error]');
           if (errorNode) {{
             errorNode.hidden = false;
@@ -5990,6 +6230,7 @@ def build_html_report(
         team_meta=team_meta_html,
         team_summary=team_summary_html,
         player_meta=escape(player_meta_text),
+        player_table=player_table_html,
         player_list=player_list_html,
     )
     html = html.replace("__PRELOADED_OVERVIEW__", preloaded_overview_json)
