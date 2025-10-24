@@ -5805,7 +5805,7 @@ def build_html_report(
         }}
 
         if (!parsedAny) return null;
-        return `${homeSets}:${awaySets}`;
+        return `${{homeSets}}:${{awaySets}}`;
       }}
 
       function formatSetScores(match) {{
