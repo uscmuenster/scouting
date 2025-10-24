@@ -2519,6 +2519,77 @@ def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerS
     )
 
 
+def _parse_team_player_lines(
+    lines: Sequence[str], team_name: str
+) -> List[MatchPlayerStats]:
+    """Parse player lines for a single team from a stats PDF.
+
+    Newer VBL PDFs sometimes wrap a player row across multiple lines. The
+    legacy implementation expected all values to be present on a single line,
+    which caused us to silently drop the affected players. We now keep track of
+    partially parsed lines and merge them with following lines until the
+    statistics can be parsed successfully.
+    """
+
+    players: List[MatchPlayerStats] = []
+    pending: Optional[str] = None
+
+    def try_parse(text: str) -> Optional[MatchPlayerStats]:
+        normalized = re.sub(r"\s+", " ", text.strip())
+        if not normalized:
+            return None
+        return _parse_player_stats_line(normalized, team_name)
+
+    for raw_line in lines:
+        stripped = raw_line.strip()
+        if not stripped:
+            continue
+        lowered = stripped.lower()
+        if re.match(r"(?i)^nr\b", stripped):
+            pending = None
+            continue
+        if ("aufschlag" in lowered and "annahme" in lowered) or (
+            "angriff" in lowered and "block" in lowered
+        ):
+            pending = None
+            continue
+        if stripped.lower().startswith("libero"):
+            pending = None
+            continue
+
+        if pending is not None:
+            combined = f"{pending} {stripped}"
+            parsed = try_parse(combined)
+            if parsed is not None:
+                players.append(parsed)
+                pending = None
+                continue
+            parsed = try_parse(stripped)
+            if parsed is not None:
+                players.append(parsed)
+                pending = None
+                continue
+            if re.search(r"\d", stripped):
+                pending = combined
+            else:
+                pending = stripped
+            continue
+
+        parsed = try_parse(stripped)
+        if parsed is not None:
+            players.append(parsed)
+            pending = None
+            continue
+        pending = stripped
+
+    if pending is not None:
+        parsed = try_parse(pending)
+        if parsed is not None:
+            players.append(parsed)
+
+    return players
+
+
 def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     names: List[str] = []
     team_pattern = re.compile(r"(?:Spielbericht\s+)?(.+?)\s+\d+\s*$")
@@ -2594,11 +2665,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
             if not raw_line or raw_line.lower().startswith("libero"):
                 continue
             player_lines.append(lines[idx])
-        players: List[MatchPlayerStats] = []
-        for raw_line in player_lines:
-            parsed = _parse_player_stats_line(raw_line, team_name)
-            if parsed is not None:
-                players.append(parsed)
+        players = _parse_team_player_lines(player_lines, team_name)
         summaries.append(
             MatchStatsTotals(
                 team_name=team_name,
