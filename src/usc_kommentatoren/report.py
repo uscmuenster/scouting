@@ -5538,8 +5538,8 @@ def build_html_report(
 
         const totalCells = [
           {{ type: 'th', value: 'Summe', attrs: {{ scope: 'row' }} }},
-          {{ value: '–' }},
-          {{ value: '–' }},
+          {{ value: '' }},
+          {{ value: '' }},
           {{ value: formatInt(totals.serves_attempts), numeric: true }},
           {{ value: formatInt(totals.serves_errors), numeric: true }},
           {{ value: formatInt(totals.serves_points), numeric: true }},
