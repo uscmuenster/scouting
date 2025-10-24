@@ -27,6 +27,8 @@ from .report import (
 )
 
 DEFAULT_OUTPUT_PATH = Path("docs/data/usc_stats_overview.json")
+# Backwards compatible alias so existing call sites continue to work.
+STATS_OUTPUT_PATH = DEFAULT_OUTPUT_PATH
 
 
 @dataclass(frozen=True)
