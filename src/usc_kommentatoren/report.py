@@ -245,6 +245,7 @@ class MatchStatsTotals:
     header_lines: Tuple[str, ...]
     totals_line: str
     metrics: Optional["MatchStatsMetrics"] = None
+    players: Tuple["MatchPlayerStats", ...] = ()
 
 
 @dataclass(frozen=True)
@@ -262,6 +263,15 @@ class MatchStatsMetrics:
     attacks_points: int
     attacks_success_pct: str
     blocks_points: int
+
+
+@dataclass(frozen=True)
+class MatchPlayerStats:
+    team_name: str
+    player_name: str
+    jersey_number: Optional[int]
+    metrics: MatchStatsMetrics
+    total_points: Optional[int] = None
 
 
 @dataclass(frozen=True)
@@ -1291,17 +1301,28 @@ _MANUAL_STATS_TOTALS_DATA: Dict[str, Any] = {
 
 
 _MANUAL_STATS_TOTALS: Optional[
-    Dict[str, List[Tuple[Tuple[str, ...], str, MatchStatsMetrics]]]
+    Dict[
+        str,
+        List[
+            Tuple[Tuple[str, ...], str, MatchStatsMetrics, Tuple[MatchPlayerStats, ...]]
+        ],
+    ]
 ] = None
 
 
-def _load_manual_stats_totals() -> Dict[str, List[Tuple[Tuple[str, ...], str, MatchStatsMetrics]]]:
+def _load_manual_stats_totals() -> Dict[
+    str,
+    List[Tuple[Tuple[str, ...], str, MatchStatsMetrics, Tuple[MatchPlayerStats, ...]]],
+]:
     global _MANUAL_STATS_TOTALS
     if _MANUAL_STATS_TOTALS is not None:
         return _MANUAL_STATS_TOTALS
 
     payload = _MANUAL_STATS_TOTALS_DATA
-    manual: Dict[str, List[Tuple[Tuple[str, ...], str, MatchStatsMetrics]]] = {}
+    manual: Dict[
+        str,
+        List[Tuple[Tuple[str, ...], str, MatchStatsMetrics, Tuple[MatchPlayerStats, ...]]],
+    ] = {}
     matches = payload.get("matches", []) if isinstance(payload, dict) else []
     for match_entry in matches:
         if not isinstance(match_entry, dict):
@@ -1309,7 +1330,9 @@ def _load_manual_stats_totals() -> Dict[str, List[Tuple[Tuple[str, ...], str, Ma
         stats_url = match_entry.get("stats_url")
         if not stats_url:
             continue
-        teams_entries: List[Tuple[Tuple[str, ...], str, MatchStatsMetrics]] = []
+        teams_entries: List[
+            Tuple[Tuple[str, ...], str, MatchStatsMetrics, Tuple[MatchPlayerStats, ...]]
+        ] = []
         for team_entry in match_entry.get("teams", []) or []:
             if not isinstance(team_entry, dict):
                 continue
@@ -1338,6 +1361,68 @@ def _load_manual_stats_totals() -> Dict[str, List[Tuple[Tuple[str, ...], str, Ma
                 )
             except (KeyError, TypeError, ValueError):
                 continue
+            players: List[MatchPlayerStats] = []
+            for player_entry in team_entry.get("players", []) or []:
+                if not isinstance(player_entry, dict):
+                    continue
+                player_name = player_entry.get("name")
+                if not player_name:
+                    continue
+                metrics_payload = player_entry.get("metrics") or {}
+                try:
+                    player_metrics = MatchStatsMetrics(
+                        serves_attempts=int(metrics_payload.get("serves_attempts", 0)),
+                        serves_errors=int(metrics_payload.get("serves_errors", 0)),
+                        serves_points=int(metrics_payload.get("serves_points", 0)),
+                        receptions_attempts=int(
+                            metrics_payload.get("receptions_attempts", 0)
+                        ),
+                        receptions_errors=int(
+                            metrics_payload.get("receptions_errors", 0)
+                        ),
+                        receptions_positive_pct=str(
+                            metrics_payload.get("receptions_positive_pct", "0%")
+                        ),
+                        receptions_perfect_pct=str(
+                            metrics_payload.get("receptions_perfect_pct", "0%")
+                        ),
+                        attacks_attempts=int(metrics_payload.get("attacks_attempts", 0)),
+                        attacks_errors=int(metrics_payload.get("attacks_errors", 0)),
+                        attacks_blocked=int(metrics_payload.get("attacks_blocked", 0)),
+                        attacks_points=int(metrics_payload.get("attacks_points", 0)),
+                        attacks_success_pct=str(
+                            metrics_payload.get("attacks_success_pct", "0%")
+                        ),
+                        blocks_points=int(metrics_payload.get("blocks_points", 0)),
+                    )
+                except (TypeError, ValueError):
+                    continue
+                try:
+                    jersey_number = (
+                        int(player_entry.get("jersey_number"))
+                        if player_entry.get("jersey_number") is not None
+                        else None
+                    )
+                except (TypeError, ValueError):
+                    jersey_number = None
+                total_points_value = player_entry.get("total_points")
+                try:
+                    total_points = (
+                        int(total_points_value)
+                        if total_points_value is not None
+                        else None
+                    )
+                except (TypeError, ValueError):
+                    total_points = None
+                players.append(
+                    MatchPlayerStats(
+                        team_name=name,
+                        player_name=pretty_name(str(player_name)),
+                        jersey_number=jersey_number,
+                        metrics=player_metrics,
+                        total_points=total_points,
+                    )
+                )
             normalized_keys: List[str] = []
             primary_key = normalize_name(name)
             normalized_keys.append(primary_key)
@@ -1348,7 +1433,7 @@ def _load_manual_stats_totals() -> Dict[str, List[Tuple[Tuple[str, ...], str, Ma
                 normalized_alias = normalize_name(alias_name)
                 if normalized_alias not in normalized_keys:
                     normalized_keys.append(normalized_alias)
-            teams_entries.append((tuple(normalized_keys), name, metrics))
+            teams_entries.append((tuple(normalized_keys), name, metrics, tuple(players)))
         if teams_entries:
             manual[stats_url] = teams_entries
 
@@ -2220,6 +2305,122 @@ def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
         return None
 
 
+def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsMetrics]:
+    """Return structured statistics for a ``MatchStatsTotals`` entry.
+
+    The PDF-Auswertungen der VBL liefern die Gesamtwerte in einer einzigen
+    Textzeile. Für manche Spiele liegen die bereits als ``MatchStatsMetrics``
+    im ``metrics``-Attribut vor (z. B. aus manuellen Korrekturen). Falls nicht,
+    wird die Zahlenzeile erneut mit ``_parse_match_stats_metrics`` analysiert.
+    """
+
+    if entry.metrics is not None:
+        return entry.metrics
+    if not entry.totals_line:
+        return None
+    return _parse_match_stats_metrics(entry.totals_line)
+
+
+_PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
+
+
+def _parse_int_token(token: str) -> int:
+    stripped = token.strip().replace("\u00a0", "")
+    if not stripped or stripped in {"-", "–"}:
+        return 0
+    cleaned = stripped.replace(".", "").replace(",", "")
+    try:
+        return int(cleaned)
+    except ValueError:
+        return 0
+
+
+def _parse_optional_int_token(token: str) -> Optional[int]:
+    stripped = token.strip().replace("\u00a0", "")
+    if not stripped or stripped in {"-", "–"}:
+        return None
+    cleaned = stripped.replace(".", "").replace(",", "")
+    try:
+        return int(cleaned)
+    except ValueError:
+        return None
+
+
+def _parse_percentage_token(token: str) -> str:
+    stripped = token.strip().replace("\u00a0", "")
+    if not stripped or stripped in {"-", "–"}:
+        return "0%"
+    normalized = stripped.replace("%", "").replace(",", ".")
+    try:
+        value = float(normalized)
+    except ValueError:
+        return "0%"
+    return f"{int(round(value))}%"
+
+
+def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerStats]:
+    cleaned = line.replace("\u00a0", " ").strip()
+    if not cleaned:
+        return None
+    if cleaned.lower().startswith(("trainer", "team", "coaches")):
+        return None
+    jersey_match = re.match(r"^\s*(\d{1,3})", cleaned)
+    jersey_number: Optional[int]
+    name_segment: str
+    rest: str
+    if jersey_match:
+        try:
+            jersey_number = int(jersey_match.group(1))
+        except ValueError:
+            jersey_number = None
+        rest = cleaned[jersey_match.end() :].strip()
+    else:
+        jersey_number = None
+        rest = cleaned
+    if not rest:
+        return None
+    value_matches = list(_PLAYER_VALUE_PATTERN.finditer(rest))
+    if len(value_matches) < 13:
+        return None
+    first_value = value_matches[0]
+    name_segment = rest[: first_value.start()].strip(" .:-")
+    if not name_segment:
+        return None
+    player_name = pretty_name(name_segment)
+    numeric_tokens = [match.group(0) for match in value_matches]
+    metrics_count = 13
+    metrics_tokens = numeric_tokens[:metrics_count]
+    extra_tokens = numeric_tokens[metrics_count:]
+    try:
+        metrics = MatchStatsMetrics(
+            serves_attempts=_parse_int_token(metrics_tokens[0]),
+            serves_errors=_parse_int_token(metrics_tokens[1]),
+            serves_points=_parse_int_token(metrics_tokens[2]),
+            receptions_attempts=_parse_int_token(metrics_tokens[3]),
+            receptions_errors=_parse_int_token(metrics_tokens[4]),
+            receptions_positive_pct=_parse_percentage_token(metrics_tokens[5]),
+            receptions_perfect_pct=_parse_percentage_token(metrics_tokens[6]),
+            attacks_attempts=_parse_int_token(metrics_tokens[7]),
+            attacks_errors=_parse_int_token(metrics_tokens[8]),
+            attacks_blocked=_parse_int_token(metrics_tokens[9]),
+            attacks_points=_parse_int_token(metrics_tokens[10]),
+            attacks_success_pct=_parse_percentage_token(metrics_tokens[11]),
+            blocks_points=_parse_int_token(metrics_tokens[12]),
+        )
+    except (IndexError, ValueError):
+        return None
+    total_points = None
+    if extra_tokens:
+        total_points = _parse_optional_int_token(extra_tokens[0])
+    return MatchPlayerStats(
+        team_name=team_name,
+        player_name=player_name,
+        jersey_number=jersey_number,
+        metrics=metrics,
+        total_points=total_points,
+    )
+
+
 def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     names: List[str] = []
     team_pattern = re.compile(r"(?:Spielbericht\s+)?(.+?)\s+\d+\s*$")
@@ -2259,14 +2460,16 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
     team_names = _extract_stats_team_names(lines)
     summaries: List[MatchStatsTotals] = []
     for marker_index, marker in enumerate(markers):
-        header_lines: List[str] = []
+        header_entries: List[Tuple[int, str]] = []
         cursor = marker - 1
-        while cursor >= 0 and len(header_lines) < 3:
-            candidate = lines[cursor].strip()
+        while cursor >= 0 and len(header_entries) < 6:
+            candidate_raw = lines[cursor]
+            candidate = candidate_raw.strip()
             if candidate:
-                header_lines.append(_normalize_stats_header_line(candidate))
+                header_entries.append((cursor, _normalize_stats_header_line(candidate)))
             cursor -= 1
-        header_lines.reverse()
+        header_entries.reverse()
+        header_lines = [entry[1] for entry in header_entries]
         totals_line: Optional[str] = None
         for probe in range(marker + 1, len(lines)):
             candidate = lines[probe].strip()
@@ -2281,12 +2484,29 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
         if not totals_line:
             continue
         normalized_totals = _normalize_stats_totals_line(totals_line)
-        team_name = team_names[marker_index] if marker_index < len(team_names) else f"Team {marker_index + 1}"
+        team_name = (
+            team_names[marker_index]
+            if marker_index < len(team_names)
+            else f"Team {marker_index + 1}"
+        )
+        player_lines: List[str] = []
+        start_index = header_entries[-1][0] + 1 if header_entries else 0
+        for idx in range(start_index, marker):
+            raw_line = lines[idx].strip()
+            if not raw_line or raw_line.lower().startswith("libero"):
+                continue
+            player_lines.append(lines[idx])
+        players: List[MatchPlayerStats] = []
+        for raw_line in player_lines:
+            parsed = _parse_player_stats_line(raw_line, team_name)
+            if parsed is not None:
+                players.append(parsed)
         summaries.append(
             MatchStatsTotals(
                 team_name=team_name,
                 header_lines=tuple(header_lines),
                 totals_line=normalized_totals,
+                players=tuple(players),
             )
         )
     return tuple(summaries)
@@ -2316,8 +2536,9 @@ def fetch_match_stats_totals(
                     header_lines=(),
                     totals_line="",
                     metrics=metrics,
+                    players=players,
                 )
-                for _, team_name, metrics in manual_entries
+                for _, team_name, metrics, players in manual_entries
             )
             _STATS_TOTALS_CACHE[stats_url] = summaries
             return summaries
@@ -2326,7 +2547,7 @@ def fetch_match_stats_totals(
     summaries = list(_parse_stats_totals_pdf(response.content))
     if manual_entries:
         index_lookup: Dict[str, int] = {}
-        for idx, (keys, _, _) in enumerate(manual_entries):
+        for idx, (keys, _, _, _) in enumerate(manual_entries):
             for key in keys:
                 index_lookup[key] = idx
         updated: List[MatchStatsTotals] = []
@@ -2336,18 +2557,19 @@ def fetch_match_stats_totals(
             match_idx = index_lookup.get(normalized_team)
             if match_idx is not None:
                 matched_indices.add(match_idx)
-                _, _, metrics = manual_entries[match_idx]
+                _, _, metrics, players = manual_entries[match_idx]
                 updated.append(
                     MatchStatsTotals(
                         team_name=entry.team_name,
                         header_lines=entry.header_lines,
                         totals_line=entry.totals_line,
                         metrics=metrics,
+                        players=players or entry.players,
                     )
                 )
             else:
                 updated.append(entry)
-        for idx, (_keys, team_name, metrics) in enumerate(manual_entries):
+        for idx, (_keys, team_name, metrics, players) in enumerate(manual_entries):
             if idx in matched_indices:
                 continue
             updated.append(
@@ -2356,6 +2578,7 @@ def fetch_match_stats_totals(
                     header_lines=(),
                     totals_line="",
                     metrics=metrics,
+                    players=players,
                 )
             )
         summaries = updated
@@ -3287,1509 +3510,553 @@ def _format_season_results_section(
 
 def build_html_report(
     *,
-    next_home: Match,
-    usc_recent: List[Match],
-    opponent_recent: List[Match],
-    usc_next: Optional[Match] = None,
-    opponent_next: Optional[Match] = None,
-    usc_news: Sequence[NewsItem],
-    opponent_news: Sequence[NewsItem],
-    usc_instagram: Sequence[str],
-    opponent_instagram: Sequence[str],
-    usc_roster: Sequence[RosterMember],
-    opponent_roster: Sequence[RosterMember],
-    usc_transfers: Sequence[TransferItem],
-    opponent_transfers: Sequence[TransferItem],
-    usc_photo: Optional[str],
-    opponent_photo: Optional[str],
-    season_results: Optional[Mapping[str, Any]] = None,
+    next_home=None,
+    usc_recent=None,
+    opponent_recent=None,
+    usc_next=None,
+    opponent_next=None,
+    usc_news=(),
+    opponent_news=(),
+    usc_instagram=(),
+    opponent_instagram=(),
+    usc_roster=(),
+    opponent_roster=(),
+    usc_transfers=(),
+    opponent_transfers=(),
+    usc_photo=None,
+    opponent_photo=None,
+    season_results=None,
     generated_at: Optional[datetime] = None,
     font_scale: float = 1.0,
-    match_stats: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
-    mvp_rankings: Optional[Mapping[str, Mapping[str, Any]]] = None,
+    match_stats=None,
+    mvp_rankings=None,
+    usc_scouting: Optional[Mapping[str, Any]] = None,
 ) -> str:
-    heading = pretty_name(next_home.away_team)
-    kickoff_dt = next_home.kickoff.astimezone(BERLIN_TZ)
-    kickoff_date = kickoff_dt.strftime("%d.%m.%Y")
-    kickoff_weekday = GERMAN_WEEKDAYS.get(
-        kickoff_dt.weekday(), kickoff_dt.strftime("%a")
-    )
-    kickoff_time = kickoff_dt.strftime("%H:%M")
-    kickoff = f"{kickoff_date} ({kickoff_weekday}) {kickoff_time}"
-    kickoff_label = f"{kickoff} Uhr"
-    countdown_iso = kickoff_dt.isoformat()
-    match_day = kickoff_dt.date()
-    location = pretty_name(next_home.location)
-    usc_url = get_team_homepage(USC_CANONICAL_NAME) or USC_HOMEPAGE
-    opponent_url = get_team_homepage(next_home.away_team)
+    """Generate a lightweight scouting landing page for USC Münster."""
 
-    def _combine_matches(
-        next_match: Optional[Match],
-        recent_matches: List[Match],
-        highlight_lookup: Mapping[str, str],
-    ) -> str:
-        combined: List[str] = []
-        seen: set[tuple[datetime, str, str]] = set()
+    generated_at = generated_at or datetime.now(tz=BERLIN_TZ)
+    generated_label = format_generation_timestamp(generated_at)
+    generated_iso = generated_at.astimezone(BERLIN_TZ).isoformat()
 
-        ordered: List[Match] = []
-        if next_match:
-            ordered.append(next_match)
-        ordered.extend(recent_matches)
-
-        for match in ordered:
-            signature = (
-                match.kickoff,
-                normalize_name(match.home_team),
-                normalize_name(match.away_team),
-            )
-            if signature in seen:
-                continue
-            seen.add(signature)
-            stats_payload: Optional[Sequence[MatchStatsTotals]] = None
-            if match_stats and match.stats_url:
-                stats_payload = match_stats.get(match.stats_url)
-            combined.append(
-                format_match_line(
-                    match,
-                    stats=stats_payload,
-                    highlight_teams=highlight_lookup,
-                )
-            )
-
-        if not combined:
-            return "<li>Keine Daten verfügbar.</li>"
-        return "\n      ".join(combined)
-
-    highlight_targets = {
-        "usc": USC_CANONICAL_NAME,
-        "opponent": next_home.away_team,
-    }
-
-    usc_items = _combine_matches(usc_next, usc_recent, highlight_targets)
-    opponent_items = _combine_matches(
-        opponent_next, opponent_recent, highlight_targets
-    )
-
-    usc_news_items = format_news_list(usc_news)
-    opponent_news_items = format_news_list(opponent_news)
-    usc_instagram_items = format_instagram_list(usc_instagram)
-    opponent_instagram_items = format_instagram_list(opponent_instagram)
-    season_results_section = _format_season_results_section(
-        season_results, next_home.away_team
-    )
-    usc_roster_items = format_roster_list(usc_roster, match_date=match_day)
-    opponent_roster_items = format_roster_list(opponent_roster, match_date=match_day)
-    usc_transfer_items = format_transfer_list(usc_transfers)
-    opponent_transfer_items = format_transfer_list(opponent_transfers)
-    mvp_section_html = format_mvp_rankings_section(
-        mvp_rankings,
-        usc_name=USC_CANONICAL_NAME,
-        opponent_name=next_home.away_team,
-    )
-
-    navigation_links = [
-        ("aufstellungen.html", "Startaufstellungen der letzten Begegnungen"),
-    ]
-    lineup_link_items = "\n        ".join(
-        f"<li><a href=\"{escape(url)}\">{escape(label)}</a></li>"
-        for url, label in navigation_links
-    )
-
-    opponent_photo_block = ""
-    if opponent_photo:
-        opponent_photo_block = (
-            "          <figure class=\"team-photo\">"
-            f"<img src=\"{escape(opponent_photo)}\" alt=\"Teamfoto {escape(heading)}\" />"
-            f"<figcaption>Teamfoto {escape(heading)}</figcaption>"
-            "</figure>\n"
-        )
-
-    usc_photo_block = ""
-    if usc_photo:
-        usc_photo_block = (
-            "          <figure class=\"team-photo\">"
-            f"<img src=\"{escape(usc_photo)}\" alt=\"Teamfoto {escape(USC_CANONICAL_NAME)}\" />"
-            f"<figcaption>Teamfoto {escape(USC_CANONICAL_NAME)}</figcaption>"
-            "</figure>\n"
-        )
-    countdown_html = "\n".join(
-        [
-            (
-                "    <section class=\"countdown-banner\" data-countdown-banner "
-                f"data-kickoff=\"{escape(countdown_iso)}\">"
-            ),
-            "      <p class=\"countdown-heading\">Countdown bis zum Spielbeginn</p>",
-            (
-                "      <p class=\"countdown-display\" data-countdown-display"
-                " aria-live=\"polite\">--:--:--</p>"
-            ),
-            "    </section>",
-        ]
-    )
-
-    countdown_meta_lines = [
-        (
-            "<p class=\"countdown-meta__kickoff\">"
-            f"<strong>Spieltermin:</strong> {escape(kickoff_label)}"
-            "</p>"
-        ),
-        (
-            "<p class=\"countdown-meta__location\">"
-            f"<strong>Austragungsort:</strong> {escape(location)}"
-            "</p>"
-        ),
-    ]
-
-    countdown_meta_html = "\n".join(
-        [
-            "    <div class=\"countdown-meta\">",
-            *[f"      {line}" for line in countdown_meta_lines],
-            "    </div>",
-        ]
-    )
-
-    meta_lines = []
-
-    referees = list(next_home.referees)
-    for idx in range(1, 3):
-        if idx <= len(referees):
-            referee_name = referees[idx - 1]
-        else:
-            referee_name = "noch nicht veröffentlicht"
-        meta_lines.append(
-            f"<p><strong>{idx}. Schiedsrichter*in:</strong> {escape(referee_name)}</p>"
-        )
-
-    meta_lines.append(
-        f"<p><a class=\"meta-link\" href=\"{escape(TABLE_URL)}\">Tabelle der Volleyball Bundesliga</a></p>"
-    )
-    if usc_url:
-        meta_lines.append(
-            f"<p><a class=\"meta-link\" href=\"{escape(usc_url)}\">Homepage USC Münster</a></p>"
-        )
-    if opponent_url:
-        meta_lines.append(
-            f"<p><a class=\"meta-link\" href=\"{escape(opponent_url)}\">Homepage {escape(heading)}</a></p>"
-        )
-    meta_html = "\n      ".join(meta_lines)
-
-    birthday_notes = collect_birthday_notes(
-        match_day,
-        (
-            (USC_CANONICAL_NAME, usc_roster),
-            (heading, opponent_roster),
-        ),
-    )
-    notes_html = ""
-    if birthday_notes:
-        note_items = "\n        ".join(
-            f"<li>{escape(note)}</li>" for note in birthday_notes
-        )
-        notes_html = (
-            "\n"
-            "    <section class=\"notice-group\">\n"
-            "      <h2>Bemerkungen</h2>\n"
-            "      <ul class=\"notice-list\">\n"
-            f"        {note_items}\n"
-            "      </ul>\n"
-            "    </section>\n"
-            "\n"
-        )
-
-    update_note_html = ""
-    if generated_at:
-        generated_label = format_generation_timestamp(generated_at)
-        update_note_html = (
-            "    <footer class=\"page-footer\">\n"
-            "      <p class=\"update-note\" role=\"status\">\n"
-            "        <span aria-hidden=\"true\">📅</span>\n"
-            f"        <span><strong>Aktualisiert am</strong> {escape(generated_label)}</span>\n"
-            "      </p>\n"
-            "    </footer>\n"
-            "\n"
-        )
-
-    font_scale = max(0.3, min(font_scale, 3.0))
-    scale_value = f"{font_scale:.4f}".rstrip("0").rstrip(".")
-    if not scale_value:
-        scale_value = "1"
-
-    html = f"""<!DOCTYPE html>
-<html lang=\"de\">
+    html = """<!DOCTYPE html>
+<html lang="de">
 <head>
-  <meta charset=\"utf-8\">
-  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-  <meta http-equiv=\"Cache-Control\" content=\"no-cache, no-store, must-revalidate\">
-  <meta http-equiv=\"Pragma\" content=\"no-cache\">
-  <meta http-equiv=\"Expires\" content=\"0\">
-  <meta name=\"theme-color\" content=\"{THEME_COLORS['mvp_overview_summary_bg']}\">
-  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"favicon.png\">
-  <link rel=\"icon\" type=\"image/png\" sizes=\"192x192\" href=\"favicon.png\">
-  <link rel=\"apple-touch-icon\" href=\"favicon.png\">
-  <link rel=\"manifest\" href=\"manifest.webmanifest\">
-  <title>Nächster USC-Heimgegner</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scouting USC Münster</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
   <style>
     :root {{
       color-scheme: light dark;
-      --font-scale: {scale_value};
-      --font-context-scale: 1;
-      --theme-color: {THEME_COLORS['mvp_overview_summary_bg']};
-      --accordion-opponent-bg: {HIGHLIGHT_COLORS['opponent']['accordion_bg']};
-      --accordion-opponent-shadow: {HIGHLIGHT_COLORS['opponent']['accordion_shadow']};
-      --accordion-usc-bg: {HIGHLIGHT_COLORS['usc']['accordion_bg']};
-      --accordion-usc-shadow: {HIGHLIGHT_COLORS['usc']['accordion_shadow']};
-      --usc-highlight-row-bg: {HIGHLIGHT_COLORS['usc']['row_bg']};
-      --usc-highlight-row-text: {HIGHLIGHT_COLORS['usc']['row_text']};
-      --usc-highlight-card-border: {HIGHLIGHT_COLORS['usc']['card_border']};
-      --usc-highlight-card-shadow: {HIGHLIGHT_COLORS['usc']['card_shadow']};
-      --usc-highlight-mvp-bg: {HIGHLIGHT_COLORS['usc']['mvp_bg']};
-      --usc-highlight-mvp-border: {HIGHLIGHT_COLORS['usc']['mvp_border']};
-      --usc-highlight-mvp-score: {HIGHLIGHT_COLORS['usc']['mvp_score']};
-      --usc-highlight-legend-dot: {HIGHLIGHT_COLORS['usc']['legend_dot']};
-      --opponent-highlight-row-bg: {HIGHLIGHT_COLORS['opponent']['row_bg']};
-      --opponent-highlight-row-text: {HIGHLIGHT_COLORS['opponent']['row_text']};
-      --opponent-highlight-card-border: {HIGHLIGHT_COLORS['opponent']['card_border']};
-      --opponent-highlight-card-shadow: {HIGHLIGHT_COLORS['opponent']['card_shadow']};
-      --opponent-highlight-mvp-bg: {HIGHLIGHT_COLORS['opponent']['mvp_bg']};
-      --opponent-highlight-mvp-border: {HIGHLIGHT_COLORS['opponent']['mvp_border']};
-      --opponent-highlight-mvp-score: {HIGHLIGHT_COLORS['opponent']['mvp_score']};
-      --opponent-highlight-legend-dot: {HIGHLIGHT_COLORS['opponent']['legend_dot']};
-      --mvp-overview-summary-bg: {THEME_COLORS['mvp_overview_summary_bg']};
+      --bg: #f5f7f9;
+      --fg: #0f172a;
+      --muted: #475569;
+      --accent: #0f766e;
+      --accent-soft: rgba(15, 118, 110, 0.12);
+      --card-bg: #ffffff;
+      --card-border: rgba(15, 118, 110, 0.2);
+      --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
     }}
-    @media (display-mode: standalone), (display-mode: fullscreen) {{
+
+    @media (prefers-color-scheme: dark) {{
       :root {{
-        --font-context-scale: 1.25;
+        --bg: #0f1f24;
+        --fg: #e2f1f4;
+        --muted: #93b4bf;
+        --accent-soft: rgba(94, 234, 212, 0.16);
+        --card-bg: #132a30;
+        --card-border: rgba(94, 234, 212, 0.28);
+        --shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
       }}
     }}
+
+    * {{
+      box-sizing: border-box;
+    }}
+
     body {{
       margin: 0;
-      font-family: \"Inter\", \"Segoe UI\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
       line-height: 1.6;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(0.95rem, 1.8vw, 1.05rem));
-      background: #f5f7f9;
-      color: #1f2933;
     }}
+
     main {{
-      max-width: 56rem;
+      max-width: 62rem;
       margin: 0 auto;
-      padding: clamp(0.6rem, 2.5vw, 1.2rem) clamp(0.9rem, 3vw, 2.4rem);
-    }}
-    h1 {{
-      color: #004c54;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1.55rem, 4.5vw, 2.35rem));
-      margin: 0 0 1.25rem 0;
-    }}
-    h2 {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1.15rem, 3.6vw, 1.6rem));
-      margin-bottom: 1rem;
-    }}
-    section {{
-      margin-top: clamp(1.2rem, 3vw, 2rem);
-    }}
-    .meta {{
+      padding: clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 5vw, 3.6rem);
       display: grid;
-      gap: 0.25rem;
-      margin: 0 0 1.3rem 0;
-      padding: 0;
+      gap: clamp(1.8rem, 4vw, 3rem);
     }}
-    .meta p {{
-      margin: 0;
-    }}
-    .countdown-meta {{
-      display: grid;
-      gap: clamp(0.2rem, 1.2vw, 0.45rem);
-      margin: 0 0 clamp(0.55rem, 2vw, 0.9rem) 0;
-    }}
-    .countdown-meta p {{
-      margin: 0;
-    }}
-    .countdown-meta__kickoff {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1.05rem, 3.4vw, 1.25rem));
-      font-weight: 600;
-    }}
-    .countdown-meta__location {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(0.95rem, 3vw, 1.1rem));
-      font-weight: 500;
-    }}
-    .countdown-banner {{
-      margin: 0 0 1.5rem 0;
-      padding: clamp(0.55rem, 1.7vw, 0.9rem) clamp(0.65rem, 2.2vw, 1.15rem);
-      border-radius: 0.95rem;
-      background: linear-gradient(135deg, #0f766e, #10b981);
-      color: #f0fdf4;
-      display: grid;
-      gap: 0.25rem;
-      box-shadow: 0 12px 28px rgba(15, 118, 110, 0.28);
-      width: fit-content;
-      max-width: 100%;
-      justify-items: start;
-    }}
-    .countdown-banner--live {{
-      background: linear-gradient(135deg, #b91c1c, #f97316);
-      box-shadow: 0 18px 40px rgba(180, 83, 9, 0.4);
-    }}
-    .countdown-heading {{
-      margin: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(0.5rem, 1.5vw, 0.65rem));
-    }}
-    .countdown-display {{
-      margin: 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1.2rem, 3.6vw, 1.6rem));
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-    }}
-    .update-note {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      padding: 0.25rem 0.6rem;
-      background: #ecfdf5;
-      color: #047857;
-      border-radius: 999px;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.7rem);
-      font-weight: 600;
-      border: 1px solid #bbf7d0;
-    }}
-    .update-note span {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }}
-    .page-footer {{
-      margin-top: clamp(1.75rem, 4vw, 2.75rem);
-      display: flex;
-      justify-content: center;
-    }}
-    .match-list {{
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 0.75rem;
-    }}
-    .match-list li {{
-      background: #ffffff;
-      border-radius: 0.8rem;
-      padding: 0.85rem clamp(0.9rem, 2.6vw, 1.3rem);
-      box-shadow: 0 10px 30px rgba(0, 76, 84, 0.08);
-    }}
-    .lineup-link {{
-      margin-top: clamp(0.75rem, 2.5vw, 1.4rem);
-      display: flex;
-      justify-content: center;
-    }}
-    .lineup-link ul {{
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: clamp(0.6rem, 2vw, 1rem);
-    }}
-    .lineup-link li {{
-      display: flex;
-    }}
-    .lineup-link a {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.6rem 1.2rem;
-      border-radius: 999px;
-      background: #0f766e;
-      color: #ffffff;
-      font-weight: 600;
-      text-decoration: none;
-      box-shadow: 0 12px 28px rgba(15, 118, 110, 0.25);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
-    }}
-    .lineup-link a:hover,
-    .lineup-link a:focus-visible {{
-      transform: translateY(-1px);
-      box-shadow: 0 16px 32px rgba(15, 118, 110, 0.3);
-      outline: none;
-    }}
-    .match-line {{
-      display: flex;
-      flex-direction: column;
-      gap: 0.45rem;
-    }}
-    .match-header {{
-      font-weight: 600;
-      color: inherit;
-    }}
-    .match-result {{
-      font-family: \"Fira Mono\", \"SFMono-Regular\", Menlo, Consolas, monospace;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      color: #0f766e;
-    }}
-    .match-meta {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.85rem);
-      color: #475569;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.3rem 0.75rem;
-      align-items: center;
-    }}
-    .match-meta span {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }}
-    .match-meta a {{
-      color: #1d4ed8;
-      font-weight: 600;
-      text-decoration: none;
-    }}
-    .match-meta a:hover,
-    .match-meta a:focus-visible {{
-      text-decoration: underline;
-      outline: none;
-    }}
-    .match-stats {{
-      margin-top: clamp(0.45rem, 1.4vw, 0.85rem);
-      border-radius: 0.85rem;
-      background: #f8fafc;
-      border: 1px solid rgba(15, 118, 110, 0.18);
-      padding: 0.75rem 1rem;
-    }}
-    .match-stats summary {{
-      cursor: pointer;
-      list-style: none;
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      font-weight: 600;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.92rem);
-    }}
-    .match-stats summary::-webkit-details-marker {{
-      display: none;
-    }}
-    .match-stats summary::after {{
-      content: "▾";
-      margin-left: auto;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      transition: transform 0.2s ease;
-    }}
-    .match-stats[open] summary::after {{
-      transform: rotate(180deg);
-    }}
-    .match-stats-content {{
-      margin-top: 0.75rem;
-      display: grid;
-      gap: clamp(0.75rem, 2vw, 1.1rem);
-    }}
-    .match-stats-table-wrapper {{
-      overflow-x: auto;
-    }}
-    .match-stats-table {{
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      background: #ffffff;
-      border-radius: 0.75rem;
-      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      min-width: 22rem;
-    }}
-    .match-stats-table thead th {{
-      background: rgba(15, 118, 110, 0.12);
-      color: #0f766e;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.8rem);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.02em;
-      padding: 0.55rem 0.75rem;
-      text-align: center;
-    }}
-    .match-stats-table thead th:first-child {{
-      text-align: left;
-    }}
-    .match-stats-table tbody th {{
-      text-align: left;
-      padding: 0.65rem 0.85rem;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      font-weight: 600;
-      color: #0f172a;
-    }}
-    .match-stats-table tbody td {{
-      text-align: center;
-      padding: 0.65rem 0.7rem;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      font-weight: 500;
-      color: #1f2937;
-    }}
-    .match-stats-table tbody tr + tr th,
-    .match-stats-table tbody tr + tr td {{
-      border-top: 1px solid #e2e8f0;
-    }}
-    .match-stats-table tbody tr[data-team-role="usc"] {{
-      background: var(--usc-highlight-row-bg);
-      color: var(--usc-highlight-row-text);
-    }}
-    .match-stats-table tbody tr[data-team-role="usc"] th,
-    .match-stats-table tbody tr[data-team-role="usc"] td {{
-      color: inherit;
-    }}
-    .match-stats-table tbody tr[data-team-role="opponent"] {{
-      background: var(--opponent-highlight-row-bg);
-      color: var(--opponent-highlight-row-text);
-    }}
-    .match-stats-table tbody tr[data-team-role="opponent"] th,
-    .match-stats-table tbody tr[data-team-role="opponent"] td {{
-      color: inherit;
-    }}
-    .match-stats-card {{
-      border-radius: 0.75rem;
-      background: #ffffff;
-      padding: 0.75rem 0.95rem;
-      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
-      border: 1px solid rgba(148, 163, 184, 0.35);
-    }}
-    .match-stats-card[data-team-role="usc"] {{
-      border-color: var(--usc-highlight-card-border);
-      box-shadow: 0 14px 30px var(--usc-highlight-card-shadow);
-    }}
-    .match-stats-card[data-team-role="opponent"] {{
-      border-color: var(--opponent-highlight-card-border);
-      box-shadow: 0 14px 30px var(--opponent-highlight-card-shadow);
-    }}
-    .match-stats-card h4 {{
-      margin: 0 0 0.5rem 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-      font-weight: 600;
-      color: #0f172a;
-    }}
-    .match-stats-card pre {{
-      margin: 0;
-      font-family: \"Fira Mono\", \"SFMono-Regular\", Menlo, Consolas, monospace;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.75rem);
-      line-height: 1.4;
-      white-space: pre;
-      overflow-x: auto;
-      padding: 0.5rem 0.65rem;
-      background: rgba(15, 23, 42, 0.04);
-      border-radius: 0.6rem;
-      color: #1f2937;
-    }}
-    .news-group,
-    .roster-group,
-    .transfer-group {{
-      margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-      display: grid;
-      gap: 0.75rem;
-    }}
-    .accordion {{
-      border-radius: 0.85rem;
-      overflow: hidden;
-      background: var(--accordion-opponent-bg);
-      box-shadow: 0 18px 40px var(--accordion-opponent-shadow);
-      border: none;
-    }}
-    .roster-group details:nth-of-type(2),
-    .transfer-group details:nth-of-type(2),
-    .news-group details:nth-of-type(2) {{
-      background: var(--accordion-usc-bg);
-      box-shadow: 0 18px 40px var(--accordion-usc-shadow);
-    }}
-    .accordion summary {{
-      cursor: pointer;
-      padding: 0.85rem 1.2rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      list-style: none;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1rem, 2.6vw, 1.2rem));
-    }}
-    .accordion summary::-webkit-details-marker {{
-      display: none;
-    }}
-    .accordion summary::after {{
-      content: \"▾\";
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 1rem);
-      transition: transform 0.2s ease;
-    }}
-    .accordion[open] summary::after {{
-      transform: rotate(180deg);
-    }}
-    .accordion-content {{
-      padding: 0 1.2rem 1.2rem;
-    }}
-    .news-list {{
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }}
-    .news-list li {{
-      margin: 0;
-      padding: 0;
-    }}
-    .news-meta {{
-      display: block;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.85rem);
-      color: #64748b;
-      margin-top: 0.2rem;
-    }}
-    .mvp-group {{
-      margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-    }}
-    .mvp-overview {{
-      border-radius: 0.8rem;
-      border: none;
-      background: #ffffff;
-      box-shadow: 0 14px 30px rgba(15, 118, 110, 0.14);
-      overflow: hidden;
-    }}
-    .mvp-overview summary {{
-      cursor: pointer;
-      padding: 0.85rem 1.2rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      list-style: none;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1rem, 2.4vw, 1.15rem));
-      background: var(--mvp-overview-summary-bg);
-      border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-      color: #ffffff;
-    }}
-    .mvp-overview summary::-webkit-details-marker {{
-      display: none;
-    }}
-    .mvp-overview summary::after {{
-      content: "▾";
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 1rem);
-      transition: transform 0.2s ease;
-    }}
-    .mvp-overview[open] summary::after {{
-      transform: rotate(180deg);
-    }}
-    .mvp-overview-content {{
-      padding: 0 1.2rem 1.2rem;
-      display: grid;
-      gap: clamp(0.6rem, 2vw, 1.1rem);
-    }}
-    .mvp-note {{
-      margin: 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.85rem);
-      color: #475569;
-    }}
-    .mvp-legend {{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      align-items: center;
-    }}
-    .mvp-legend-item {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.35rem 0.75rem;
-      border-radius: 999px;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.75rem);
-      font-weight: 600;
-      background: rgba(15, 23, 42, 0.05);
-      color: #0f172a;
-    }}
-    .mvp-legend-item::before {{
-      content: "";
-      width: 0.65rem;
-      height: 0.65rem;
-      border-radius: 50%;
-      box-shadow: inset 0 0 0 2px rgba(15, 23, 42, 0.15);
-    }}
-    .mvp-legend-item[data-team="usc"]::before {{
-      background: var(--usc-highlight-legend-dot);
-    }}
-    .mvp-legend-item[data-team="opponent"]::before {{
-      background: var(--opponent-highlight-legend-dot);
-    }}
-    .mvp-category {{
-      border-radius: 0.8rem;
-      border: 1px solid #e2e8f0;
-      background: #f8fafc;
-      overflow: hidden;
-    }}
-    .mvp-category summary {{
-      cursor: pointer;
-      padding: 0.85rem 1.05rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      list-style: none;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(0.95rem, 2.2vw, 1.1rem));
-      gap: 0.6rem;
-      background: rgba(15, 118, 110, 0.08);
-    }}
-    .mvp-category summary::-webkit-details-marker {{
-      display: none;
-    }}
-    .mvp-category summary::after {{
-      content: "▾";
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-      transition: transform 0.2s ease;
-      color: inherit;
-    }}
-    .mvp-category[open] summary::after {{
-      transform: rotate(180deg);
-    }}
-    .mvp-category-title {{
-      flex: 1;
-      color: #0f766e;
-    }}
-    .mvp-category-badge {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.3rem 0.65rem;
-      border-radius: 999px;
-      background: rgba(15, 118, 110, 0.14);
-      color: #0f4c75;
-      font-weight: 700;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.7rem);
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }}
-    .mvp-category-content {{
-      padding: 0.9rem 1.05rem 1.1rem;
-      display: grid;
-      gap: 0.7rem;
-    }}
-    .mvp-list {{
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: grid;
-      gap: 0.55rem;
-    }}
-    .mvp-entry {{
-      display: grid;
-      grid-template-columns: minmax(4.75rem, auto) 1fr minmax(4.5rem, auto);
-      gap: 0.6rem;
-      align-items: center;
-      padding: 0.6rem 0.75rem;
-      border-radius: 0.7rem;
-      background: rgba(15, 23, 42, 0.05);
-      box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.08);
-    }}
-    .mvp-entry-rank {{
-      font-weight: 700;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-      color: #0f172a;
-    }}
-    .mvp-entry-info {{
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }}
-    .mvp-entry-name {{
-      font-weight: 600;
-      color: #0f172a;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-    }}
-    .mvp-entry-meta {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.78rem);
-      color: #475569;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-    }}
-    .mvp-entry-score {{
-      font-weight: 700;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-      color: #0f4c75;
-      justify-self: end;
-    }}
-    .mvp-entry[data-team="opponent"] {{
-      background: var(--opponent-highlight-mvp-bg);
-      box-shadow: inset 0 0 0 1px var(--opponent-highlight-mvp-border);
-    }}
-    .mvp-entry[data-team="opponent"] .mvp-entry-score {{
-      color: var(--opponent-highlight-mvp-score);
-    }}
-    .mvp-entry[data-team="usc"] {{
-      background: var(--usc-highlight-mvp-bg);
-      box-shadow: inset 0 0 0 1px var(--usc-highlight-mvp-border);
-    }}
-    .mvp-entry[data-team="usc"] .mvp-entry-score {{
-      color: var(--usc-highlight-mvp-score);
-    }}
-    @media (max-width: 38rem) {{
-      .mvp-category summary {{
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.4rem;
-      }}
-      .mvp-entry {{
-        grid-template-columns: minmax(4.25rem, auto) 1fr;
-        grid-template-areas: \"rank score\" \"info info\";
-        row-gap: 0.4rem;
-      }}
-      .mvp-entry-rank {{
-        grid-area: rank;
-      }}
-      .mvp-entry-score {{
-        grid-area: score;
-      }}
-      .mvp-entry-info {{
-        grid-area: info;
-      }}
-    }}
-    @media (max-width: 30rem) {{
-      .match-stats summary {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.82rem);
-      }}
-      .match-stats-table {{
-        min-width: min(16rem, 100%);
-      }}
-      .match-stats-table thead th {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.62rem);
-        padding: 0.3rem 0.35rem;
-      }}
-      .match-stats-table tbody th,
-      .match-stats-table tbody td {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.7rem);
-        padding: 0.35rem 0.35rem;
-      }}
-    }}
-    .mvp-empty {{
-      margin: 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      color: #475569;
-    }}
-    .transfer-list {{
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 0.65rem;
-    }}
-    .transfer-category {{
-      font-weight: 700;
-      color: #1d4ed8;
-      padding-top: 0.35rem;
-      margin: 0;
-    }}
-    .transfer-line {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-      font-weight: 500;
-      color: inherit;
-      word-break: break-word;
-    }}
-    .team-photo {{
-      margin: 0 0 1.1rem 0;
-    }}
-    .team-photo img {{
-      width: 100%;
-      border-radius: 0.85rem;
-      display: block;
-    }}
-    .team-photo figcaption {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.85rem);
-      color: #64748b;
-      margin-top: 0.35rem;
-      text-align: center;
-    }}
-    .roster-list {{
-      list-style: none;
-      margin: 0;
-      padding: 0;
+
+    header.page-header {{
       display: grid;
       gap: 0.8rem;
     }}
-    .roster-item {{
-      display: grid;
-      grid-template-columns: minmax(3.6rem, auto) 1fr;
-      gap: 0.75rem;
+
+    h1 {{
+      margin: 0;
+      font-size: clamp(2.1rem, 5vw, 3rem);
+      letter-spacing: -0.01em;
+    }}
+
+    p.page-intro {{
+      margin: 0;
+      max-width: 48rem;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      color: var(--muted);
+    }}
+
+    .update-note {{
+      margin: 0;
+      display: inline-flex;
       align-items: center;
-    }}
-    .roster-number {{
-      font-family: \"Fira Mono\", \"SFMono-Regular\", Menlo, Consolas, monospace;
+      gap: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
       font-weight: 600;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.95rem);
-      background: #bae6fd;
-      color: #1f2933;
-      border-radius: 0.65rem;
-      padding: 0.35rem 0.65rem;
-      text-align: center;
+      font-size: 0.92rem;
+      border: 1px solid var(--card-border);
     }}
-    .roster-official .roster-number {{
-      background: #e2e8f0;
+
+    section {{
+      display: grid;
+      gap: clamp(1rem, 3vw, 1.8rem);
     }}
-    .roster-text {{
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }}
-    .roster-name {{
-      font-weight: 600;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 1rem);
-    }}
-    .roster-details {{
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.82rem);
-      color: #475569;
-      line-height: 1.35;
-    }}
-    .notice-group {{
-      margin-top: clamp(1.4rem, 3vw, 2rem);
-    }}
-    .notice-list {{
-      list-style: none;
+
+    h2 {{
       margin: 0;
-      padding: 0;
+      font-size: clamp(1.35rem, 3.2vw, 1.9rem);
+    }}
+
+    .section-hint {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }}
+
+    .metrics-grid {{
       display: grid;
-      gap: 0.65rem;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: clamp(1rem, 3vw, 1.6rem);
     }}
-    .notice-list li {{
-      background: linear-gradient(135deg, #fef3c7, #fde68a);
-      border-radius: 0.85rem;
-      padding: clamp(0.85rem, 2.8vw, 1.15rem);
-      font-weight: 600;
-      box-shadow: 0 16px 34px rgba(250, 204, 21, 0.22);
-    }}
-    .instagram-group {{
-      margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-    }}
-    .instagram-grid {{
-      display: grid;
-      gap: 1.2rem;
-      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    }}
-    .instagram-card {{
-      background: #ffffff;
-      border-radius: 0.85rem;
+
+    .metric-card {{
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
       padding: clamp(1rem, 3vw, 1.4rem);
-      box-shadow: 0 12px 28px rgba(15, 118, 110, 0.12);
-    }}
-    .instagram-card h3 {{
-      margin: 0 0 0.75rem 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1.05rem, 3vw, 1.3rem));
-    }}
-    .instagram-list {{
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 0.35rem;
-    }}
-    .season-results {{
-      margin-top: clamp(1.5rem, 3.5vw, 2.5rem);
-    }}
-    .season-results-header {{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem 1.25rem;
-      align-items: baseline;
-      margin-bottom: clamp(0.75rem, 2.5vw, 1.25rem);
-    }}
-    .season-results-header h2 {{
-      margin: 0;
-    }}
-    .season-results-status {{
-      margin: 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.8rem);
-      color: #475569;
-    }}
-    .season-results-grid {{
-      display: grid;
-      gap: clamp(1rem, 3vw, 1.5rem);
-      grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
-    }}
-    .season-results-card {{
-      background: #ffffff;
-      border-radius: 0.85rem;
-      padding: clamp(1rem, 3vw, 1.4rem);
-      box-shadow: 0 12px 28px rgba(15, 118, 110, 0.12);
       display: grid;
       gap: 0.6rem;
     }}
-    .season-results-card h3 {{
+
+    .metric-card h3 {{
       margin: 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(1.05rem, 3vw, 1.3rem));
-      color: #0f172a;
+      font-size: 1.05rem;
+      color: var(--accent);
     }}
-    .season-results-list {{
+
+    .metric-card p {{
       margin: 0;
-      padding-left: 1rem;
+      color: var(--muted);
+    }}
+
+    .player-list {{
       display: grid;
-      gap: 0.35rem;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      color: #1f2933;
+      gap: clamp(1.2rem, 3vw, 2rem);
     }}
-    .season-results-fallback {{
-      margin: 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      color: #475569;
-    }}
-    .season-results-links {{
-      margin-top: clamp(1rem, 3vw, 1.75rem);
-      background: #f8fafc;
-      border-radius: 0.85rem;
-      padding: clamp(1rem, 3vw, 1.4rem);
-      box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.35);
-    }}
-    .season-results-links h3 {{
-      margin: 0 0 0.75rem 0;
-      font-size: calc(var(--font-scale) * var(--font-context-scale) * clamp(0.95rem, 2.5vw, 1.1rem));
-      color: #1f2937;
-    }}
-    .season-results-link-list {{
-      margin: 0;
-      padding-left: 1rem;
+
+    .player-card {{
+      background: var(--card-bg);
+      border-radius: 1.1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      padding: clamp(1.1rem, 3vw, 1.6rem);
       display: grid;
-      gap: 0.4rem;
+      gap: clamp(0.9rem, 2.6vw, 1.3rem);
     }}
-    .season-results-link-list a {{
-      color: #1d4ed8;
+
+    .player-card__header {{
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }}
+
+    .player-card__header h3 {{
+      margin: 0;
+      font-size: clamp(1.25rem, 3vw, 1.6rem);
+    }}
+
+    .player-card__totals h4 {{
+      margin: 0 0 0.4rem 0;
+      font-size: 1rem;
+      color: var(--accent);
+    }}
+
+    .player-card__matches {{
+      display: grid;
+      gap: clamp(0.8rem, 2vw, 1.1rem);
+    }}
+
+    .player-match {{
+      border-radius: 0.9rem;
+      border: 1px solid rgba(15, 118, 110, 0.15);
+      padding: clamp(0.8rem, 2.6vw, 1.2rem);
+      background: rgba(255, 255, 255, 0.92);
+      display: grid;
+      gap: 0.6rem;
+    }}
+
+    @media (prefers-color-scheme: dark) {{
+      .player-match {{
+        background: rgba(19, 42, 48, 0.92);
+      }}
+    }}
+
+    .player-match__header {{
+      display: grid;
+      gap: 0.25rem;
+    }}
+
+    .player-match__header h4 {{
+      margin: 0;
+      font-size: 1.05rem;
+    }}
+
+    .player-match__meta {{
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }}
+
+    .metrics-table {{
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }}
+
+    .metrics-table th,
+    .metrics-table td {{
+      text-align: left;
+      padding: 0.35rem 0;
+      vertical-align: top;
+    }}
+
+    .metrics-table th {{
+      font-weight: 600;
+      color: var(--accent);
+      width: 7.5rem;
+    }}
+
+    .metrics-table td {{
+      color: var(--muted);
+    }}
+
+    .player-match__links {{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }}
+
+    .player-match__links a {{
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
       font-weight: 600;
       text-decoration: none;
+      font-size: 0.9rem;
     }}
-    .season-results-link-list a:hover,
-    .season-results-link-list a:focus-visible {{
-      text-decoration: underline;
-      outline: none;
-    }}
-    .meta-link {{
-      font-weight: 600;
-    }}
-    a {{
-      color: #0f766e;
-    }}
-    a:hover,
-    a:focus {{
+
+    .player-match__links a:hover,
+    .player-match__links a:focus-visible {{
       text-decoration: underline;
     }}
-    .match-meta a {{
-      color: #1d4ed8;
-      font-weight: 600;
-    }}
-    .match-meta a:hover,
-    .match-meta a:focus-visible {{
-      text-decoration: underline;
-      outline: none;
-    }}
-    @media (max-width: 40rem) {{
-      body {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.85rem);
-      }}
-      h1 {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 1.6rem);
-      }}
-      h2 {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 1.1rem);
-      }}
-      .match-list li {{
-        padding: 0.85rem 1rem;
-      }}
-      .lineup-link ul {{
-        flex-direction: column;
-        align-items: center;
-        gap: 0.75rem;
-      }}
-      .lineup-link li {{
-        width: 100%;
-        justify-content: center;
-      }}
-      .lineup-link a {{
-        width: min(22rem, 100%);
-        justify-content: center;
-      }}
-      .match-result {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.8rem);
-      }}
-      .match-stats summary {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.9rem);
-      }}
-      .match-stats-table {{
-        min-width: min(18rem, 100%);
-      }}
-      .match-stats-table thead th {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.68rem);
-        padding: 0.35rem 0.45rem;
-      }}
-      .match-stats-table tbody th,
-      .match-stats-table tbody td {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.78rem);
-        padding: 0.4rem 0.45rem;
-      }}
-      .accordion summary {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 1.05rem);
-      }}
-      .mvp-overview summary {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 1.05rem);
-      }}
-      .roster-item {{
-        grid-template-columns: minmax(3rem, auto) 1fr;
-      }}
-      .roster-number {{
-        font-size: calc(var(--font-scale) * var(--font-context-scale) * 0.8rem);
-        padding: 0.3rem 0.5rem;
-      }}
-      .team-photo {{
-        margin-bottom: 0.9rem;
-      }}
-    }}
-    @media (prefers-color-scheme: dark) {{
-      :root {{
-        --accordion-opponent-bg: {HIGHLIGHT_COLORS['opponent']['dark_accordion_bg']};
-        --accordion-opponent-shadow: {HIGHLIGHT_COLORS['opponent']['dark_accordion_shadow']};
-        --accordion-usc-bg: {HIGHLIGHT_COLORS['usc']['dark_accordion_bg']};
-        --accordion-usc-shadow: {HIGHLIGHT_COLORS['usc']['dark_accordion_shadow']};
-        --usc-highlight-row-bg: {HIGHLIGHT_COLORS['usc']['dark_row_bg']};
-        --usc-highlight-row-text: {HIGHLIGHT_COLORS['usc']['dark_row_text']};
-        --opponent-highlight-row-bg: {HIGHLIGHT_COLORS['opponent']['dark_row_bg']};
-        --opponent-highlight-row-text: {HIGHLIGHT_COLORS['opponent']['dark_row_text']};
-        --mvp-overview-summary-bg: {THEME_COLORS['dark_mvp_overview_summary_bg']};
-        --theme-color: {THEME_COLORS['dark_mvp_overview_summary_bg']};
-      }}
-      body {{
-        background: #0e1b1f;
-        color: #e6f1f3;
-      }}
-      h1,
-      h2,
-      h3 {{
-        color: #f1f5f9;
-      }}
-      .match-list li {{
-        background: #132a30;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
-      }}
-      .match-stats {{
-        background: #132a30;
-        border-color: rgba(45, 212, 191, 0.35);
-      }}
-      .match-stats summary {{
-        color: #e2f3f7;
-      }}
-      .match-stats-table {{
-        background: #0f1f24;
-        border-color: rgba(94, 234, 212, 0.25);
-        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
-      }}
-      .match-stats-table thead th {{
-        background: rgba(94, 234, 212, 0.16);
-        color: #5eead4;
-      }}
-      .match-stats-table tbody tr + tr th,
-      .match-stats-table tbody tr + tr td {{
-        border-color: rgba(148, 163, 184, 0.35);
-      }}
-      .match-stats-table tbody th,
-      .match-stats-table tbody td {{
-        color: #e2f3f7;
-      }}
-      .match-stats-table tbody tr[data-team-role="usc"] {{
-        background: var(--usc-highlight-row-bg);
-        color: var(--usc-highlight-row-text);
-      }}
-      .match-stats-table tbody tr[data-team-role="opponent"] {{
-        background: var(--opponent-highlight-row-bg);
-        color: var(--opponent-highlight-row-text);
-      }}
-      .match-stats-card {{
-        background: #0f1f24;
-        border-color: rgba(94, 234, 212, 0.25);
-        box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
-      }}
-      .match-stats-card h4 {{
-        color: #f0f9ff;
-      }}
-      .match-stats-card pre {{
-        background: rgba(15, 118, 110, 0.22);
-        color: #f1f5f9;
-      }}
-      .lineup-link a {{
-        background: #14b8a6;
-        color: #022c22;
-        box-shadow: 0 16px 32px rgba(20, 184, 166, 0.35);
-      }}
-      .accordion {{
-        background: var(--accordion-opponent-bg);
-        box-shadow: 0 18px 40px var(--accordion-opponent-shadow);
-      }}
-      .mvp-overview {{
-        background: #132a30;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      }}
-      .mvp-overview summary {{
-        color: #f1f5f9;
-        background: var(--mvp-overview-summary-bg);
-        border-bottom: 1px solid rgba(148, 163, 184, 0.35);
-      }}
-      .mvp-note {{
-        color: #cbd5f5;
-      }}
-      .mvp-card {{
-        background: #132a30;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      }}
-      .mvp-card summary {{
-        color: #f1f5f9;
-      }}
-      .roster-group details:nth-of-type(2),
-      .transfer-group details:nth-of-type(2),
-      .news-group details:nth-of-type(2) {{
-        background: var(--accordion-usc-bg);
-        box-shadow: 0 18px 40px var(--accordion-usc-shadow);
-      }}
-      .instagram-card {{
-        background: #132a30;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      }}
-      .season-results-card {{
-        background: #132a30;
-        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-      }}
-      .season-results-card h3 {{
-        color: #f1f5f9;
-      }}
-      .season-results-list {{
-        color: #cbd5f5;
-      }}
-      .season-results-fallback {{
-        color: #94a3b8;
-      }}
-      .season-results-links {{
-        background: #0f1f24;
-        box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.25);
-      }}
-      .season-results-links h3 {{
-        color: #e6f1f3;
-      }}
-      .season-results-link-list a {{
-        color: #93c5fd;
-      }}
-      .season-results-status {{
-        color: #94a3b8;
-      }}
-      .pwa-install-banner {{
-        box-shadow: 0 22px 44px rgba(8, 47, 73, 0.55);
-      }}
-      .pwa-install-button {{
-        color: {THEME_COLORS['mvp_overview_summary_bg']};
-      }}
-      .pwa-install-dismiss {{
-        color: #e2f3f7;
-      }}
-      .match-result {{
-        color: #5eead4;
-      }}
-      .match-meta {{
-        color: #cbd5f5;
-      }}
-      .transfer-line {{
-        color: #dbeafe;
-      }}
-      .news-meta {{
-        color: #9ca3af;
-      }}
-      .transfer-category {{
-        color: #bfdbfe;
-      }}
-      .roster-number {{
-        background: #155e75;
-        color: #ecfeff;
-      }}
-      .roster-official .roster-number {{
-        background: #1f2933;
-      }}
-      .roster-details {{
-        color: #cbd5f5;
-      }}
-      .update-note {{
-        background: rgba(15, 118, 110, 0.16);
-        color: #ccfbf1;
-        border-color: rgba(45, 212, 191, 0.35);
-      }}
-      .notice-list li {{
-        background: linear-gradient(135deg, #7c2d12, #a16207);
-        color: #fef3c7;
-        box-shadow: 0 20px 48px rgba(250, 204, 21, 0.35);
-      }}
-      .team-photo figcaption {{
-        color: #94a3b8;
-      }}
-      a {{
-        color: #5eead4;
-      }}
-      .countdown-banner {{
-        background: linear-gradient(135deg, rgba(15, 118, 110, 0.8), rgba(45, 212, 191, 0.85));
-        color: #ecfeff;
-        box-shadow: 0 20px 44px rgba(0, 0, 0, 0.55);
-      }}
-      .countdown-banner--live {{
-        background: linear-gradient(135deg, rgba(190, 18, 60, 0.85), rgba(249, 115, 22, 0.85));
-      }}
+
+    .empty-state {{
+      margin: 0;
+      color: var(--muted);
+      font-style: italic;
     }}
   </style>
 </head>
 <body>
   <main>
-    <h1>Nächster USC-Heimgegner:<br><span data-next-opponent>{escape(heading)}</span></h1>
-{countdown_meta_html}
-{countdown_html}
-    <div class=\"meta\">
-      {meta_html}
-    </div>
-{notes_html}
+    <header class="page-header">
+      <h1>Scouting USC Münster</h1>
+      <p class="page-intro">Aggregierte Statistiken aller verfügbaren USC-Partien aus den offiziellen VBL-PDFs. Die Übersicht gruppiert alle Werte pro Spielerin und zeigt Summen über alle erfassten Spiele.</p>
+      <p class="update-note" data-update-note data-generated="{generated_iso}">
+        <span aria-hidden="true">📅</span>
+        <span>Aktualisiert am {generated_label}</span>
+      </p>
+    </header>
+
     <section>
-      <h2>Spiele: {escape(heading)}</h2>
-      <ul class=\"match-list\">
-        {opponent_items}
-      </ul>
-    </section>
-    <section>
-      <h2>Spiele: {escape(USC_CANONICAL_NAME)}</h2>
-      <ul class=\"match-list\">
-        {usc_items}
-      </ul>
-    </section>
-    <section class=\"lineup-link\">
-      <ul>
-        {lineup_link_items}
-      </ul>
-    </section>
-    <section class=\"roster-group\">
-      <details class=\"accordion\">
-        <summary>Kader {escape(heading)}</summary>
-        <div class=\"accordion-content\">
-{opponent_photo_block}          <ul class=\"roster-list\">
-            {opponent_roster_items}
-          </ul>
-        </div>
-      </details>
-      <details class=\"accordion\">
-        <summary>Kader {escape(USC_CANONICAL_NAME)}</summary>
-        <div class=\"accordion-content\">
-{usc_photo_block}          <ul class=\"roster-list\">
-            {usc_roster_items}
-          </ul>
-        </div>
-      </details>
-    </section>
-    <section class=\"transfer-group\">
-      <details class=\"accordion\">
-        <summary>Wechselbörse {escape(heading)}</summary>
-        <div class=\"accordion-content\">
-          <ul class=\"transfer-list\">
-            {opponent_transfer_items}
-          </ul>
-        </div>
-      </details>
-      <details class=\"accordion\">
-        <summary>Wechselbörse {escape(USC_CANONICAL_NAME)}</summary>
-        <div class=\"accordion-content\">
-          <ul class=\"transfer-list\">
-            {usc_transfer_items}
-          </ul>
-        </div>
-      </details>
-    </section>
-    <section class=\"news-group\">
-      <details class=\"accordion\">
-        <summary>News von {escape(heading)}</summary>
-        <div class=\"accordion-content\">
-          <ul class=\"news-list\">
-            {opponent_news_items}
-          </ul>
-        </div>
-      </details>
-      <details class=\"accordion\">
-        <summary>News von {escape(USC_CANONICAL_NAME)}</summary>
-        <div class=\"accordion-content\">
-          <ul class=\"news-list\">
-            {usc_news_items}
-          </ul>
-        </div>
-      </details>
-    </section>
-{mvp_section_html}    <section class=\"instagram-group\">
-      <h2>Instagram-Links</h2>
-      <div class=\"instagram-grid\">
-        <article class=\"instagram-card\">
-          <h3>{escape(heading)}</h3>
-          <ul class=\"instagram-list\">
-            {opponent_instagram_items}
-          </ul>
-        </article>
-        <article class=\"instagram-card\">
-          <h3>{escape(USC_CANONICAL_NAME)}</h3>
-          <ul class=\"instagram-list\">
-            {usc_instagram_items}
-          </ul>
-        </article>
+      <h2>Team-Überblick</h2>
+      <p class="section-hint" data-team-meta>Die Daten werden geladen…</p>
+      <div class="metrics-grid" data-team-summary>
+        <p class="empty-state">Keine Daten verfügbar.</p>
       </div>
     </section>
-{season_results_section}
-{update_note_html}
+
+    <section>
+      <h2>Spielerinnen</h2>
+      <p class="section-hint" data-player-meta>Die Daten werden geladen…</p>
+      <div class="player-list" data-player-list>
+        <p class="empty-state">Keine Spielerinnendaten geladen.</p>
+      </div>
+      <p class="empty-state" data-error hidden>Beim Laden der Scouting-Daten ist ein Fehler aufgetreten.</p>
+    </section>
   </main>
   <script>
-    (() => {{
-      const themeColor = "{THEME_COLORS['mvp_overview_summary_bg']}";
-      const themeMeta = document.querySelector('meta[name="theme-color"]');
-      if (themeMeta) {{
-        themeMeta.setAttribute("content", themeColor);
+    const OVERVIEW_PATH = 'data/usc_stats_overview.json';
+
+    function formatDate(value) {{
+      if (!value) return '–';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '–';
+      return new Intl.DateTimeFormat('de-DE', {{ day: '2-digit', month: '2-digit', year: 'numeric' }}).format(date);
+    }}
+
+    function formatDateTime(value) {{
+      if (!value) return '–';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '–';
+      return new Intl.DateTimeFormat('de-DE', {{
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }}).format(date);
+    }}
+
+    function formatInt(value) {{
+      if (value === null || value === undefined) return '0';
+      return Number(value).toString();
+    }}
+
+    function formatPct(value) {{
+      if (!value) return '0%';
+      return String(value);
+    }}
+
+    function formatMatchHeading(index, match) {{
+      const date = formatDate(match.kickoff);
+      const opponent = match.opponent || 'Unbekannt';
+      const homeAway = match.is_home ? 'Heim' : 'Auswärts';
+      return `Spiel <<index + 1>>: <<date>> · <<homeAway>> vs. <<opponent>>`;
+    }}
+
+    function formatResult(match) {{
+      if (match.result && match.result.summary) {{
+        return `Ergebnis: <<match.result.summary>>`;
       }}
+      return 'Ergebnis: offen';
+    }}
 
-      const banner = document.querySelector('[data-countdown-banner]');
-      if (banner) {{
-        const iso = banner.getAttribute('data-kickoff');
-        if (iso) {{
-          const targetMs = Date.parse(iso);
-          if (!Number.isNaN(targetMs)) {{
-            const display = banner.querySelector('[data-countdown-display]');
-            const pad = (value) => String(value).padStart(2, '0');
-            const plural = (value, singular, pluralForm) =>
-              value + ' ' + (value === 1 ? singular : pluralForm);
-            let timerId;
-            const update = () => {{
-              const diff = targetMs - Date.now();
-              if (diff <= 0) {{
-                if (display) {{
-                  display.textContent = 'Anpfiff!';
-                }}
-                banner.classList.add('countdown-banner--live');
-                if (typeof timerId === 'number') {{
-                  window.clearInterval(timerId);
-                }}
-                return;
-              }}
+    function formatMatchMeta(match) {{
+      const items = [];
+      if (match.result && match.result.summary) {{
+        items.push(`Ergebnis: <<match.result.summary>>`);
+      }}
+      if (match.result && match.result.total_points) {{
+        items.push(`Ballpunkte: <<match.result.total_points>>`);
+      }}
+      if (!items.length) {{
+        items.push('Noch kein Ergebnis verfügbar');
+      }}
+      return items.join(' · ');
+    }}
 
-              const totalSeconds = Math.floor(diff / 1000);
-              const days = Math.floor(totalSeconds / 86400);
-              const hours = Math.floor((totalSeconds % 86400) / 3600);
-              const minutes = Math.floor((totalSeconds % 3600) / 60);
-              const seconds = totalSeconds % 60;
-              const parts = [];
-              if (days > 0) {{
-                parts.push(plural(days, 'Tag', 'Tage'));
-              }}
-              parts.push(pad(hours) + ':' + pad(minutes) + ':' + pad(seconds));
-              if (display) {{
-                display.textContent = parts.join(' · ');
-              }}
-            }};
+    function buildMetricTable(metrics, totalPoints) {{
+      const table = document.createElement('table');
+      table.className = 'metrics-table';
+      const tbody = document.createElement('tbody');
+      const rows = [
+        ['Aufschlag', `<<formatInt(metrics.serves_attempts)>> Versuche · <<formatInt(metrics.serves_errors)>> Fehler · <<formatInt(metrics.serves_points)>> Asse`],
+        ['Annahme', `<<formatInt(metrics.receptions_attempts)>> Annahmen · <<formatInt(metrics.receptions_errors)>> Fehler · <<formatPct(metrics.receptions_positive_pct)>> positiv · <<formatPct(metrics.receptions_perfect_pct)>> perfekt`],
+        ['Angriff', `<<formatInt(metrics.attacks_attempts)>> Versuche · <<formatInt(metrics.attacks_errors)>> Fehler · <<formatInt(metrics.attacks_blocked)>> geblockt · <<formatInt(metrics.attacks_points)>> Punkte · <<formatPct(metrics.attacks_success_pct)>> Erfolgsquote`],
+        ['Block', `<<formatInt(metrics.blocks_points)>> Blockpunkte`],
+      ];
+      if (totalPoints !== null && totalPoints !== undefined) {{
+        rows.push(['Gesamtpunkte', formatInt(totalPoints)]);
+      }}
+      for (const [label, value] of rows) {{
+        const tr = document.createElement('tr');
+        const th = document.createElement('th');
+        th.textContent = label;
+        const td = document.createElement('td');
+        td.textContent = value;
+        tr.append(th, td);
+        tbody.appendChild(tr);
+      }}
+      table.appendChild(tbody);
+      return table;
+    }}
 
-            update();
-            timerId = window.setInterval(update, 1000);
-          }}
+    function renderTeamOverview(data) {{
+      const summaryNode = document.querySelector('[data-team-summary]');
+      const metaNode = document.querySelector('[data-team-meta]');
+      summaryNode.innerHTML = '';
+      const totals = data.totals;
+      if (!totals) {{
+        summaryNode.innerHTML = '<p class="empty-state">Keine Teamstatistiken verfügbar.</p>';
+        if (metaNode) metaNode.textContent = 'Keine abgeschlossenen Spiele vorhanden.';
+        return;
+      }}
+      if (metaNode) {{
+        const count = data.match_count || 0;
+        metaNode.textContent = count === 1 ? '1 Spiel berücksichtigt.' : `<<count>> Spiele berücksichtigt.`;
+      }}
+      const cards = [
+        ['Aufschlag', `<<formatInt(totals.serves_attempts)>> Versuche · <<formatInt(totals.serves_errors)>> Fehler · <<formatInt(totals.serves_points)>> Asse`],
+        ['Annahme', `<<formatInt(totals.receptions_attempts)>> Annahmen · <<formatInt(totals.receptions_errors)>> Fehler · <<formatPct(totals.receptions_positive_pct)>> positiv · <<formatPct(totals.receptions_perfect_pct)>> perfekt`],
+        ['Angriff', `<<formatInt(totals.attacks_attempts)>> Versuche · <<formatInt(totals.attacks_errors)>> Fehler · <<formatInt(totals.attacks_blocked)>> geblockt · <<formatInt(totals.attacks_points)>> Punkte · <<formatPct(totals.attacks_success_pct)>> Erfolgsquote`],
+        ['Block', `<<formatInt(totals.blocks_points)>> Blockpunkte`],
+      ];
+      for (const [title, text] of cards) {{
+        const card = document.createElement('article');
+        card.className = 'metric-card';
+        const heading = document.createElement('h3');
+        heading.textContent = title;
+        const body = document.createElement('p');
+        body.textContent = text;
+        card.append(heading, body);
+        summaryNode.appendChild(card);
+      }}
+    }}
+
+    function renderPlayers(data) {{
+      const container = document.querySelector('[data-player-list]');
+      const metaNode = document.querySelector('[data-player-meta]');
+      const errorNode = document.querySelector('[data-error]');
+      container.innerHTML = '';
+      if (errorNode) errorNode.hidden = true;
+      const players = Array.isArray(data.players) ? data.players : [];
+      if (metaNode) {{
+        metaNode.textContent = players.length === 1 ? '1 Spielerin mit Statistikdaten.' : `<<players.length>> Spielerinnen mit Statistikdaten.`;
+      }}
+      if (!players.length) {{
+        container.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        return;
+      }}
+      for (const player of players) {{
+        const card = document.createElement('article');
+        card.className = 'player-card';
+
+        const header = document.createElement('header');
+        header.className = 'player-card__header';
+        const title = document.createElement('h3');
+        title.textContent = player.jersey_number ? `#<<player.jersey_number>> <<player.name>>` : player.name;
+        header.appendChild(title);
+
+        if (player.totals) {{
+          const totalsWrapper = document.createElement('div');
+          totalsWrapper.className = 'player-card__totals';
+          const totalsHeading = document.createElement('h4');
+          totalsHeading.textContent = 'Summe';
+          totalsWrapper.appendChild(totalsHeading);
+          totalsWrapper.appendChild(buildMetricTable(player.totals, player.total_points));
+          header.appendChild(totalsWrapper);
+        }}
+        card.appendChild(header);
+
+        const matchesWrapper = document.createElement('div');
+        matchesWrapper.className = 'player-card__matches';
+        const matches = Array.isArray(player.matches) ? player.matches : [];
+        if (!matches.length) {{
+          const empty = document.createElement('p');
+          empty.className = 'empty-state';
+          empty.textContent = 'Keine Spiele verfügbar.';
+          matchesWrapper.appendChild(empty);
+        }} else {{
+          matches.forEach((match, index) => {{
+            const matchBlock = document.createElement('div');
+            matchBlock.className = 'player-match';
+
+            const matchHeader = document.createElement('div');
+            matchHeader.className = 'player-match__header';
+            const heading = document.createElement('h4');
+            heading.textContent = formatMatchHeading(index, match);
+            const meta = document.createElement('p');
+            meta.className = 'player-match__meta';
+            meta.textContent = formatMatchMeta(match);
+            matchHeader.append(heading, meta);
+            matchBlock.appendChild(matchHeader);
+
+            if (match.metrics) {{
+              matchBlock.appendChild(buildMetricTable(match.metrics, match.total_points));
+            }}
+
+            const links = [];
+            if (match.info_url) {{
+              links.push(['Spielinfos', match.info_url]);
+            }}
+            if (match.stats_url) {{
+              links.push(['Statistik (PDF)', match.stats_url]);
+            }}
+            if (links.length) {{
+              const linkWrapper = document.createElement('div');
+              linkWrapper.className = 'player-match__links';
+              links.forEach(([label, url]) => {{
+                const anchor = document.createElement('a');
+                anchor.href = url;
+                anchor.target = '_blank';
+                anchor.rel = 'noopener';
+                anchor.textContent = label;
+                linkWrapper.appendChild(anchor);
+              }});
+              matchBlock.appendChild(linkWrapper);
+            }}
+
+            matchesWrapper.appendChild(matchBlock);
+          }});
+        }}
+        card.appendChild(matchesWrapper);
+        container.appendChild(card);
+      }}
+    }}
+
+    async function bootstrap() {{
+      try {{
+        const response = await fetch(OVERVIEW_PATH, {{ cache: 'no-store' }});
+        if (!response.ok) {{
+          throw new Error(`HTTP <<response.status>>`);
+        }}
+        const data = await response.json();
+        renderTeamOverview(data);
+        renderPlayers(data);
+        const note = document.querySelector('[data-update-note] span:last-child');
+        if (note && data.generated) {{
+          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>>`;
+        }}
+      }} catch (error) {{
+        const container = document.querySelector('[data-player-list]');
+        if (container) {{
+          container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+        }}
+        const errorNode = document.querySelector('[data-error]');
+        if (errorNode) {{
+          errorNode.hidden = false;
+          errorNode.textContent = `Fehler beim Laden: <<error instanceof Error ? error.message : String(error)>>`;
         }}
       }}
+    }}
 
-    }})();
+    document.addEventListener('DOMContentLoaded', bootstrap);
   </script>
 </body>
-</html>
-"""
-
+</html>""".format(
+        generated_iso=escape(generated_iso),
+        generated_label=escape(generated_label),
+    )
+    html = html.replace("<<", "${").replace(">>", "}")
     return html
 
 
@@ -4802,6 +4069,7 @@ __all__ = [
     "MatchResult",
     "RosterMember",
     "MatchStatsTotals",
+    "MatchPlayerStats",
     "TransferItem",
     "TEAM_HOMEPAGES",
     "TEAM_ROSTER_IDS",
@@ -4813,6 +4081,7 @@ __all__ = [
     "collect_team_news",
     "collect_team_transfers",
     "collect_match_stats_totals",
+    "resolve_match_stats_metrics",
     "collect_instagram_links",
     "collect_team_roster",
     "collect_team_photo",

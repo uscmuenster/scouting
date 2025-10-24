@@ -34,6 +34,18 @@ python scripts/update_lineups.py --limit 3
 
 Die PDFs werden standardmäßig unter `data/lineups/` gecacht, Kaderexporte in `data/rosters/` gespeichert und das JSON nach `docs/data/aufstellungen.json` geschrieben.
 
+### Scouting-Übersicht (`docs/data/usc_stats_overview.json`)
+
+Mit `scripts/update_usc_stats_overview.py` fasst du die Statistik-PDFs des USC Münster zusammen. Für jedes abgeschlossene Spiel werden die wichtigsten Kennzahlen (Aufschlag, Annahme, Angriff, Block) einzeln ausgewiesen und zusätzlich zu einer Gesamtsumme über alle verfügbaren Spiele aggregiert. Die Datensätze berücksichtigen ausschließlich USC-Werte – gegnerische Teams werden ignoriert.
+
+Aufrufbeispiel:
+
+```bash
+python scripts/update_usc_stats_overview.py
+```
+
+Die Spielplan-CSV aus `data/schedule.csv` wird bei vorhandener Datei wiederverwendet. Alternativ kann der Pfad per `--schedule-path` angepasst werden, ebenso wie Ziel- und Quell-URLs.
+
 ### Internationale Spiele (`docs/internationale_spiele.html`)
 
 Mit `scripts/update_international_matches.py` aggregierst du Champions-League-, Cup- und Challenge-Cup-Partien deutscher Teams direkt von der CEV. Das Ergebnis ist eine eigenständige HTML-Seite mit:

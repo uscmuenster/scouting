@@ -5,6 +5,7 @@ from .report import (
     NEWS_LOOKBACK_DAYS,
     Match,
     MatchResult,
+    MatchPlayerStats,
     NewsItem,
     RosterMember,
     TABLE_URL,
@@ -24,12 +25,23 @@ from .report import (
     parse_roster,
     parse_schedule,
 )
+from .stats import (
+    AggregatedMetrics,
+    DEFAULT_OUTPUT_PATH as STATS_OUTPUT_PATH,
+    USCMatchStatsEntry,
+    USCPlayerMatchEntry,
+    build_stats_overview,
+    collect_usc_match_stats,
+    collect_usc_player_stats,
+    summarize_metrics,
+)
 
 __all__ = [
     "DEFAULT_SCHEDULE_URL",
     "NEWS_LOOKBACK_DAYS",
     "Match",
     "MatchResult",
+    "MatchPlayerStats",
     "NewsItem",
     "RosterMember",
     "build_html_report",
@@ -48,4 +60,12 @@ __all__ = [
     "parse_roster",
     "parse_schedule",
     "TABLE_URL",
+    "AggregatedMetrics",
+    "STATS_OUTPUT_PATH",
+    "USCMatchStatsEntry",
+    "USCPlayerMatchEntry",
+    "build_stats_overview",
+    "collect_usc_match_stats",
+    "collect_usc_player_stats",
+    "summarize_metrics",
 ]
