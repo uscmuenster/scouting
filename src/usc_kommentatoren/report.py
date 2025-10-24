@@ -5190,17 +5190,22 @@ def _build_player_card_html(player: Mapping[str, Any]) -> str:
     if jersey not in (None, ""):
         title = f"#{jersey} {name}"
 
-    lines = ["<article class=\"player-card\">", "  <header class=\"player-card__header\">"]
+    lines = [
+        "<details class=\"player-card\">",
+        "  <summary class=\"player-card__summary\">",
+    ]
     lines.append(f"    <h3>{escape(title)}</h3>")
-    lines.append("  </header>")
-    lines.append('  <div class="player-card__table-wrapper">')
+    lines.append("  </summary>")
+    lines.append('  <div class="player-card__content">')
+    lines.append('    <div class="player-card__table-wrapper">')
     table_html = _build_player_match_table_html(player)
     if table_html:
-        lines.append(_indent_html(table_html, 4))
+        lines.append(_indent_html(table_html, 6))
     else:
-        lines.append('    <p class="empty-state">Keine Spiele verfügbar.</p>')
+        lines.append('      <p class="empty-state">Keine Spiele verfügbar.</p>')
+    lines.append('    </div>')
     lines.append('  </div>')
-    lines.append('</article>')
+    lines.append('</details>')
     return "\n".join(lines)
 
 
@@ -5564,20 +5569,50 @@ def build_html_report(
       border-radius: 1.1rem;
       border: 1px solid var(--card-border);
       box-shadow: var(--shadow);
-      padding: clamp(1.1rem, 3vw, 1.6rem);
-      display: grid;
-      gap: clamp(0.9rem, 2.6vw, 1.3rem);
+      overflow: hidden;
     }}
 
-    .player-card__header {{
+    .player-card__summary {{
       display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: clamp(1.1rem, 3vw, 1.6rem);
+      list-style: none;
+      user-select: none;
     }}
 
-    .player-card__header h3 {{
+    .player-card__summary::-webkit-details-marker {{
+      display: none;
+    }}
+
+    .player-card__summary::after {{
+      content: '▾';
+      font-size: 1.1rem;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }}
+
+    .player-card[open] > .player-card__summary::after {{
+      transform: rotate(-180deg);
+    }}
+
+    .player-card__summary h3 {{
       margin: 0;
       font-size: clamp(1.25rem, 3vw, 1.6rem);
+    }}
+
+    .player-card__summary:focus-visible {{
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }}
+
+    .player-card__content {{
+      display: grid;
+      gap: clamp(0.9rem, 2.6vw, 1.3rem);
+      padding: clamp(0.8rem, 2.4vw, 1.1rem) clamp(1.1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.6rem);
+      border-top: 1px solid var(--card-border);
     }}
 
     .player-card__table-wrapper {{
@@ -6147,16 +6182,19 @@ def build_html_report(
         }}
       }}
       for (const player of players) {{
-        const card = document.createElement('article');
+        const card = document.createElement('details');
         card.className = 'player-card';
 
-        const header = document.createElement('header');
-        header.className = 'player-card__header';
+        const summary = document.createElement('summary');
+        summary.className = 'player-card__summary';
         const title = document.createElement('h3');
         const playerName = player && player.name ? player.name : 'Unbekannt';
         title.textContent = player.jersey_number ? `#<<player.jersey_number>> <<playerName>>` : playerName;
-        header.appendChild(title);
-        card.appendChild(header);
+        summary.appendChild(title);
+        card.appendChild(summary);
+
+        const content = document.createElement('div');
+        content.className = 'player-card__content';
 
         const tableWrapper = document.createElement('div');
         tableWrapper.className = 'player-card__table-wrapper';
@@ -6166,7 +6204,8 @@ def build_html_report(
         }} else {{
           tableWrapper.innerHTML = '<p class="empty-state">Keine Spiele verfügbar.</p>';
         }}
-        card.appendChild(tableWrapper);
+        content.appendChild(tableWrapper);
+        card.appendChild(content);
 
         container.appendChild(card);
       }}
