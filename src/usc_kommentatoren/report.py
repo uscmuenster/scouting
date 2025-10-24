@@ -263,6 +263,8 @@ class MatchStatsMetrics:
     attacks_points: int
     attacks_success_pct: str
     blocks_points: int
+    receptions_positive: int = 0
+    receptions_perfect: int = 0
 
 
 @dataclass(frozen=True)
@@ -272,6 +274,8 @@ class MatchPlayerStats:
     jersey_number: Optional[int]
     metrics: MatchStatsMetrics
     total_points: Optional[int] = None
+    break_points: Optional[int] = None
+    plus_minus: Optional[int] = None
 
 
 @dataclass(frozen=True)
@@ -1344,20 +1348,41 @@ def _load_manual_stats_totals() -> Dict[
             attack = team_entry.get("attack") or {}
             block = team_entry.get("block") or {}
             try:
+                serve_attempts = int(serve["attempts"])
+                serve_errors = int(serve["errors"])
+                serve_points = int(serve["points"])
+                reception_attempts = int(reception["attempts"])
+                reception_errors = int(reception["errors"])
+                reception_positive_pct = str(reception["positive_pct"])
+                reception_perfect_pct = str(reception["perfect_pct"])
+                reception_positive = _compute_percentage_count(
+                    reception_attempts, reception_positive_pct
+                )
+                reception_perfect = _compute_percentage_count(
+                    reception_attempts, reception_perfect_pct
+                )
+                attack_attempts = int(attack["attempts"])
+                attack_errors = int(attack["errors"])
+                attack_blocked = int(attack["blocked"])
+                attack_points = int(attack["points"])
+                attack_success_pct = str(attack["success_pct"])
+                block_points = int(block["points"])
                 metrics = MatchStatsMetrics(
-                    serves_attempts=int(serve["attempts"]),
-                    serves_errors=int(serve["errors"]),
-                    serves_points=int(serve["points"]),
-                    receptions_attempts=int(reception["attempts"]),
-                    receptions_errors=int(reception["errors"]),
-                    receptions_positive_pct=str(reception["positive_pct"]),
-                    receptions_perfect_pct=str(reception["perfect_pct"]),
-                    attacks_attempts=int(attack["attempts"]),
-                    attacks_errors=int(attack["errors"]),
-                    attacks_blocked=int(attack["blocked"]),
-                    attacks_points=int(attack["points"]),
-                    attacks_success_pct=str(attack["success_pct"]),
-                    blocks_points=int(block["points"]),
+                    serves_attempts=serve_attempts,
+                    serves_errors=serve_errors,
+                    serves_points=serve_points,
+                    receptions_attempts=reception_attempts,
+                    receptions_errors=reception_errors,
+                    receptions_positive_pct=reception_positive_pct,
+                    receptions_perfect_pct=reception_perfect_pct,
+                    attacks_attempts=attack_attempts,
+                    attacks_errors=attack_errors,
+                    attacks_blocked=attack_blocked,
+                    attacks_points=attack_points,
+                    attacks_success_pct=attack_success_pct,
+                    blocks_points=block_points,
+                    receptions_positive=reception_positive,
+                    receptions_perfect=reception_perfect,
                 )
             except (KeyError, TypeError, ValueError):
                 continue
@@ -1370,22 +1395,31 @@ def _load_manual_stats_totals() -> Dict[
                     continue
                 metrics_payload = player_entry.get("metrics") or {}
                 try:
+                    reception_attempts = int(
+                        metrics_payload.get("receptions_attempts", 0)
+                    )
+                    reception_positive_pct = str(
+                        metrics_payload.get("receptions_positive_pct", "0%")
+                    )
+                    reception_perfect_pct = str(
+                        metrics_payload.get("receptions_perfect_pct", "0%")
+                    )
+                    reception_positive = _compute_percentage_count(
+                        reception_attempts, reception_positive_pct
+                    )
+                    reception_perfect = _compute_percentage_count(
+                        reception_attempts, reception_perfect_pct
+                    )
                     player_metrics = MatchStatsMetrics(
                         serves_attempts=int(metrics_payload.get("serves_attempts", 0)),
                         serves_errors=int(metrics_payload.get("serves_errors", 0)),
                         serves_points=int(metrics_payload.get("serves_points", 0)),
-                        receptions_attempts=int(
-                            metrics_payload.get("receptions_attempts", 0)
-                        ),
+                        receptions_attempts=reception_attempts,
                         receptions_errors=int(
                             metrics_payload.get("receptions_errors", 0)
                         ),
-                        receptions_positive_pct=str(
-                            metrics_payload.get("receptions_positive_pct", "0%")
-                        ),
-                        receptions_perfect_pct=str(
-                            metrics_payload.get("receptions_perfect_pct", "0%")
-                        ),
+                        receptions_positive_pct=reception_positive_pct,
+                        receptions_perfect_pct=reception_perfect_pct,
                         attacks_attempts=int(metrics_payload.get("attacks_attempts", 0)),
                         attacks_errors=int(metrics_payload.get("attacks_errors", 0)),
                         attacks_blocked=int(metrics_payload.get("attacks_blocked", 0)),
@@ -1394,6 +1428,8 @@ def _load_manual_stats_totals() -> Dict[
                             metrics_payload.get("attacks_success_pct", "0%")
                         ),
                         blocks_points=int(metrics_payload.get("blocks_points", 0)),
+                        receptions_positive=reception_positive,
+                        receptions_perfect=reception_perfect,
                     )
                 except (TypeError, ValueError):
                     continue
@@ -1421,6 +1457,12 @@ def _load_manual_stats_totals() -> Dict[
                         jersey_number=jersey_number,
                         metrics=player_metrics,
                         total_points=total_points,
+                        break_points=_parse_optional_int_token(
+                            str(metrics_payload.get("break_points", "0"))
+                        ),
+                        plus_minus=_parse_optional_int_token(
+                            str(metrics_payload.get("plus_minus", "0"))
+                        ),
                     )
                 )
             normalized_keys: List[str] = []
@@ -2263,20 +2305,31 @@ def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
         if not serve_split or not attack_split:
             return None
         try:
+            reception_attempts = int(tokens[4])
+            reception_positive_pct = tokens[6]
+            reception_perfect_pct = tokens[7]
+            reception_positive = _compute_percentage_count(
+                reception_attempts, reception_positive_pct
+            )
+            reception_perfect = _compute_percentage_count(
+                reception_attempts, reception_perfect_pct
+            )
             return MatchStatsMetrics(
                 serves_attempts=int(tokens[2]),
                 serves_errors=serve_split[0],
                 serves_points=serve_split[1],
-                receptions_attempts=int(tokens[4]),
+                receptions_attempts=reception_attempts,
                 receptions_errors=int(tokens[5]),
-                receptions_positive_pct=tokens[6],
-                receptions_perfect_pct=tokens[7],
+                receptions_positive_pct=reception_positive_pct,
+                receptions_perfect_pct=reception_perfect_pct,
                 attacks_attempts=int(tokens[8]),
                 attacks_errors=int(tokens[9]),
                 attacks_blocked=attack_split[0],
                 attacks_points=attack_split[1],
                 attacks_success_pct=tokens[11],
                 blocks_points=int(tokens[12]),
+                receptions_positive=reception_positive,
+                receptions_perfect=reception_perfect,
             )
         except ValueError:
             return None
@@ -2292,20 +2345,31 @@ def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
     serves_errors, serves_points = serve_split
     attacks_blocked, attacks_points = attack_split
     try:
+        reception_attempts = int(groups["reception_attempts"])
+        reception_positive_pct = groups["reception_pos"]
+        reception_perfect_pct = groups["reception_perf"]
+        reception_positive = _compute_percentage_count(
+            reception_attempts, reception_positive_pct
+        )
+        reception_perfect = _compute_percentage_count(
+            reception_attempts, reception_perfect_pct
+        )
         return MatchStatsMetrics(
             serves_attempts=int(groups["serve_attempts"]),
             serves_errors=serves_errors,
             serves_points=serves_points,
-            receptions_attempts=int(groups["reception_attempts"]),
+            receptions_attempts=reception_attempts,
             receptions_errors=int(groups["reception_errors"]),
-            receptions_positive_pct=groups["reception_pos"],
-            receptions_perfect_pct=groups["reception_perf"],
+            receptions_positive_pct=reception_positive_pct,
+            receptions_perfect_pct=reception_perfect_pct,
             attacks_attempts=int(groups["attack_attempts"]),
             attacks_errors=int(groups["attack_errors"]),
             attacks_blocked=attacks_blocked,
             attacks_points=attacks_points,
             attacks_success_pct=groups["attack_pct"],
             blocks_points=int(groups["block_points"]),
+            receptions_positive=reception_positive,
+            receptions_perfect=reception_perfect,
         )
     except ValueError:
         return None
@@ -2363,20 +2427,42 @@ def _extract_compact_value_tokens(parts: Sequence[str]) -> Optional[Tuple[List[s
 
 
 def _build_metrics_from_compact_tokens(tokens: Sequence[str]) -> MatchStatsMetrics:
+    serves_attempts = _parse_int_token(tokens[3])
+    serves_errors = _parse_int_token(tokens[4])
+    serves_points = _parse_int_token(tokens[5])
+    receptions_attempts = _parse_int_token(tokens[6])
+    receptions_errors = _parse_int_token(tokens[7])
+    receptions_positive_pct = _parse_percentage_token(tokens[8])
+    receptions_perfect_pct = _parse_percentage_token(tokens[9])
+    receptions_positive = _compute_percentage_count(
+        receptions_attempts, receptions_positive_pct
+    )
+    receptions_perfect = _compute_percentage_count(
+        receptions_attempts, receptions_perfect_pct
+    )
+    attacks_attempts = _parse_int_token(tokens[10])
+    attacks_errors = _parse_int_token(tokens[11])
+    attacks_blocked = _parse_int_token(tokens[12])
+    attacks_points = _parse_int_token(tokens[13])
+    attacks_success_pct = _parse_percentage_token(tokens[14])
+    blocks_points = _parse_int_token(tokens[15])
+
     return MatchStatsMetrics(
-        serves_attempts=_parse_int_token(tokens[3]),
-        serves_errors=_parse_int_token(tokens[4]),
-        serves_points=_parse_int_token(tokens[5]),
-        receptions_attempts=_parse_int_token(tokens[6]),
-        receptions_errors=_parse_int_token(tokens[7]),
-        receptions_positive_pct=_parse_percentage_token(tokens[8]),
-        receptions_perfect_pct=_parse_percentage_token(tokens[9]),
-        attacks_attempts=_parse_int_token(tokens[10]),
-        attacks_errors=_parse_int_token(tokens[11]),
-        attacks_blocked=_parse_int_token(tokens[12]),
-        attacks_points=_parse_int_token(tokens[13]),
-        attacks_success_pct=_parse_percentage_token(tokens[14]),
-        blocks_points=_parse_int_token(tokens[15]),
+        serves_attempts=serves_attempts,
+        serves_errors=serves_errors,
+        serves_points=serves_points,
+        receptions_attempts=receptions_attempts,
+        receptions_errors=receptions_errors,
+        receptions_positive_pct=receptions_positive_pct,
+        receptions_perfect_pct=receptions_perfect_pct,
+        receptions_positive=receptions_positive,
+        receptions_perfect=receptions_perfect,
+        attacks_attempts=attacks_attempts,
+        attacks_errors=attacks_errors,
+        attacks_blocked=attacks_blocked,
+        attacks_points=attacks_points,
+        attacks_success_pct=attacks_success_pct,
+        blocks_points=blocks_points,
     )
 
 
@@ -2410,12 +2496,16 @@ def _parse_compact_player_stats(
         name_segment = " ".join(cleaned_parts)
     player_name = pretty_name(name_segment)
     total_points = _parse_int_token(value_tokens[0])
+    break_points = _parse_int_token(value_tokens[1])
+    plus_minus = _parse_int_token(value_tokens[2])
     return MatchPlayerStats(
         team_name=team_name,
         player_name=player_name,
         jersey_number=jersey_number,
         metrics=metrics,
         total_points=total_points,
+        break_points=break_points,
+        plus_minus=plus_minus,
     )
 
 
@@ -2451,6 +2541,20 @@ def _parse_percentage_token(token: str) -> str:
     except ValueError:
         return "0%"
     return f"{int(round(value))}%"
+
+
+def _compute_percentage_count(attempts: int, pct: str) -> int:
+    if attempts <= 0:
+        return 0
+    cleaned = pct.strip()
+    if not cleaned:
+        return 0
+    numeric = cleaned.replace("%", "").replace(",", ".")
+    try:
+        value = float(numeric)
+    except ValueError:
+        return 0
+    return int(round(attempts * (value / 100)))
 
 
 def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerStats]:
@@ -2490,32 +2594,61 @@ def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerS
     metrics_tokens = numeric_tokens[:metrics_count]
     extra_tokens = numeric_tokens[metrics_count:]
     try:
-        metrics = MatchStatsMetrics(
-            serves_attempts=_parse_int_token(metrics_tokens[0]),
-            serves_errors=_parse_int_token(metrics_tokens[1]),
-            serves_points=_parse_int_token(metrics_tokens[2]),
-            receptions_attempts=_parse_int_token(metrics_tokens[3]),
-            receptions_errors=_parse_int_token(metrics_tokens[4]),
-            receptions_positive_pct=_parse_percentage_token(metrics_tokens[5]),
-            receptions_perfect_pct=_parse_percentage_token(metrics_tokens[6]),
-            attacks_attempts=_parse_int_token(metrics_tokens[7]),
-            attacks_errors=_parse_int_token(metrics_tokens[8]),
-            attacks_blocked=_parse_int_token(metrics_tokens[9]),
-            attacks_points=_parse_int_token(metrics_tokens[10]),
-            attacks_success_pct=_parse_percentage_token(metrics_tokens[11]),
-            blocks_points=_parse_int_token(metrics_tokens[12]),
+        serves_attempts = _parse_int_token(metrics_tokens[0])
+        serves_errors = _parse_int_token(metrics_tokens[1])
+        serves_points = _parse_int_token(metrics_tokens[2])
+        receptions_attempts = _parse_int_token(metrics_tokens[3])
+        receptions_errors = _parse_int_token(metrics_tokens[4])
+        receptions_positive_pct = _parse_percentage_token(metrics_tokens[5])
+        receptions_perfect_pct = _parse_percentage_token(metrics_tokens[6])
+        receptions_positive = _compute_percentage_count(
+            receptions_attempts, receptions_positive_pct
         )
+        receptions_perfect = _compute_percentage_count(
+            receptions_attempts, receptions_perfect_pct
+        )
+        attacks_attempts = _parse_int_token(metrics_tokens[7])
+        attacks_errors = _parse_int_token(metrics_tokens[8])
+        attacks_blocked = _parse_int_token(metrics_tokens[9])
+        attacks_points = _parse_int_token(metrics_tokens[10])
+        attacks_success_pct = _parse_percentage_token(metrics_tokens[11])
+        blocks_points = _parse_int_token(metrics_tokens[12])
     except (IndexError, ValueError):
         return None
+    metrics = MatchStatsMetrics(
+        serves_attempts=serves_attempts,
+        serves_errors=serves_errors,
+        serves_points=serves_points,
+        receptions_attempts=receptions_attempts,
+        receptions_errors=receptions_errors,
+        receptions_positive_pct=receptions_positive_pct,
+        receptions_perfect_pct=receptions_perfect_pct,
+        receptions_positive=receptions_positive,
+        receptions_perfect=receptions_perfect,
+        attacks_attempts=attacks_attempts,
+        attacks_errors=attacks_errors,
+        attacks_blocked=attacks_blocked,
+        attacks_points=attacks_points,
+        attacks_success_pct=attacks_success_pct,
+        blocks_points=blocks_points,
+    )
     total_points = None
     if extra_tokens:
         total_points = _parse_optional_int_token(extra_tokens[0])
+    break_points = None
+    plus_minus = None
+    if len(extra_tokens) > 1:
+        break_points = _parse_optional_int_token(extra_tokens[1])
+    if len(extra_tokens) > 2:
+        plus_minus = _parse_optional_int_token(extra_tokens[2])
     return MatchPlayerStats(
         team_name=team_name,
         player_name=player_name,
         jersey_number=jersey_number,
         metrics=metrics,
         total_points=total_points,
+        break_points=break_points,
+        plus_minus=plus_minus,
     )
 
 

@@ -82,6 +82,8 @@ class USCPlayerMatchEntry:
     is_home: bool
     metrics: MatchStatsMetrics
     total_points: Optional[int]
+    break_points: Optional[int]
+    plus_minus: Optional[int]
 
     def to_dict(self) -> Dict[str, object]:
         result_payload: Optional[Dict[str, object]] = None
@@ -101,6 +103,8 @@ class USCPlayerMatchEntry:
             "result": result_payload,
             "metrics": asdict(self.metrics),
             "total_points": self.total_points,
+            "break_points": self.break_points,
+            "plus_minus": self.plus_minus,
         }
 
 
@@ -113,6 +117,8 @@ class AggregatedMetrics:
     serves_points: int
     receptions_attempts: int
     receptions_errors: int
+    receptions_positive: int
+    receptions_perfect: int
     receptions_positive_pct: Optional[str]
     receptions_perfect_pct: Optional[str]
     attacks_attempts: int
@@ -176,6 +182,8 @@ def summarize_metrics(entries: Sequence[MatchStatsMetrics]) -> Optional[Aggregat
         serves_points=sum(item.serves_points for item in entries),
         receptions_attempts=sum(item.receptions_attempts for item in entries),
         receptions_errors=sum(item.receptions_errors for item in entries),
+        receptions_positive=sum(getattr(item, "receptions_positive", 0) for item in entries),
+        receptions_perfect=sum(getattr(item, "receptions_perfect", 0) for item in entries),
         receptions_positive_pct=_weighted_percentage(
             entries, "receptions_attempts", "receptions_positive_pct"
         ),
@@ -263,6 +271,8 @@ def collect_usc_player_stats(
                     is_home=is_home,
                     metrics=player.metrics,
                     total_points=player.total_points,
+                    break_points=player.break_points,
+                    plus_minus=player.plus_minus,
                 )
             )
     entries.sort(key=lambda entry: (entry.player_name.lower(), entry.match.kickoff))
@@ -323,6 +333,12 @@ def build_stats_overview(
         total_points_values = [
             item.total_points for item in entries_list if item.total_points is not None
         ]
+        break_point_values = [
+            item.break_points for item in entries_list if item.break_points is not None
+        ]
+        plus_minus_values = [
+            item.plus_minus for item in entries_list if item.plus_minus is not None
+        ]
         jersey_number = entries_list[0].jersey_number
         players_payload.append(
             {
@@ -333,6 +349,12 @@ def build_stats_overview(
                 "totals": player_totals.to_dict() if player_totals else None,
                 "total_points": sum(total_points_values)
                 if total_points_values
+                else None,
+                "break_points_total": sum(break_point_values)
+                if break_point_values
+                else None,
+                "plus_minus_total": sum(plus_minus_values)
+                if plus_minus_values
                 else None,
             }
         )
