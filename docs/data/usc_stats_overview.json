@@ -1,0 +1,124 @@
+{
+  "generated": "2025-10-24T07:23:51+00:00",
+  "team": "USC Münster",
+  "match_count": 2,
+  "matches": [
+    {
+      "match_number": null,
+      "match_id": "777479989",
+      "kickoff": "2025-10-15T19:30:00+02:00",
+      "is_home": false,
+      "opponent": "Binder Blaubären TSV Flacht",
+      "host": "Binder Blaubären TSV Flacht",
+      "location": "Sporthalle Flacht",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
+      "scoresheet_url": null,
+      "attendance": "433",
+      "mvps": [
+        {
+          "medal": null,
+          "name": "Neuhaus, Frauke",
+          "team": "Binder Blaubären TSV Flacht"
+        },
+        {
+          "medal": null,
+          "name": "Ford, Brianna",
+          "team": "USC Münster"
+        }
+      ],
+      "result": {
+        "score": "0:3",
+        "total_points": "49:75",
+        "sets": [
+          "14:25",
+          "15:25",
+          "20:25"
+        ],
+        "summary": "0:3 / 49:75 (14:25 15:25 20:25)"
+      },
+      "metrics": {
+        "serves_attempts": 74,
+        "serves_errors": 13,
+        "serves_points": 5,
+        "receptions_attempts": 37,
+        "receptions_errors": 2,
+        "receptions_positive_pct": "38%",
+        "receptions_perfect_pct": "27%",
+        "attacks_attempts": 82,
+        "attacks_errors": 7,
+        "attacks_blocked": 6,
+        "attacks_points": 40,
+        "attacks_success_pct": "49%",
+        "blocks_points": 7
+      }
+    },
+    {
+      "match_number": null,
+      "match_id": "777479976",
+      "kickoff": "2025-10-12T16:00:00+02:00",
+      "is_home": true,
+      "opponent": "SSC Palmberg Schwerin",
+      "host": "USC Münster",
+      "location": "Sporthalle Berg Fidel",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
+      "scoresheet_url": null,
+      "attendance": "2124",
+      "mvps": [
+        {
+          "medal": null,
+          "name": "Jordan, Emilia",
+          "team": "USC Münster"
+        },
+        {
+          "medal": null,
+          "name": "Kirchhoff, Mia",
+          "team": "SSC Palmberg Schwerin"
+        }
+      ],
+      "result": {
+        "score": "3:2",
+        "total_points": "106:106",
+        "sets": [
+          "20:25",
+          "25:22",
+          "21:25",
+          "25:21",
+          "15:13"
+        ],
+        "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"
+      },
+      "metrics": {
+        "serves_attempts": 105,
+        "serves_errors": 19,
+        "serves_points": 14,
+        "receptions_attempts": 88,
+        "receptions_errors": 15,
+        "receptions_positive_pct": "30%",
+        "receptions_perfect_pct": "15%",
+        "attacks_attempts": 132,
+        "attacks_errors": 10,
+        "attacks_blocked": 8,
+        "attacks_points": 52,
+        "attacks_success_pct": "39%",
+        "blocks_points": 9
+      }
+    }
+  ],
+  "totals": {
+    "serves_attempts": 179,
+    "serves_errors": 32,
+    "serves_points": 19,
+    "receptions_attempts": 125,
+    "receptions_errors": 17,
+    "receptions_positive_pct": "32%",
+    "receptions_perfect_pct": "19%",
+    "attacks_attempts": 214,
+    "attacks_errors": 17,
+    "attacks_blocked": 14,
+    "attacks_points": 92,
+    "attacks_success_pct": "43%",
+    "blocks_points": 16
+  }
+}
