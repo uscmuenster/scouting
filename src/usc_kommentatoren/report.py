@@ -4975,6 +4975,39 @@ def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str
     return "\n".join(lines)
 
 
+def _build_player_card_html(player: Mapping[str, Any]) -> str:
+    player_name = player.get("name")
+    if not player_name:
+        player_name = "Unbekannt"
+    else:
+        player_name = str(player_name)
+
+    jersey_value = player.get("jersey_number")
+    jersey_number = "" if jersey_value in (None, "") else str(jersey_value).strip()
+    if not jersey_number:
+        title_text = player_name
+    else:
+        title_text = f"#{jersey_number} {player_name}"
+
+    table_html_raw = _build_player_match_table_html(player)
+    table_html = table_html_raw or '<p class="empty-state">Keine Spiele verfügbar.</p>'
+
+    lines = [
+        '<details class="player-card">',
+        '  <summary class="player-card__summary">',
+        f"    <h3>{escape(title_text)}</h3>",
+        '  </summary>',
+        '  <div class="player-card__content">',
+        '    <div class="player-card__table-wrapper">',
+        _indent_html(table_html, 6),
+        '    </div>',
+        '  </div>',
+        '</details>',
+    ]
+
+    return "\n".join(lines)
+
+
 def _render_player_overview_content(
     usc_scouting: Optional[Mapping[str, Any]]
 ) -> tuple[str, str, str]:
