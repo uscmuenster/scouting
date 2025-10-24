@@ -20,6 +20,7 @@ from .report import (
     SCHEDULE_PAGE_URL,
     USC_CANONICAL_NAME,
     MANUAL_SCHEDULE_PATH,
+    get_team_short_label,
     collect_match_stats_totals,
     enrich_matches,
     fetch_schedule,
@@ -41,6 +42,7 @@ class USCMatchStatsEntry:
 
     match: Match
     opponent: str
+    opponent_short: str
     is_home: bool
     metrics: MatchStatsMetrics
 
@@ -55,6 +57,7 @@ class USCMatchStatsEntry:
             "kickoff": self.match.kickoff.isoformat(),
             "is_home": self.is_home,
             "opponent": self.opponent,
+            "opponent_short": self.opponent_short,
             "host": self.match.host,
             "location": self.match.location,
             "info_url": self.match.info_url,
@@ -82,6 +85,7 @@ class USCPlayerMatchEntry:
     jersey_number: Optional[int]
     match: Match
     opponent: str
+    opponent_short: str
     is_home: bool
     metrics: MatchStatsMetrics
     total_points: Optional[int]
@@ -101,6 +105,7 @@ class USCPlayerMatchEntry:
             "kickoff": self.match.kickoff.isoformat(),
             "is_home": self.is_home,
             "opponent": self.opponent,
+            "opponent_short": self.opponent_short,
             "info_url": self.match.info_url,
             "stats_url": self.match.stats_url,
             "result": result_payload,
@@ -268,11 +273,14 @@ def collect_usc_match_stats(
         if metrics is None:
             continue
         is_home = is_usc(match.home_team)
-        opponent = match.away_team if is_home else match.home_team
+        opponent_raw = match.away_team if is_home else match.home_team
+        opponent_pretty = pretty_name(opponent_raw)
+        opponent_short = get_team_short_label(opponent_pretty)
         entries.append(
             USCMatchStatsEntry(
                 match=match,
-                opponent=pretty_name(opponent),
+                opponent=opponent_pretty,
+                opponent_short=opponent_short,
                 is_home=is_home,
                 metrics=metrics,
             )
@@ -303,7 +311,9 @@ def collect_usc_player_stats(
         if usc_summary is None:
             continue
         is_home = is_usc(match.home_team)
-        opponent = pretty_name(match.away_team if is_home else match.home_team)
+        opponent_raw = match.away_team if is_home else match.home_team
+        opponent = pretty_name(opponent_raw)
+        opponent_short = get_team_short_label(opponent)
         for player in usc_summary.players:
             entries.append(
                 USCPlayerMatchEntry(
@@ -311,6 +321,7 @@ def collect_usc_player_stats(
                     jersey_number=player.jersey_number,
                     match=match,
                     opponent=opponent,
+                    opponent_short=opponent_short,
                     is_home=is_home,
                     metrics=player.metrics,
                     total_points=player.total_points,
