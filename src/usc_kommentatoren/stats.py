@@ -257,6 +257,7 @@ def build_stats_overview(
 __all__ = [
     "AggregatedMetrics",
     "DEFAULT_OUTPUT_PATH",
+    "STATS_OUTPUT_PATH",
     "USCMatchStatsEntry",
     "build_stats_overview",
     "collect_usc_match_stats",
