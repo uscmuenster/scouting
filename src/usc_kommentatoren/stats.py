@@ -44,7 +44,7 @@ class USCMatchStatsEntry:
     def to_dict(self) -> Dict[str, object]:
         result_payload: Optional[Dict[str, object]] = None
         if self.match.result:
-            result_payload = _serialize_result(self.match.result)
+            result_payload = _serialize_result(self.match.result, is_home=self.is_home)
 
         return {
             "match_number": self.match.match_number,
@@ -88,7 +88,7 @@ class USCPlayerMatchEntry:
     def to_dict(self) -> Dict[str, object]:
         result_payload: Optional[Dict[str, object]] = None
         if self.match.result:
-            result_payload = _serialize_result(self.match.result)
+            result_payload = _serialize_result(self.match.result, is_home=self.is_home)
 
         return {
             "player": self.player_name,
@@ -132,12 +132,52 @@ class AggregatedMetrics:
         return asdict(self)
 
 
-def _serialize_result(result: MatchResult) -> Dict[str, object]:
+def _flip_scoreline(value: str) -> str:
+    parts = value.split(":", 1)
+    if len(parts) != 2:
+        return value
+    left, right = parts
+    return f"{right.strip()}:{left.strip()}"
+
+
+def _build_result_summary(
+    score: Optional[str], total_points: Optional[str], sets: Sequence[str]
+) -> str:
+    segments: List[str] = []
+    if score:
+        segments.append(score)
+    if total_points:
+        if segments:
+            segments.append(f"/ {total_points}")
+        else:
+            segments.append(total_points)
+    if sets:
+        joined_sets = " ".join(sets)
+        segments.append(f"({joined_sets})")
+    return " ".join(segments) if segments else "Ergebnis offen"
+
+
+def _serialize_result(result: MatchResult, *, is_home: bool) -> Dict[str, object]:
+    score_value: Optional[str] = result.score
+    total_points_value: Optional[str] = result.total_points
+    set_values: List[str] = list(result.sets)
+
+    if not is_home:
+        if score_value:
+            score_value = _flip_scoreline(score_value)
+        if total_points_value:
+            total_points_value = _flip_scoreline(total_points_value)
+        set_values = [
+            _flip_scoreline(item) if ":" in item else item for item in set_values
+        ]
+
+    summary_value = _build_result_summary(score_value, total_points_value, set_values)
+
     return {
-        "score": result.score,
-        "total_points": result.total_points,
-        "sets": list(result.sets),
-        "summary": result.summary,
+        "score": score_value,
+        "total_points": total_points_value,
+        "sets": set_values,
+        "summary": summary_value,
     }
 
 
