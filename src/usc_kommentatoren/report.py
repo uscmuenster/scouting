@@ -5343,6 +5343,10 @@ def build_html_report(
       --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
     }}
 
+    html {{
+      font-size: 70%;
+    }}
+
     @media (prefers-color-scheme: dark) {{
       :root {{
         --bg: #0f1f24;
