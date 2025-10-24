@@ -38,6 +38,49 @@ BERLIN_TZ = ZoneInfo("Europe/Berlin")
 USC_CANONICAL_NAME = "USC Münster"
 USC_HOMEPAGE = "https://www.usc-muenster.de/"
 
+MANUAL_SCHEDULE_PATH = (
+    Path(__file__).resolve().parents[2] / "docs" / "data" / "manual_schedule.csv"
+)
+_MANUAL_SCHEDULE_METADATA: Dict[str, Dict[str, Optional[str]]] = {
+    "2005": {
+        "match_id": "777479976",
+        "info_url": (
+            "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml"
+            "?matchId=777479976&hideHistoryBackButton=true"
+        ),
+        "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
+        "scoresheet_url": None,
+    },
+    "2011": {
+        "match_id": "777479989",
+        "info_url": (
+            "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml"
+            "?matchId=777479989&hideHistoryBackButton=true"
+        ),
+        "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
+        "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/ab4891bf-921b-4fe1-8aaa-97f2b9acb6d9/2011",
+    },
+}
+
+
+def _merge_manual_schedule_metadata(
+    metadata: Dict[str, Dict[str, Optional[str]]]
+) -> Dict[str, Dict[str, Optional[str]]]:
+    for match_number, manual_entry in _MANUAL_SCHEDULE_METADATA.items():
+        entry = metadata.setdefault(
+            match_number,
+            {
+                "match_id": None,
+                "info_url": None,
+                "stats_url": None,
+                "scoresheet_url": None,
+            },
+        )
+        for key, value in manual_entry.items():
+            if value and not entry.get(key):
+                entry[key] = value
+    return metadata
+
 # Farbkonfiguration für Hervorhebungen von USC und Gegner.
 # Werte können bei Bedarf angepasst werden, um die farbliche Darstellung global zu ändern.
 HIGHLIGHT_COLORS: Dict[str, Dict[str, str]] = {
@@ -391,6 +434,8 @@ def _http_get(
             return response
         except requests.RequestException as exc:  # pragma: no cover - network errors
             last_error = exc
+            if isinstance(exc, (requests.exceptions.ProxyError, requests.exceptions.ConnectionError)):
+                raise
             if attempt == retries - 1:
                 raise
             backoff = delay_seconds * (2 ** attempt)
@@ -499,11 +544,14 @@ def fetch_schedule_match_metadata(
     retries: int = 5,
     delay_seconds: float = 2.0,
 ) -> Dict[str, Dict[str, Optional[str]]]:
-    response = _http_get(
-        url,
-        retries=retries,
-        delay_seconds=delay_seconds,
-    )
+    try:
+        response = _http_get(
+            url,
+            retries=retries,
+            delay_seconds=delay_seconds,
+        )
+    except requests.RequestException:
+        return _merge_manual_schedule_metadata({})
     soup = BeautifulSoup(response.text, "html.parser")
     metadata: Dict[str, Dict[str, Optional[str]]] = {}
     current_match_id: Optional[str] = None
@@ -547,7 +595,7 @@ def fetch_schedule_match_metadata(
             elif "statistik" in title or "uploads" in href.lower():
                 entry["stats_url"] = full_href
 
-    return metadata
+    return _merge_manual_schedule_metadata(metadata)
 
 
 def build_match_details_url(match_id: str) -> str:
@@ -841,7 +889,10 @@ def enrich_match(
     if match_id:
         detail = detail_cache.get(match_id)
         if detail is None:
-            detail = fetch_match_details(match_id)
+            try:
+                detail = fetch_match_details(match_id)
+            except requests.RequestException:
+                detail = {}
             detail_cache[match_id] = detail
         fetched_referees = detail.get("referees") or ()
         if fetched_referees:
@@ -1246,6 +1297,397 @@ _MANUAL_STATS_TOTALS_DATA: Dict[str, Any] = {
             ],
         },
         {
+            "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
+            "teams": [
+                {
+                    "name": "USC Münster",
+                    "serve": {
+                        "attempts": 105,
+                        "errors": 19,
+                        "points": 14,
+                    },
+                    "reception": {
+                        "attempts": 88,
+                        "errors": 15,
+                        "positive_pct": "30%",
+                        "perfect_pct": "15%",
+                    },
+                    "attack": {
+                        "attempts": 132,
+                        "errors": 10,
+                        "blocked": 8,
+                        "points": 52,
+                        "success_pct": "39%",
+                    },
+                    "block": {
+                        "points": 9,
+                    },
+                    "players": [
+                        {
+                            "name": "MOLENAAR Pippa",
+                            "jersey_number": 1,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 2,
+                            "metrics": {
+                                "serves_attempts": 1,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 32,
+                                "receptions_errors": 5,
+                                "receptions_positive_pct": "34%",
+                                "receptions_perfect_pct": "19%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 2,
+                            },
+                        },
+                        {
+                            "name": "SCHAEFER Lara-Marie",
+                            "jersey_number": 2,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 1,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 12,
+                                "receptions_errors": 3,
+                                "receptions_positive_pct": "33%",
+                                "receptions_perfect_pct": "17%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 1,
+                            },
+                        },
+                        {
+                            "name": "SPÖLER Esther",
+                            "jersey_number": 3,
+                            "total_points": 7,
+                            "break_points": 3,
+                            "plus_minus": 1,
+                            "metrics": {
+                                "serves_attempts": 10,
+                                "serves_errors": 2,
+                                "serves_points": 1,
+                                "receptions_attempts": 18,
+                                "receptions_errors": 3,
+                                "receptions_positive_pct": "22%",
+                                "receptions_perfect_pct": "11%",
+                                "attacks_attempts": 23,
+                                "attacks_errors": 2,
+                                "attacks_blocked": 1,
+                                "attacks_points": 8,
+                                "attacks_success_pct": "35%",
+                                "blocks_points": 1,
+                                "break_points": 3,
+                                "plus_minus": 1,
+                            },
+                        },
+                        {
+                            "name": "MALM Cecilia",
+                            "jersey_number": 5,
+                            "total_points": 8,
+                            "break_points": 3,
+                            "plus_minus": 4,
+                            "metrics": {
+                                "serves_attempts": 12,
+                                "serves_errors": 3,
+                                "serves_points": 2,
+                                "receptions_attempts": 16,
+                                "receptions_errors": 3,
+                                "receptions_positive_pct": "25%",
+                                "receptions_perfect_pct": "13%",
+                                "attacks_attempts": 24,
+                                "attacks_errors": 2,
+                                "attacks_blocked": 2,
+                                "attacks_points": 9,
+                                "attacks_success_pct": "38%",
+                                "blocks_points": 2,
+                                "break_points": 3,
+                                "plus_minus": 4,
+                            },
+                        },
+                        {
+                            "name": "KÖMMLING Elena",
+                            "jersey_number": 7,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "LIU Yina",
+                            "jersey_number": 8,
+                            "total_points": 2,
+                            "break_points": 1,
+                            "plus_minus": 1,
+                            "metrics": {
+                                "serves_attempts": 12,
+                                "serves_errors": 2,
+                                "serves_points": 1,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 2,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 1,
+                                "attacks_success_pct": "50%",
+                                "blocks_points": 1,
+                                "break_points": 1,
+                                "plus_minus": 1,
+                            },
+                        },
+                        {
+                            "name": "JORDAN Emilia",
+                            "jersey_number": 9,
+                            "total_points": 1,
+                            "break_points": 1,
+                            "plus_minus": 1,
+                            "metrics": {
+                                "serves_attempts": 25,
+                                "serves_errors": 5,
+                                "serves_points": 4,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 2,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 1,
+                                "attacks_success_pct": "50%",
+                                "blocks_points": 0,
+                                "break_points": 1,
+                                "plus_minus": 1,
+                            },
+                        },
+                        {
+                            "name": "STROTHOFF Amelie",
+                            "jersey_number": 10,
+                            "total_points": 6,
+                            "break_points": 2,
+                            "plus_minus": 1,
+                            "metrics": {
+                                "serves_attempts": 5,
+                                "serves_errors": 1,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 10,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 1,
+                                "attacks_points": 4,
+                                "attacks_success_pct": "40%",
+                                "blocks_points": 1,
+                                "break_points": 2,
+                                "plus_minus": 1,
+                            },
+                        },
+                        {
+                            "name": "HEIL Franziska",
+                            "jersey_number": 11,
+                            "total_points": 1,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 1,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 1,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "WAELKENS Anke",
+                            "jersey_number": 12,
+                            "total_points": 9,
+                            "break_points": 4,
+                            "plus_minus": 3,
+                            "metrics": {
+                                "serves_attempts": 6,
+                                "serves_errors": 1,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 8,
+                                "attacks_errors": 1,
+                                "attacks_blocked": 1,
+                                "attacks_points": 3,
+                                "attacks_success_pct": "38%",
+                                "blocks_points": 2,
+                                "break_points": 4,
+                                "plus_minus": 3,
+                            },
+                        },
+                        {
+                            "name": "FORD Brianna",
+                            "jersey_number": 14,
+                            "total_points": 24,
+                            "break_points": 12,
+                            "plus_minus": 5,
+                            "metrics": {
+                                "serves_attempts": 18,
+                                "serves_errors": 3,
+                                "serves_points": 4,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 38,
+                                "attacks_errors": 4,
+                                "attacks_blocked": 2,
+                                "attacks_points": 17,
+                                "attacks_success_pct": "45%",
+                                "blocks_points": 1,
+                                "break_points": 12,
+                                "plus_minus": 5,
+                            },
+                        },
+                        {
+                            "name": "SCHULTZE Lena",
+                            "jersey_number": 16,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 2,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "MARTIN Isabel Rebecca",
+                            "jersey_number": 17,
+                            "total_points": 12,
+                            "break_points": 4,
+                            "plus_minus": 2,
+                            "metrics": {
+                                "serves_attempts": 9,
+                                "serves_errors": 2,
+                                "serves_points": 1,
+                                "receptions_attempts": 10,
+                                "receptions_errors": 1,
+                                "receptions_positive_pct": "30%",
+                                "receptions_perfect_pct": "10%",
+                                "attacks_attempts": 18,
+                                "attacks_errors": 1,
+                                "attacks_blocked": 1,
+                                "attacks_points": 7,
+                                "attacks_success_pct": "39%",
+                                "blocks_points": 1,
+                                "break_points": 4,
+                                "plus_minus": 2,
+                            },
+                        },
+                        {
+                            "name": "SEYBERING Diane",
+                            "jersey_number": 18,
+                            "total_points": 5,
+                            "break_points": 3,
+                            "plus_minus": 2,
+                            "metrics": {
+                                "serves_attempts": 4,
+                                "serves_errors": 0,
+                                "serves_points": 1,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 6,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 2,
+                                "attacks_success_pct": "33%",
+                                "blocks_points": 0,
+                                "break_points": 3,
+                                "plus_minus": 2,
+                            },
+                        },
+                    ],
+                },
+                {
+                    "name": "SSC Palmberg Schwerin",
+                    "serve": {
+                        "attempts": 107,
+                        "errors": 19,
+                        "points": 15,
+                    },
+                    "reception": {
+                        "attempts": 86,
+                        "errors": 14,
+                        "positive_pct": "33%",
+                        "perfect_pct": "15%",
+                    },
+                    "attack": {
+                        "attempts": 129,
+                        "errors": 10,
+                        "blocked": 9,
+                        "points": 50,
+                        "success_pct": "39%",
+                    },
+                    "block": {
+                        "points": 8,
+                    },
+                },
+            ],
+        },
+        {
             "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
             "teams": [
                 {
@@ -1298,6 +1740,344 @@ _MANUAL_STATS_TOTALS_DATA: Dict[str, Any] = {
                     "block": {
                         "points": 7,
                     },
+                    "players": [
+                        {
+                            "name": "MOLENAAR Pippa",
+                            "jersey_number": 1,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 3,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "67%",
+                                "receptions_perfect_pct": "33%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "SCHAEFER Lara-Marie",
+                            "jersey_number": 2,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 5,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "20%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "SPÖLER Esther",
+                            "jersey_number": 3,
+                            "total_points": 10,
+                            "break_points": 4,
+                            "plus_minus": 7,
+                            "metrics": {
+                                "serves_attempts": 9,
+                                "serves_errors": 1,
+                                "serves_points": 1,
+                                "receptions_attempts": 2,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "100%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 11,
+                                "attacks_errors": 1,
+                                "attacks_blocked": 1,
+                                "attacks_points": 7,
+                                "attacks_success_pct": "64%",
+                                "blocks_points": 2,
+                                "break_points": 4,
+                                "plus_minus": 7,
+                            },
+                        },
+                        {
+                            "name": "MALM Cecilia",
+                            "jersey_number": 5,
+                            "total_points": 6,
+                            "break_points": 4,
+                            "plus_minus": 2,
+                            "metrics": {
+                                "serves_attempts": 13,
+                                "serves_errors": 1,
+                                "serves_points": 2,
+                                "receptions_attempts": 10,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "40%",
+                                "receptions_perfect_pct": "20%",
+                                "attacks_attempts": 12,
+                                "attacks_errors": 3,
+                                "attacks_blocked": 0,
+                                "attacks_points": 4,
+                                "attacks_success_pct": "33%",
+                                "blocks_points": 0,
+                                "break_points": 4,
+                                "plus_minus": 2,
+                            },
+                        },
+                        {
+                            "name": "KÖMMLING Elena",
+                            "jersey_number": 7,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "LIU Yina",
+                            "jersey_number": 8,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 1,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "JORDAN Emilia",
+                            "jersey_number": 9,
+                            "total_points": 1,
+                            "break_points": 1,
+                            "plus_minus": -3,
+                            "metrics": {
+                                "serves_attempts": 13,
+                                "serves_errors": 3,
+                                "serves_points": 0,
+                                "receptions_attempts": 1,
+                                "receptions_errors": 1,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 2,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 1,
+                                "attacks_success_pct": "50%",
+                                "blocks_points": 0,
+                                "break_points": 1,
+                                "plus_minus": -3,
+                            },
+                        },
+                        {
+                            "name": "STROTHOFF Amelie",
+                            "jersey_number": 10,
+                            "total_points": 2,
+                            "break_points": 1,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 5,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 10,
+                                "receptions_errors": 1,
+                                "receptions_positive_pct": "20%",
+                                "receptions_perfect_pct": "20%",
+                                "attacks_attempts": 4,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 1,
+                                "attacks_points": 2,
+                                "attacks_success_pct": "50%",
+                                "blocks_points": 0,
+                                "break_points": 1,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "HEIL Franziska",
+                            "jersey_number": 11,
+                            "total_points": 0,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 0,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "WAELKENS Anke",
+                            "jersey_number": 12,
+                            "total_points": 3,
+                            "break_points": 3,
+                            "plus_minus": 2,
+                            "metrics": {
+                                "serves_attempts": 8,
+                                "serves_errors": 1,
+                                "serves_points": 1,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 1,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 0,
+                                "attacks_success_pct": "0%",
+                                "blocks_points": 2,
+                                "break_points": 3,
+                                "plus_minus": 2,
+                            },
+                        },
+                        {
+                            "name": "FORD Brianna",
+                            "jersey_number": 14,
+                            "total_points": 17,
+                            "break_points": 10,
+                            "plus_minus": 13,
+                            "metrics": {
+                                "serves_attempts": 10,
+                                "serves_errors": 2,
+                                "serves_points": 1,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 29,
+                                "attacks_errors": 1,
+                                "attacks_blocked": 1,
+                                "attacks_points": 16,
+                                "attacks_success_pct": "55%",
+                                "blocks_points": 0,
+                                "break_points": 10,
+                                "plus_minus": 13,
+                            },
+                        },
+                        {
+                            "name": "SCHULTZE Lena",
+                            "jersey_number": 16,
+                            "total_points": 1,
+                            "break_points": 0,
+                            "plus_minus": 0,
+                            "metrics": {
+                                "serves_attempts": 0,
+                                "serves_errors": 0,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 4,
+                                "attacks_errors": 1,
+                                "attacks_blocked": 0,
+                                "attacks_points": 1,
+                                "attacks_success_pct": "25%",
+                                "blocks_points": 0,
+                                "break_points": 0,
+                                "plus_minus": 0,
+                            },
+                        },
+                        {
+                            "name": "MARTIN Isabel Rebecca",
+                            "jersey_number": 17,
+                            "total_points": 8,
+                            "break_points": 6,
+                            "plus_minus": 2,
+                            "metrics": {
+                                "serves_attempts": 9,
+                                "serves_errors": 2,
+                                "serves_points": 0,
+                                "receptions_attempts": 6,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "33%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 16,
+                                "attacks_errors": 1,
+                                "attacks_blocked": 3,
+                                "attacks_points": 7,
+                                "attacks_success_pct": "44%",
+                                "blocks_points": 1,
+                                "break_points": 6,
+                                "plus_minus": 2,
+                            },
+                        },
+                        {
+                            "name": "SEYBERING Diane",
+                            "jersey_number": 18,
+                            "total_points": 4,
+                            "break_points": 3,
+                            "plus_minus": 1,
+                            "metrics": {
+                                "serves_attempts": 6,
+                                "serves_errors": 3,
+                                "serves_points": 0,
+                                "receptions_attempts": 0,
+                                "receptions_errors": 0,
+                                "receptions_positive_pct": "0%",
+                                "receptions_perfect_pct": "0%",
+                                "attacks_attempts": 3,
+                                "attacks_errors": 0,
+                                "attacks_blocked": 0,
+                                "attacks_points": 2,
+                                "attacks_success_pct": "67%",
+                                "blocks_points": 2,
+                                "break_points": 3,
+                                "plus_minus": 1,
+                            },
+                        },
+                    ],
                 },
             ],
         },
@@ -2260,6 +3040,11 @@ _MATCH_STATS_LINE_PATTERN = re.compile(
     r"(?P<block_points>\d+)"
 )
 
+_TOTALS_LABEL_PATTERN = re.compile(
+    r"\b(Aufschlag|Annahme|Angriff|Block|Punkte)\b",
+    re.IGNORECASE,
+)
+
 
 def _split_compound_value(
     value: str,
@@ -2285,6 +3070,7 @@ def _split_compound_value(
 
 def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
     normalized_line = _normalize_stats_totals_line(line)
+    normalized_line = _TOTALS_LABEL_PATTERN.sub(" ", normalized_line)
     compact_result = _extract_compact_value_tokens(
         _tokenize_compact_stats_text(normalized_line)
     )
@@ -2773,19 +3559,37 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
             cursor -= 1
         header_entries.reverse()
         header_lines = [entry[1] for entry in header_entries]
-        totals_line: Optional[str] = None
+        totals_candidates: List[str] = []
         for probe in range(marker + 1, len(lines)):
             candidate = lines[probe].strip()
             if not candidate:
+                if totals_candidates:
+                    break
                 continue
             if candidate.startswith("Satz"):
                 break
-            if re.search(r"[A-Za-zÄÖÜäöüß]", candidate):
+            if "Spieler insgesamt" in candidate:
+                break
+            if not re.search(r"\d", candidate):
+                if totals_candidates:
+                    break
                 continue
-            if re.search(r"\d", candidate):
-                totals_line = candidate
-        if not totals_line:
+            totals_candidates.append(candidate)
+            # Continue collecting lines in case the totals are split across multiple rows.
+        if not totals_candidates:
             continue
+        points_lines = [
+            entry
+            for entry in totals_candidates
+            if re.search(r"\bPunkte\b", entry, re.IGNORECASE)
+        ]
+        other_lines = [
+            entry
+            for entry in totals_candidates
+            if entry not in points_lines
+        ]
+        ordered_totals = points_lines + other_lines if points_lines else totals_candidates
+        totals_line = " ".join(ordered_totals)
         normalized_totals = _normalize_stats_totals_line(totals_line)
         team_name = (
             team_names[marker_index]
