@@ -3804,6 +3804,18 @@ def build_html_report(
       font-size: 0.95rem;
     }}
 
+    .match-result-list {{
+      margin: 0.3rem 0 0;
+      padding-left: 1.2rem;
+      list-style: disc;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }}
+
+    .match-result-list li {{
+      margin: 0.2rem 0;
+    }}
+
     .metrics-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
@@ -3966,7 +3978,7 @@ def build_html_report(
 
     <section>
       <h2>Team-Überblick</h2>
-      <p class="section-hint" data-team-meta>Die Daten werden geladen…</p>
+      <div class="section-hint" data-team-meta>Die Daten werden geladen…</div>
       <div class="metrics-grid" data-team-summary>
         <p class="empty-state">Keine Daten verfügbar.</p>
       </div>
@@ -4039,6 +4051,17 @@ def build_html_report(
       return items.join(' · ');
     }}
 
+    function formatMatchResultLine(match) {{
+      const date = formatDate(match.kickoff);
+      const opponent = match.opponent || 'Unbekannt';
+      const venue = match.is_home ? 'Heim' : 'Auswärts';
+      let resultSummary = 'Ergebnis offen';
+      if (match.result && match.result.summary) {{
+        resultSummary = match.result.summary;
+      }}
+      return `<<date>> · <<venue>> · <<opponent>>: <<resultSummary>>`;
+    }}
+
     function buildMetricTable(metrics, totalPoints) {{
       const table = document.createElement('table');
       table.className = 'metrics-table';
@@ -4076,8 +4099,29 @@ def build_html_report(
         return;
       }}
       if (metaNode) {{
-        const count = data.match_count || 0;
-        metaNode.textContent = count === 1 ? '1 Spiel berücksichtigt.' : `<<count>> Spiele berücksichtigt.`;
+        const matches = Array.isArray(data.matches) ? data.matches : [];
+        const count = data.match_count || matches.length || 0;
+        metaNode.innerHTML = '';
+        if (!matches.length) {{
+          metaNode.textContent = count === 1
+            ? '1 Spiel berücksichtigt.'
+            : `<<count>> Spiele berücksichtigt.`;
+        }} else {{
+          const summaryText = document.createElement('span');
+          summaryText.textContent = count === 1
+            ? '1 Spiel berücksichtigt:'
+            : `<<count>> Spiele berücksichtigt:`;
+          metaNode.appendChild(summaryText);
+
+          const list = document.createElement('ul');
+          list.className = 'match-result-list';
+          for (const match of matches) {{
+            const item = document.createElement('li');
+            item.textContent = formatMatchResultLine(match);
+            list.appendChild(item);
+          }}
+          metaNode.appendChild(list);
+        }}
       }}
       const cards = [
         ['Aufschlag', `<<formatInt(totals.serves_attempts)>> Versuche · <<formatInt(totals.serves_errors)>> Fehler · <<formatInt(totals.serves_points)>> Asse`],
