@@ -8,6 +8,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence
 
+import requests
+
 from .report import (
     DEFAULT_SCHEDULE_URL,
     Match,
@@ -17,6 +19,7 @@ from .report import (
     MatchStatsTotals,
     SCHEDULE_PAGE_URL,
     USC_CANONICAL_NAME,
+    MANUAL_SCHEDULE_PATH,
     collect_match_stats_totals,
     enrich_matches,
     fetch_schedule,
@@ -289,11 +292,20 @@ def _load_enriched_matches(
         schedule_path = Path(schedule_path)
     schedule_csv_url = schedule_csv_url or DEFAULT_SCHEDULE_URL
     schedule_page_url = schedule_page_url or SCHEDULE_PAGE_URL
+    manual_schedule_path = MANUAL_SCHEDULE_PATH if MANUAL_SCHEDULE_PATH.exists() else None
     if schedule_path and schedule_path.exists():
         matches = load_schedule_from_file(schedule_path)
     else:
-        matches = fetch_schedule(schedule_csv_url)
+        try:
+            matches = fetch_schedule(schedule_csv_url)
+        except requests.RequestException:
+            if manual_schedule_path:
+                matches = load_schedule_from_file(manual_schedule_path)
+            else:
+                matches = []
     metadata = fetch_schedule_match_metadata(schedule_page_url)
+    if not matches and manual_schedule_path:
+        matches = load_schedule_from_file(manual_schedule_path)
     return enrich_matches(matches, metadata)
 
 
