@@ -4677,11 +4677,54 @@ def _indent_html(content: str, spaces: int) -> str:
     return "\n".join(f"{indent}{line}" if line else "" for line in content.splitlines())
 
 
+def _summarize_set_results(sets: Sequence[str]) -> Optional[str]:
+    home_sets = 0
+    away_sets = 0
+    parsed_any = False
+
+    for raw_value in sets:
+        parts = raw_value.split(":", 1)
+        if len(parts) != 2:
+            continue
+        left, right = parts
+        try:
+            left_points = int(left.strip())
+            right_points = int(right.strip())
+        except ValueError:
+            continue
+
+        if left_points == right_points:
+            continue
+
+        parsed_any = True
+        if left_points > right_points:
+            home_sets += 1
+        else:
+            away_sets += 1
+
+    if not parsed_any:
+        return None
+
+    return f"{home_sets}:{away_sets}"
+
+
 def _format_match_sets_label(match: Mapping[str, Any]) -> str:
     result = match.get("result") or {}
+
+    score_value = (result.get("score") or "").strip()
+    if score_value:
+        return score_value
+
     sets = result.get("sets") or []
     cleaned = [str(item).strip() for item in sets if str(item).strip()]
-    return " ".join(cleaned) if cleaned else "–"
+    if not cleaned:
+        return "–"
+
+    summarized = _summarize_set_results(cleaned)
+    if summarized:
+        return summarized
+
+    return " ".join(cleaned)
 
 
 def _resolve_match_metric(match: Mapping[str, Any], key: str) -> Any:
@@ -4702,18 +4745,18 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
         ("Datum", False),
         ("Gegner", False),
         ("Sätze", False),
-        ("Srv\u00a0V", True),
-        ("Srv\u00a0F", True),
-        ("Srv\u00a0Asse", True),
-        ("Ann\u00a0V", True),
-        ("Ann\u00a0F", True),
-        ("Ann\u00a0+%", True),
-        ("Ann\u00a0Perf%", True),
-        ("Ang\u00a0V", True),
-        ("Ang\u00a0F", True),
-        ("Ang\u00a0gebl.", True),
-        ("Ang\u00a0Pkt.", True),
-        ("Ang\u00a0%", True),
+        ("Auf-Ges", True),
+        ("Auf-Fhl", True),
+        ("Auf-Pkt", True),
+        ("An-Ges", True),
+        ("An-Fhl", True),
+        ("An-Pos%", True),
+        ("An-Prf%", True),
+        ("Ag-Ges", True),
+        ("Ag-Fhl", True),
+        ("Ag-Blo", True),
+        ("Ag-Pkt", True),
+        ("Ag-%", True),
         ("Block", True),
         ("Pkt.", True),
         ("Breakpkt.", True),
@@ -4788,8 +4831,9 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
     if totals is not None:
         lines.append('    <tr class="stats-table__total player-match-table__total-row">')
         lines.append('      <th scope="row">Summe</th>')
-        lines.append('      <td>–</td>')
-        lines.append('      <td>–</td>')
+        lines.append('      <td></td>')
+        lines.append('      <td></td>')
+        lines.append('      <td></td>')
         lines.append(
             f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_attempts')))}</td>"
         )
@@ -4958,6 +5002,10 @@ def build_html_report(
       --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
     }}
 
+    html {{
+      font-size: 100%;
+    }}
+
     @media (prefers-color-scheme: dark) {{
       :root {{
         --bg: #0f1f24;
@@ -5018,7 +5066,7 @@ def build_html_report(
       background: var(--accent-soft);
       color: var(--accent);
       font-weight: 600;
-      font-size: 0.92rem;
+      font-size: 0.65rem;
       border: 1px solid var(--card-border);
     }}
 
@@ -5130,20 +5178,50 @@ def build_html_report(
       border-radius: 1.1rem;
       border: 1px solid var(--card-border);
       box-shadow: var(--shadow);
-      padding: clamp(1.1rem, 3vw, 1.6rem);
-      display: grid;
-      gap: clamp(0.9rem, 2.6vw, 1.3rem);
+      overflow: hidden;
     }}
 
-    .player-card__header {{
+    .player-card__summary {{
       display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: clamp(1.1rem, 3vw, 1.6rem);
+      list-style: none;
+      user-select: none;
     }}
 
-    .player-card__header h3 {{
+    .player-card__summary::-webkit-details-marker {{
+      display: none;
+    }}
+
+    .player-card__summary::after {{
+      content: '▾';
+      font-size: 1.1rem;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }}
+
+    .player-card[open] > .player-card__summary::after {{
+      transform: rotate(-180deg);
+    }}
+
+    .player-card__summary h3 {{
       margin: 0;
       font-size: clamp(1.25rem, 3vw, 1.6rem);
+    }}
+
+    .player-card__summary:focus-visible {{
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }}
+
+    .player-card__content {{
+      display: grid;
+      gap: clamp(0.9rem, 2.6vw, 1.3rem);
+      padding: clamp(0.8rem, 2.4vw, 1.1rem) clamp(1.1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.6rem);
+      border-top: 1px solid var(--card-border);
     }}
 
     .player-card__table-wrapper {{
@@ -5264,18 +5342,18 @@ def build_html_report(
         {{ label: 'Datum' }},
         {{ label: 'Gegner' }},
         {{ label: 'Sätze' }},
-        {{ label: 'Srv\u00a0V', numeric: true }},
-        {{ label: 'Srv\u00a0F', numeric: true }},
-        {{ label: 'Srv\u00a0Asse', numeric: true }},
-        {{ label: 'Ann\u00a0V', numeric: true }},
-        {{ label: 'Ann\u00a0F', numeric: true }},
-        {{ label: 'Ann\u00a0+%', numeric: true }},
-        {{ label: 'Ann\u00a0Perf%', numeric: true }},
-        {{ label: 'Ang\u00a0V', numeric: true }},
-        {{ label: 'Ang\u00a0F', numeric: true }},
-        {{ label: 'Ang\u00a0gebl.', numeric: true }},
-        {{ label: 'Ang\u00a0Pkt.', numeric: true }},
-        {{ label: 'Ang\u00a0%', numeric: true }},
+        {{ label: 'Auf-Ges', numeric: true }},
+        {{ label: 'Auf-Fhl', numeric: true }},
+        {{ label: 'Auf-Pkt', numeric: true }},
+        {{ label: 'An-Ges', numeric: true }},
+        {{ label: 'An-Fhl', numeric: true }},
+        {{ label: 'An-Pos%', numeric: true }},
+        {{ label: 'An-Prf%', numeric: true }},
+        {{ label: 'Ag-Ges', numeric: true }},
+        {{ label: 'Ag-Fhl', numeric: true }},
+        {{ label: 'Ag-Blo', numeric: true }},
+        {{ label: 'Ag-Pkt', numeric: true }},
+        {{ label: 'Ag-%', numeric: true }},
         {{ label: 'Block', numeric: true }},
         {{ label: 'Pkt.', numeric: true }},
         {{ label: 'Breakpkt.', numeric: true }},
@@ -5500,16 +5578,19 @@ def build_html_report(
         }}
       }}
       for (const player of players) {{
-        const card = document.createElement('article');
+        const card = document.createElement('details');
         card.className = 'player-card';
 
-        const header = document.createElement('header');
-        header.className = 'player-card__header';
+        const summary = document.createElement('summary');
+        summary.className = 'player-card__summary';
         const title = document.createElement('h3');
         const playerName = player && player.name ? player.name : 'Unbekannt';
         title.textContent = player.jersey_number ? `#<<player.jersey_number>> <<playerName>>` : playerName;
-        header.appendChild(title);
-        card.appendChild(header);
+        summary.appendChild(title);
+        card.appendChild(summary);
+
+        const content = document.createElement('div');
+        content.className = 'player-card__content';
 
         const tableWrapper = document.createElement('div');
         tableWrapper.className = 'player-card__table-wrapper';
@@ -5519,7 +5600,8 @@ def build_html_report(
         }} else {{
           tableWrapper.innerHTML = '<p class="empty-state">Keine Spiele verfügbar.</p>';
         }}
-        card.appendChild(tableWrapper);
+        content.appendChild(tableWrapper);
+        card.appendChild(content);
 
         container.appendChild(card);
       }}
