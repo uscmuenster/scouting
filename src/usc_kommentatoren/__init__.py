@@ -24,6 +24,14 @@ from .report import (
     parse_roster,
     parse_schedule,
 )
+from .stats import (
+    AggregatedMetrics,
+    DEFAULT_OUTPUT_PATH as STATS_OUTPUT_PATH,
+    USCMatchStatsEntry,
+    build_stats_overview,
+    collect_usc_match_stats,
+    summarize_metrics,
+)
 
 __all__ = [
     "DEFAULT_SCHEDULE_URL",
@@ -48,4 +56,10 @@ __all__ = [
     "parse_roster",
     "parse_schedule",
     "TABLE_URL",
+    "AggregatedMetrics",
+    "STATS_OUTPUT_PATH",
+    "USCMatchStatsEntry",
+    "build_stats_overview",
+    "collect_usc_match_stats",
+    "summarize_metrics",
 ]

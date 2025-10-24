@@ -2220,6 +2220,22 @@ def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
         return None
 
 
+def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsMetrics]:
+    """Return structured statistics for a ``MatchStatsTotals`` entry.
+
+    The PDF-Auswertungen der VBL liefern die Gesamtwerte in einer einzigen
+    Textzeile. Für manche Spiele liegen die bereits als ``MatchStatsMetrics``
+    im ``metrics``-Attribut vor (z. B. aus manuellen Korrekturen). Falls nicht,
+    wird die Zahlenzeile erneut mit ``_parse_match_stats_metrics`` analysiert.
+    """
+
+    if entry.metrics is not None:
+        return entry.metrics
+    if not entry.totals_line:
+        return None
+    return _parse_match_stats_metrics(entry.totals_line)
+
+
 def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     names: List[str] = []
     team_pattern = re.compile(r"(?:Spielbericht\s+)?(.+?)\s+\d+\s*$")
@@ -4813,6 +4829,7 @@ __all__ = [
     "collect_team_news",
     "collect_team_transfers",
     "collect_match_stats_totals",
+    "resolve_match_stats_metrics",
     "collect_instagram_links",
     "collect_team_roster",
     "collect_team_photo",
