@@ -5151,7 +5151,7 @@ def build_html_report(
     }}
 
     main {{
-      max-width: 62rem;
+      max-width: min(120rem, 96vw);
       margin: 0 auto;
       padding: clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 5vw, 3.6rem);
       display: grid;
@@ -5171,7 +5171,7 @@ def build_html_report(
 
     p.page-intro {{
       margin: 0;
-      max-width: 48rem;
+      max-width: 72rem;
       font-size: clamp(1rem, 2.4vw, 1.2rem);
       color: var(--muted);
     }}
