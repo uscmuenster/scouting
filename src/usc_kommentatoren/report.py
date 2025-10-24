@@ -4630,6 +4630,16 @@ def _format_scouting_date(value: Optional[str]) -> str:
     return parsed.strftime("%d.%m.%Y")
 
 
+def _resolve_opponent_label(match: Mapping[str, Any]) -> str:
+    opponent_short = match.get("opponent_short")
+    if opponent_short:
+        return str(opponent_short)
+    opponent = match.get("opponent")
+    if opponent:
+        return str(opponent)
+    return "Unbekannt"
+
+
 def _format_home_away_label(is_home: Optional[bool]) -> str:
     return "Heim" if is_home else "Auswärts"
 
@@ -4656,9 +4666,9 @@ def _format_int_value(value: Any, default: str = "0") -> str:
     return str(value)
 
 
-def _format_pct_value(value: Any) -> str:
+def _format_pct_value(value: Any, default: str = "0%") -> str:
     if value in (None, ""):
-        return "0%"
+        return default
     return str(value)
 
 
@@ -4679,7 +4689,7 @@ def _format_match_meta_text(match: Mapping[str, Any]) -> str:
 def _format_match_result_label(match: Mapping[str, Any]) -> str:
     result = match.get("result") or {}
     summary = result.get("summary") or "Ergebnis offen"
-    opponent = match.get("opponent") or "Unbekannt"
+    opponent = _resolve_opponent_label(match)
     date_label = _format_scouting_date(match.get("kickoff"))
     venue_marker = _format_home_away_marker(match.get("is_home"))
     return f"{date_label} · {opponent} {venue_marker}: {summary}"
@@ -4687,7 +4697,7 @@ def _format_match_result_label(match: Mapping[str, Any]) -> str:
 
 def _format_match_heading_text(index: int, match: Mapping[str, Any]) -> str:
     date_label = _format_scouting_date(match.get("kickoff"))
-    opponent = match.get("opponent") or "Unbekannt"
+    opponent = _resolve_opponent_label(match)
     venue = _format_home_away_label(match.get("is_home"))
     return f"Spiel {index + 1}: {date_label} · {venue} vs. {opponent}"
 
@@ -4853,84 +4863,138 @@ def _build_player_match_links_html(match: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _format_scouting_datetime_label(value: Optional[str]) -> str:
-    parsed = _parse_scouting_datetime(value)
-    if not parsed:
-        return ""
-    return parsed.strftime("%d.%m.%Y · %H:%M Uhr")
+def _build_match_table_html(
+    matches: Sequence[Mapping[str, Any]],
+    totals: Optional[Mapping[str, Any]],
+) -> str:
+    valid_matches: list[Mapping[str, Any]] = [
+        match for match in matches if isinstance(match, Mapping)
+    ]
+    sort_fallback = datetime.max.replace(tzinfo=BERLIN_TZ)
+    valid_matches.sort(
+        key=lambda match: _parse_scouting_datetime(match.get("kickoff"))
+        or sort_fallback
+    )
 
-
-def _format_match_detail_line(match: Mapping[str, Any]) -> str:
-    parts: list[str] = []
-    datetime_label = _format_scouting_datetime_label(match.get("kickoff"))
-    if datetime_label:
-        parts.append(datetime_label)
-    location = match.get("location")
-    if location:
-        parts.append(str(location))
-    return " • ".join(parts)
-
-
-def _format_match_card_title(match: Mapping[str, Any]) -> str:
-    opponent = match.get("opponent") or "Unbekannt"
-    is_home = match.get("is_home")
-    if is_home:
-        pairing = f"{USC_CANONICAL_NAME} vs. {opponent}"
-    else:
-        pairing = f"{opponent} vs. {USC_CANONICAL_NAME}"
-    datetime_label = _format_scouting_datetime_label(match.get("kickoff"))
-    if datetime_label:
-        return f"{pairing} ({datetime_label})"
-    return pairing
-
-
-def _build_match_links_html(match: Mapping[str, Any]) -> str:
-    links: list[tuple[str, str]] = []
-    info_url = match.get("info_url")
-    if info_url:
-        links.append(("Spielinfos", str(info_url)))
-    stats_url = match.get("stats_url")
-    if stats_url:
-        links.append(("Statistik (PDF)", str(stats_url)))
-    scoresheet_url = match.get("scoresheet_url")
-    if scoresheet_url:
-        links.append(("Spielbericht", str(scoresheet_url)))
-    if not links:
+    if not valid_matches:
         return ""
 
-    lines = ['    <div class="match-card__links">']
-    for label, url in links:
-        lines.append(f'      <a href="{escape(url)}" target="_blank" rel="noopener">{escape(label)}</a>')
-    lines.append("    </div>")
-    return "\n".join(lines)
+    header_specs: Sequence[tuple[str, Optional[str], bool]] = [
+        ("Datum", None, False),
+        ("Gegner", None, False),
+        ("Ergebnis", None, False),
+        ("Srv\u00a0V", "Aufschlag-Versuche", True),
+        ("Srv\u00a0F", "Aufschlag-Fehler", True),
+        ("Srv\u00a0Asse", "Aufschlag-Asse", True),
+        ("Ann\u00a0V", "Annahme-Versuche", True),
+        ("Ann\u00a0F", "Annahme-Fehler", True),
+        ("Ann\u00a0+%", "Positive Annahmen", True),
+        ("Ann\u00a0Perf%", "Perfekte Annahmen", True),
+        ("Ang\u00a0V", "Angriffs-Versuche", True),
+        ("Ang\u00a0F", "Angriffs-Fehler", True),
+        ("Ang\u00a0gebl.", "Geblockte Angriffe", True),
+        ("Ang\u00a0Pkt.", "Angriffspunkte", True),
+        ("Ang\u00a0%", "Angriffsquote", True),
+        ("Block", "Blockpunkte", True),
+    ]
 
-
-def _build_match_card_html(match: Mapping[str, Any]) -> str:
-    title = _format_match_card_title(match)
-    meta = _format_match_detail_line(match)
-    result_text = _format_match_meta_text(match)
-    attendance = _format_int_value(match.get("attendance"), default="")
-
-    lines = ['<article class="match-card">', f"  <h3>{escape(title)}</h3>"]
-    if meta:
-        lines.append(f"  <p class=\"match-card__meta\">{escape(meta)}</p>")
-    if attendance:
-        lines.append(f"  <p class=\"match-card__meta\">Zuschauer: {escape(attendance)}</p>")
-    if result_text:
-        lines.append(f"  <p class=\"match-card__result\">{escape(result_text)}</p>")
-
-    links_html = _build_match_links_html(match)
-    if links_html:
-        lines.append(links_html)
-
-    metrics = match.get("metrics")
-    if isinstance(metrics, Mapping):
-        table_html = _indent_html(
-            _build_metric_table_html(metrics, match.get("total_points")), 2
+    lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
+    for label, title, is_numeric in header_specs:
+        title_attr = f' title="{escape(title)}"' if title else ""
+        numeric_class = " class=\"numeric\"" if is_numeric else ""
+        lines.append(
+            f"      <th scope=\"col\"{numeric_class}{title_attr}>{escape(label)}</th>"
         )
-        lines.append(table_html)
+    lines.extend(['    </tr>', '  </thead>', '  <tbody>'])
 
-    lines.append("</article>")
+    for match in valid_matches:
+        metrics = match.get("metrics")
+        metric_values = metrics if isinstance(metrics, Mapping) else {}
+        result = match.get("result") or {}
+        row_values = [
+            (_format_scouting_date(match.get("kickoff")), False),
+            (_resolve_opponent_label(match), False),
+            (result.get("summary") or "Ergebnis offen", False),
+            (_format_int_value(metric_values.get("serves_attempts")), True),
+            (_format_int_value(metric_values.get("serves_errors")), True),
+            (_format_int_value(metric_values.get("serves_points")), True),
+            (_format_int_value(metric_values.get("receptions_attempts")), True),
+            (_format_int_value(metric_values.get("receptions_errors")), True),
+            (
+                _format_pct_value(
+                    metric_values.get("receptions_positive_pct"), default="–"
+                ),
+                True,
+            ),
+            (
+                _format_pct_value(
+                    metric_values.get("receptions_perfect_pct"), default="–"
+                ),
+                True,
+            ),
+            (_format_int_value(metric_values.get("attacks_attempts")), True),
+            (_format_int_value(metric_values.get("attacks_errors")), True),
+            (_format_int_value(metric_values.get("attacks_blocked")), True),
+            (_format_int_value(metric_values.get("attacks_points")), True),
+            (
+                _format_pct_value(
+                    metric_values.get("attacks_success_pct"), default="–"
+                ),
+                True,
+            ),
+            (_format_int_value(metric_values.get("blocks_points")), True),
+        ]
+        lines.append("    <tr>")
+        for value, is_numeric in row_values:
+            cell_class = " class=\"numeric\"" if is_numeric else ""
+            lines.append(f"      <td{cell_class}>{escape(value)}</td>")
+        lines.append("    </tr>")
+
+    lines.append("  </tbody>")
+
+    if isinstance(totals, Mapping):
+        total_row = [
+            ("Summe", False, True),
+            ("–", False, False),
+            ("–", False, False),
+            (_format_int_value(totals.get("serves_attempts")), True, False),
+            (_format_int_value(totals.get("serves_errors")), True, False),
+            (_format_int_value(totals.get("serves_points")), True, False),
+            (_format_int_value(totals.get("receptions_attempts")), True, False),
+            (_format_int_value(totals.get("receptions_errors")), True, False),
+            (
+                _format_pct_value(totals.get("receptions_positive_pct"), default="–"),
+                True,
+                False,
+            ),
+            (
+                _format_pct_value(totals.get("receptions_perfect_pct"), default="–"),
+                True,
+                False,
+            ),
+            (_format_int_value(totals.get("attacks_attempts")), True, False),
+            (_format_int_value(totals.get("attacks_errors")), True, False),
+            (_format_int_value(totals.get("attacks_blocked")), True, False),
+            (_format_int_value(totals.get("attacks_points")), True, False),
+            (
+                _format_pct_value(totals.get("attacks_success_pct"), default="–"),
+                True,
+                False,
+            ),
+            (_format_int_value(totals.get("blocks_points")), True, False),
+        ]
+        lines.extend(['  <tfoot>', '    <tr class="stats-table__total">'])
+        for index, (value, is_numeric, is_header) in enumerate(total_row):
+            if is_header:
+                lines.append(
+                    f"      <th scope=\"row\">{escape(value)}</th>"
+                )
+                continue
+            cell_class = " class=\"numeric\"" if is_numeric else ""
+            lines.append(f"      <td{cell_class}>{escape(value)}</td>")
+        lines.extend(['    </tr>', '  </tfoot>'])
+
+    lines.append("</table>")
     return "\n".join(lines)
 
 
@@ -5055,16 +5119,12 @@ def _render_match_overview_content(
         return default_html
 
     matches = usc_scouting.get("matches") or []
-    cards: list[str] = []
-    for match in matches:
-        if not isinstance(match, Mapping):
-            continue
-        cards.append(_build_match_card_html(match))
-
-    if not cards:
+    totals = usc_scouting.get("totals")
+    table_html = _build_match_table_html(matches, totals if isinstance(totals, Mapping) else None)
+    if not table_html:
         return default_html
 
-    return _indent_html("\n\n".join(cards), 8)
+    return _indent_html(table_html, 8)
 
 
 def build_html_report(
@@ -5240,60 +5300,74 @@ def build_html_report(
       gap: clamp(1rem, 3vw, 1.6rem);
     }}
 
-    .match-list {{
-      display: grid;
-      gap: clamp(1.1rem, 3vw, 1.8rem);
-    }}
-
-    .match-card {{
-      background: var(--card-bg);
+    .table-container {{
+      overflow-x: auto;
       border-radius: 1rem;
       border: 1px solid var(--card-border);
+      background: var(--card-bg);
       box-shadow: var(--shadow);
-      padding: clamp(1rem, 3vw, 1.5rem);
-      display: grid;
-      gap: 0.75rem;
+      padding: clamp(0.35rem, 1.5vw, 0.75rem);
     }}
 
-    .match-card h3 {{
-      margin: 0;
-      font-size: clamp(1.15rem, 3vw, 1.5rem);
-    }}
-
-    .match-card__meta {{
-      margin: 0;
-      color: var(--muted);
+    .stats-table {{
+      width: 100%;
+      border-collapse: collapse;
       font-size: 0.95rem;
+      min-width: 52rem;
     }}
 
-    .match-card__result {{
-      margin: 0;
+    .stats-table caption {{
+      text-align: left;
       font-weight: 600;
-      color: var(--accent);
+      margin-bottom: 0.5rem;
     }}
 
-    .match-card__links {{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
+    .stats-table th,
+    .stats-table td {{
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.15);
     }}
 
-    .match-card__links a {{
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.4rem 0.8rem;
-      border-radius: 999px;
-      background: var(--accent-soft);
+    .stats-table thead th {{
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
       color: var(--accent);
+      border-bottom: 2px solid var(--card-border);
+    }}
+
+    .stats-table tbody tr:nth-child(even) {{
+      background: rgba(15, 118, 110, 0.06);
+    }}
+
+    .stats-table td.numeric,
+    .stats-table th.numeric {{
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }}
+
+    .stats-table__total th,
+    .stats-table__total td {{
       font-weight: 600;
-      text-decoration: none;
-      font-size: 0.9rem;
+      border-top: 2px solid var(--card-border);
+      background: rgba(15, 118, 110, 0.08);
     }}
 
-    .match-card__links a:hover,
-    .match-card__links a:focus-visible {{
-      text-decoration: underline;
+    @media (prefers-color-scheme: dark) {{
+      .stats-table tbody tr:nth-child(even) {{
+        background: rgba(148, 210, 189, 0.08);
+      }}
+      .stats-table__total th,
+      .stats-table__total td {{
+        background: rgba(148, 210, 189, 0.12);
+        border-top: 2px solid rgba(94, 234, 212, 0.28);
+      }}
+      .stats-table th,
+      .stats-table td {{
+        border-bottom: 1px solid rgba(94, 234, 212, 0.18);
+      }}
     }}
 
     .metric-card {{
@@ -5462,7 +5536,7 @@ def build_html_report(
 
     <section>
       <h2>Spiele</h2>
-      <div class="match-list" data-match-list>
+      <div class="table-container" data-match-table-container>
 {match_list}
       </div>
     </section>
@@ -5507,9 +5581,27 @@ def build_html_report(
       return String(value);
     }}
 
+    function formatPctOrDash(value) {{
+      if (value === null || value === undefined || value === '') return '–';
+      return String(value);
+    }}
+
+    function getOpponentLabel(match) {{
+      if (match && match.opponent_short) return match.opponent_short;
+      if (match && match.opponent) return match.opponent;
+      return 'Unbekannt';
+    }}
+
+    function parseTimestamp(value) {{
+      if (!value) return Number.POSITIVE_INFINITY;
+      const date = new Date(value);
+      const time = date.getTime();
+      return Number.isNaN(time) ? Number.POSITIVE_INFINITY : time;
+    }}
+
     function formatMatchHeading(index, match) {{
       const date = formatDate(match.kickoff);
-      const opponent = match.opponent || 'Unbekannt';
+      const opponent = getOpponentLabel(match);
       const homeAway = match.is_home ? 'Heim' : 'Auswärts';
       return `Spiel <<index + 1>>: <<date>> · <<homeAway>> vs. <<opponent>>`;
     }}
@@ -5537,7 +5629,7 @@ def build_html_report(
 
     function formatMatchResultLine(match) {{
       const date = formatDate(match.kickoff);
-      const opponent = match.opponent || 'Unbekannt';
+      const opponent = getOpponentLabel(match);
       const venueMarker = match.is_home ? '(H)' : '(A)';
       let resultSummary = 'Ergebnis offen';
       if (match.result && match.result.summary) {{
@@ -5572,110 +5664,128 @@ def build_html_report(
       return table;
     }}
 
-    function formatMatchTitle(match) {{
-      const opponent = match.opponent || 'Unbekannt';
-      const isHome = Boolean(match.is_home);
-      const pairing = isHome
-        ? `USC Münster vs. <<opponent>>`
-        : `<<opponent>> vs. USC Münster`;
-      const datetime = formatDateTime(match.kickoff);
-      return datetime && datetime !== '–' ? `<<pairing>> (<<datetime>>)` : pairing;
-    }}
-
-    function formatMatchDetails(match) {{
-      const details = [];
-      const datetime = formatDateTime(match.kickoff);
-      if (datetime && datetime !== '–') {{
-        details.push(datetime);
-      }}
-      if (match.location) {{
-        details.push(match.location);
-      }}
-      return details.join(' • ');
-    }}
-
-    function buildMatchLinks(match) {{
-      const links = [];
-      if (match.info_url) {{
-        links.push(['Spielinfos', match.info_url]);
-      }}
-      if (match.stats_url) {{
-        links.push(['Statistik (PDF)', match.stats_url]);
-      }}
-      if (match.scoresheet_url) {{
-        links.push(['Spielbericht', match.scoresheet_url]);
-      }}
-      if (!links.length) {{
-        return null;
-      }}
-      const container = document.createElement('div');
-      container.className = 'match-card__links';
-      for (const [label, url] of links) {{
-        const anchor = document.createElement('a');
-        anchor.href = url;
-        anchor.target = '_blank';
-        anchor.rel = 'noopener';
-        anchor.textContent = label;
-        container.appendChild(anchor);
-      }}
-      return container;
-    }}
-
-    function buildMatchCard(match) {{
-      const card = document.createElement('article');
-      card.className = 'match-card';
-
-      const heading = document.createElement('h3');
-      heading.textContent = formatMatchTitle(match);
-      card.appendChild(heading);
-
-      const details = formatMatchDetails(match);
-      if (details) {{
-        const meta = document.createElement('p');
-        meta.className = 'match-card__meta';
-        meta.textContent = details;
-        card.appendChild(meta);
-      }}
-
-      if (match.attendance) {{
-        const attendance = document.createElement('p');
-        attendance.className = 'match-card__meta';
-        attendance.textContent = `Zuschauer: <<match.attendance>>`;
-        card.appendChild(attendance);
-      }}
-
-      const result = formatMatchMeta(match);
-      if (result) {{
-        const resultNode = document.createElement('p');
-        resultNode.className = 'match-card__result';
-        resultNode.textContent = result;
-        card.appendChild(resultNode);
-      }}
-
-      const links = buildMatchLinks(match);
-      if (links) {{
-        card.appendChild(links);
-      }}
-
-      if (match.metrics) {{
-        card.appendChild(buildMetricTable(match.metrics, match.total_points));
-      }}
-
-      return card;
-    }}
-
-    function renderMatches(data) {{
-      const container = document.querySelector('[data-match-list]');
+    function renderMatchTable(data) {{
+      const container = document.querySelector('[data-match-table-container]');
       if (!container) return;
       container.innerHTML = '';
-      const matches = Array.isArray(data.matches) ? data.matches : [];
+      const matches = Array.isArray(data.matches) ? [...data.matches] : [];
       if (!matches.length) {{
         container.innerHTML = '<p class="empty-state">Keine Spiele verfügbar.</p>';
         return;
       }}
-      matches.forEach(match => {{
-        container.appendChild(buildMatchCard(match));
+
+      matches.sort((a, b) => parseTimestamp(a.kickoff) - parseTimestamp(b.kickoff));
+
+      const columns = [
+        {{ label: 'Datum' }},
+        {{ label: 'Gegner' }},
+        {{ label: 'Ergebnis' }},
+        {{ label: 'Srv\u00a0V', title: 'Aufschlag-Versuche', numeric: true }},
+        {{ label: 'Srv\u00a0F', title: 'Aufschlag-Fehler', numeric: true }},
+        {{ label: 'Srv\u00a0Asse', title: 'Aufschlag-Asse', numeric: true }},
+        {{ label: 'Ann\u00a0V', title: 'Annahme-Versuche', numeric: true }},
+        {{ label: 'Ann\u00a0F', title: 'Annahme-Fehler', numeric: true }},
+        {{ label: 'Ann\u00a0+%', title: 'Positive Annahmen', numeric: true }},
+        {{ label: 'Ann\u00a0Perf%', title: 'Perfekte Annahmen', numeric: true }},
+        {{ label: 'Ang\u00a0V', title: 'Angriffs-Versuche', numeric: true }},
+        {{ label: 'Ang\u00a0F', title: 'Angriffs-Fehler', numeric: true }},
+        {{ label: 'Ang\u00a0gebl.', title: 'Geblockte Angriffe', numeric: true }},
+        {{ label: 'Ang\u00a0Pkt.', title: 'Angriffspunkte', numeric: true }},
+        {{ label: 'Ang\u00a0%', title: 'Angriffsquote', numeric: true }},
+        {{ label: 'Block', title: 'Blockpunkte', numeric: true }},
+      ];
+
+      const table = document.createElement('table');
+      table.className = 'stats-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {{
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) th.className = 'numeric';
+        if (column.title) th.title = column.title;
+        th.textContent = column.label;
+        headerRow.appendChild(th);
       }});
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      matches.forEach(match => {{
+        const metrics = match.metrics || {{}};
+        const row = document.createElement('tr');
+        const values = [
+          formatDate(match.kickoff),
+          getOpponentLabel(match),
+          match.result && match.result.summary ? match.result.summary : 'Ergebnis offen',
+          formatInt(metrics.serves_attempts),
+          formatInt(metrics.serves_errors),
+          formatInt(metrics.serves_points),
+          formatInt(metrics.receptions_attempts),
+          formatInt(metrics.receptions_errors),
+          formatPctOrDash(metrics.receptions_positive_pct),
+          formatPctOrDash(metrics.receptions_perfect_pct),
+          formatInt(metrics.attacks_attempts),
+          formatInt(metrics.attacks_errors),
+          formatInt(metrics.attacks_blocked),
+          formatInt(metrics.attacks_points),
+          formatPctOrDash(metrics.attacks_success_pct),
+          formatInt(metrics.blocks_points),
+        ];
+        values.forEach((value, index) => {{
+          const cell = document.createElement('td');
+          if (columns[index] && columns[index].numeric) cell.className = 'numeric';
+          cell.textContent = value;
+          row.appendChild(cell);
+        }});
+        tbody.appendChild(row);
+      }});
+      table.appendChild(tbody);
+
+      const totals = data.totals;
+      if (totals && typeof totals === 'object') {{
+        const tfoot = document.createElement('tfoot');
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'stats-table__total';
+        const totalValues = [
+          {{ value: 'Summe', header: true }},
+          {{ value: '–' }},
+          {{ value: '–' }},
+          {{ value: formatInt(totals.serves_attempts), numeric: true }},
+          {{ value: formatInt(totals.serves_errors), numeric: true }},
+          {{ value: formatInt(totals.serves_points), numeric: true }},
+          {{ value: formatInt(totals.receptions_attempts), numeric: true }},
+          {{ value: formatInt(totals.receptions_errors), numeric: true }},
+          {{ value: formatPctOrDash(totals.receptions_positive_pct), numeric: true }},
+          {{ value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true }},
+          {{ value: formatInt(totals.attacks_attempts), numeric: true }},
+          {{ value: formatInt(totals.attacks_errors), numeric: true }},
+          {{ value: formatInt(totals.attacks_blocked), numeric: true }},
+          {{ value: formatInt(totals.attacks_points), numeric: true }},
+          {{ value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
+          {{ value: formatInt(totals.blocks_points), numeric: true }},
+        ];
+        totalValues.forEach((entry, index) => {{
+          if (entry.header) {{
+            const th = document.createElement('th');
+            th.scope = 'row';
+            th.textContent = entry.value;
+            totalRow.appendChild(th);
+            return;
+          }}
+          const td = document.createElement('td');
+          if (entry.numeric || (columns[index] && columns[index].numeric)) {{
+            td.className = 'numeric';
+          }}
+          td.textContent = entry.value;
+          totalRow.appendChild(td);
+        }});
+        tfoot.appendChild(totalRow);
+        table.appendChild(tfoot);
+      }}
+
+      container.appendChild(table);
     }}
 
     function renderTeamOverview(data) {{
@@ -5831,7 +5941,7 @@ def build_html_report(
     function applyOverview(data) {{
       if (!data) return;
       renderTeamOverview(data);
-      renderMatches(data);
+      renderMatchTable(data);
       renderPlayers(data);
       const note = document.querySelector('[data-update-note] span:last-child');
       if (note && data.generated) {{
