@@ -33,7 +33,21 @@ def test_export_match_stats_offline(monkeypatch, tmp_path) -> None:
     stuttgart = teams["Allianz MTV Stuttgart"]
     assert stuttgart["serve"]["attempts"] == 74
     assert stuttgart["attack"]["points"] == 40
-    assert stuttgart["player_count"] == 0
+    assert stuttgart["reception"]["positive"] == 22
+    assert stuttgart["reception"]["perfect"] == 12
+    assert stuttgart["player_count"] == len(stuttgart["players"]) > 0
+
+    stuttgart_players = {player["name"]: player for player in stuttgart["players"]}
+    assert "STAUTZ Antonia" in stuttgart_players
+    stautz = stuttgart_players["STAUTZ Antonia"]
+    assert stautz["metrics"]["attacks_points"] == 11
+    assert stautz["metrics"]["serves_attempts"] == 17
+    assert stautz["metrics"]["receptions_positive"] == 7
+
+    varela = stuttgart_players["VARELA Lucia"]
+    assert varela["metrics"]["receptions_attempts"] == 18
+    assert varela["metrics"]["receptions_perfect"] == 6
+    assert varela["plus_minus"] == 6
 
     hamburg = teams["ETV Hamburger Volksbank Volleys"]
     assert hamburg["reception"]["attempts"] == 67

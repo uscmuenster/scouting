@@ -324,7 +324,40 @@ class MatchPlayerStats:
     plus_minus: Optional[int] = None
 
 
-PLAYER_STATS_OVERRIDES: Dict[str, Sequence[Dict[str, object]]] = {}
+def _zero_player_metrics_dict() -> Dict[str, object]:
+    return {
+        "serves_attempts": 0,
+        "serves_errors": 0,
+        "serves_points": 0,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive_pct": "0%",
+        "receptions_perfect_pct": "0%",
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": "0%",
+        "blocks_points": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+    }
+
+
+PLAYER_STATS_OVERRIDES: Dict[str, Sequence[Dict[str, object]]] = {
+    "https://www.volleyball-bundesliga.de/uploads/831866c1-9e16-46f8-827c-4b0dd011928b": (
+        {
+            "team": "ETV Hamburger Volksbank Volleys",
+            "player": "KÖRTZINGER Leonie",
+            "jersey_number": 7,
+            "metrics": _zero_player_metrics_dict(),
+            "total_points": 0,
+            "break_points": 0,
+            "plus_minus": 0,
+            "add_if_missing": True,
+        },
+    ),
+}
 
 
 def _build_metrics_from_payload(payload: Mapping[str, object]) -> MatchStatsMetrics:
