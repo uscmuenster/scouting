@@ -3822,7 +3822,7 @@ def format_generation_timestamp(value: datetime) -> str:
     weekday = GERMAN_WEEKDAYS_LONG.get(localized.weekday(), localized.strftime("%A"))
     month = GERMAN_MONTHS.get(localized.month, localized.strftime("%B"))
     day = localized.day
-    time_label = localized.strftime("%H:%M")
+    time_label = localized.strftime("%H:%M:%S")
     return f"{weekday}, {day:02d}. {month} {localized.year} um {time_label}"
 
 
@@ -3835,7 +3835,7 @@ def format_match_line(
     kickoff_local = match.kickoff.astimezone(BERLIN_TZ)
     date_label = kickoff_local.strftime("%d.%m.%Y")
     weekday = GERMAN_WEEKDAYS.get(kickoff_local.weekday(), kickoff_local.strftime("%a"))
-    time_label = kickoff_local.strftime("%H:%M")
+    time_label = kickoff_local.strftime("%H:%M:%S")
     kickoff_label = f"{date_label} ({weekday}) {time_label} Uhr"
     home = pretty_name(match.home_team)
     away = pretty_name(match.away_team)
