@@ -138,3 +138,23 @@ def test_build_stats_overview_for_hamburg_includes_players(monkeypatch, tmp_path
 
     assert frobel_matches[schwerin_url]["metrics"]["attacks_points"] == 6
     assert frobel_matches[stuttgart_url]["metrics"]["attacks_points"] == 7
+
+
+def test_build_league_stats_overview(monkeypatch, tmp_path) -> None:
+    def offline_http_get(*args, **kwargs):
+        raise requests.RequestException("offline")
+
+    monkeypatch.setattr(report, "_http_get", offline_http_get)
+
+    output_path = tmp_path / "league.json"
+    payload = stats_module.build_league_stats_overview(output_path=output_path)
+
+    assert output_path.exists()
+    assert payload["team_count"] >= 2
+
+    teams = {entry["team"]: entry for entry in payload["teams"]}
+    assert "USC Münster" in teams
+    assert teams["USC Münster"]["match_count"] == 2
+
+    assert "SSC Palmberg Schwerin" in teams
+    assert teams["SSC Palmberg Schwerin"]["match_count"] == 1

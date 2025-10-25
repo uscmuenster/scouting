@@ -17,7 +17,9 @@ from .report import (
 from .stats import (
     HAMBURG_CANONICAL_NAME,
     HAMBURG_OUTPUT_PATH,
+    LEAGUE_STATS_OUTPUT_PATH,
     STATS_OUTPUT_PATH,
+    build_league_stats_overview,
     build_stats_overview,
 )
 
@@ -87,6 +89,15 @@ def main() -> int:
         schedule_path=args.schedule_path,
         output_path=HAMBURG_OUTPUT_PATH,
         focus_team=HAMBURG_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
+    )
+
+    build_league_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=LEAGUE_STATS_OUTPUT_PATH,
         stats_lookup=stats_lookup,
     )
 
