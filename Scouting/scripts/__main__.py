@@ -80,7 +80,7 @@ def main() -> int:
         stats_lookup=stats_lookup,
     )
 
-    build_stats_overview(
+    hamburg_stats_payload = build_stats_overview(
         matches=enriched_matches,
         schedule_csv_url=args.schedule_url,
         schedule_page_url=args.schedule_page_url,
@@ -93,6 +93,7 @@ def main() -> int:
     html = build_html_report(
         generated_at=datetime.now(tz=BERLIN_TZ),
         usc_scouting=stats_payload,
+        hamburg_scouting=hamburg_stats_payload,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
