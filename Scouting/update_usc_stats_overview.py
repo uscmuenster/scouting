@@ -5,11 +5,10 @@ import sys
 from pathlib import Path
 
 
-def _add_src_to_path() -> None:
-    repo_root = Path(__file__).resolve().parents[1]
-    src_dir = repo_root / "src"
-    if str(src_dir) not in sys.path:
-        sys.path.insert(0, str(src_dir))
+def _add_package_root_to_path() -> None:
+    package_root = Path(__file__).resolve().parents[1]
+    if str(package_root) not in sys.path:
+        sys.path.insert(0, str(package_root))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -48,9 +47,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> int:
-    _add_src_to_path()
-    from usc_kommentatoren import STATS_OUTPUT_PATH
-    from usc_kommentatoren.stats import build_stats_overview
+    _add_package_root_to_path()
+    from Scouting import STATS_OUTPUT_PATH
+    from Scouting.stats import build_stats_overview
 
     parser = build_parser()
     args = parser.parse_args()

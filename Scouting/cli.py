@@ -6,7 +6,7 @@ from .__main__ import main as _run_main
 
 
 def main() -> int:
-    """Entry point used by ``python -m usc_kommentatoren.cli``."""
+    """Entry point used by ``python -m Scouting.cli``."""
 
     return _run_main()
 

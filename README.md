@@ -9,49 +9,49 @@ Dieses Repository erzeugt täglich eine schlanke HTML-Seite zum Frauen-Bundeslig
 Der Kern des Projekts ist der automatisch erzeugte Spieltagsbericht. Er liefert alle relevanten Informationen zum nächsten USC-Heimspiel in einem responsiven Layout (inklusive App-optimierter Variante mit skalierter Schrift). Enthalten sind unter anderem:
 
 * Überschrift mit dem nächsten Heimgegner des USC Münster inklusive Datum, Uhrzeit und Austragungsort.
-* Verlinkungen auf die offiziellen Vereinsseiten, die Tabellenübersicht der Volleyball Bundesliga sowie veröffentlichte Spielinfos/Statistiken der VBL, sobald verfügbar. 【F:src/usc_kommentatoren/report.py†L2336-L2388】【F:src/usc_kommentatoren/report.py†L1893-L1900】
-* Die letzten Ergebnisse und das jeweils nächste Spiel sowohl des USC als auch des kommenden Gegners – inklusive Satzergebnisse, Ballpunkte, MVP-Ehrungen, Schiedsrichter*innen und Zuschauerzahlen, sofern die VBL diese Daten liefert. 【F:src/usc_kommentatoren/report.py†L1850-L1905】【F:src/usc_kommentatoren/report.py†L2331-L2344】【F:src/usc_kommentatoren/__main__.py†L73-L213】
-* Geburtstags-Hinweise für Spielerinnen in einem sieben­tägigen Fenster rund um den Spieltag. 【F:src/usc_kommentatoren/report.py†L2052-L2128】
-* Aufklappbare Kaderübersichten beider Teams mit inline eingebundenem Mannschaftsfoto, Positions- und Größenangaben sowie separaten Blöcken für Trainer*innen/Staff. 【F:src/usc_kommentatoren/report.py†L2294-L2330】
-* Wechselbörse-Sektionen je Team, die Zu- und Abgänge aus der offiziellen VBL-Wechselbörse sammeln. 【F:src/usc_kommentatoren/report.py†L2279-L2330】【F:src/usc_kommentatoren/report.py†L1736-L1848】
-* News-, Instagram- und Saisonrückblick-Abschnitte, die aktuelle Artikel, Social-Media-Links und optional externe Saisonzusammenfassungen bündeln. 【F:src/usc_kommentatoren/report.py†L1945-L2068】【F:src/usc_kommentatoren/report.py†L2134-L2245】
+* Verlinkungen auf die offiziellen Vereinsseiten, die Tabellenübersicht der Volleyball Bundesliga sowie veröffentlichte Spielinfos/Statistiken der VBL, sobald verfügbar. 【F:Scouting/report.py†L2336-L2388】【F:Scouting/report.py†L1893-L1900】
+* Die letzten Ergebnisse und das jeweils nächste Spiel sowohl des USC als auch des kommenden Gegners – inklusive Satzergebnisse, Ballpunkte, MVP-Ehrungen, Schiedsrichter*innen und Zuschauerzahlen, sofern die VBL diese Daten liefert. 【F:Scouting/report.py†L1850-L1905】【F:Scouting/report.py†L2331-L2344】【F:Scouting/__main__.py†L73-L213】
+* Geburtstags-Hinweise für Spielerinnen in einem sieben­tägigen Fenster rund um den Spieltag. 【F:Scouting/report.py†L2052-L2128】
+* Aufklappbare Kaderübersichten beider Teams mit inline eingebundenem Mannschaftsfoto, Positions- und Größenangaben sowie separaten Blöcken für Trainer*innen/Staff. 【F:Scouting/report.py†L2294-L2330】
+* Wechselbörse-Sektionen je Team, die Zu- und Abgänge aus der offiziellen VBL-Wechselbörse sammeln. 【F:Scouting/report.py†L2279-L2330】【F:Scouting/report.py†L1736-L1848】
+* News-, Instagram- und Saisonrückblick-Abschnitte, die aktuelle Artikel, Social-Media-Links und optional externe Saisonzusammenfassungen bündeln. 【F:Scouting/report.py†L1945-L2068】【F:Scouting/report.py†L2134-L2245】
 
 Die App-Ansicht wird automatisch erzeugt (Schriftfaktor standardmäßig 0,75), kann aber über die CLI-Optionen skaliert oder deaktiviert werden.
 
 ### Aufstellungs-Datensatz (`docs/data/aufstellungen.json`)
 
-Das Skript `scripts/update_lineups.py` lädt PDF-Spielberichtsbögen des USC sowie der jüngsten Partien des nächsten Gegners, extrahiert Startaufstellungen je Satz und schreibt alles als JSON. Der Datensatz enthält pro Spiel:
+Das Skript `Scouting/update_lineups.py` lädt PDF-Spielberichtsbögen des USC sowie der jüngsten Partien des nächsten Gegners, extrahiert Startaufstellungen je Satz und schreibt alles als JSON. Der Datensatz enthält pro Spiel:
 
-* Metadaten (Matchnummer, Datum, Wettbewerb, Spielort) aus dem offiziellen Spielplan. 【F:scripts/update_lineups.py†L33-L58】【F:src/usc_kommentatoren/lineups.py†L24-L121】
-* Verlinkungen zu den Original-PDFs sowie die Positionscodes der VBL. 【F:src/usc_kommentatoren/lineups.py†L640-L706】
-* Startsechs, Satzstände und zugehörige Kaderinformationen zur schnellen Wiederverwendung in Streams oder Social Posts. 【F:src/usc_kommentatoren/lineups.py†L744-L825】
+* Metadaten (Matchnummer, Datum, Wettbewerb, Spielort) aus dem offiziellen Spielplan. 【F:Scouting/update_lineups.py†L33-L58】【F:Scouting/lineups.py†L24-L121】
+* Verlinkungen zu den Original-PDFs sowie die Positionscodes der VBL. 【F:Scouting/lineups.py†L640-L706】
+* Startsechs, Satzstände und zugehörige Kaderinformationen zur schnellen Wiederverwendung in Streams oder Social Posts. 【F:Scouting/lineups.py†L744-L825】
 
 Aufrufbeispiel:
 
 ```bash
-python scripts/update_lineups.py --limit 3
+python Scouting/update_lineups.py --limit 3
 ```
 
 Die PDFs werden standardmäßig unter `data/lineups/` gecacht, Kaderexporte in `data/rosters/` gespeichert und das JSON nach `docs/data/aufstellungen.json` geschrieben.
 
 ### Scouting-Übersicht (`docs/data/usc_stats_overview.json`)
 
-Mit `scripts/update_usc_stats_overview.py` fasst du die Statistik-PDFs des USC Münster zusammen. Für jedes abgeschlossene Spiel werden die wichtigsten Kennzahlen (Aufschlag, Annahme, Angriff, Block) einzeln ausgewiesen und zusätzlich zu einer Gesamtsumme über alle verfügbaren Spiele aggregiert. Die Datensätze berücksichtigen ausschließlich USC-Werte – gegnerische Teams werden ignoriert.
+Mit `Scouting/update_usc_stats_overview.py` fasst du die Statistik-PDFs des USC Münster zusammen. Für jedes abgeschlossene Spiel werden die wichtigsten Kennzahlen (Aufschlag, Annahme, Angriff, Block) einzeln ausgewiesen und zusätzlich zu einer Gesamtsumme über alle verfügbaren Spiele aggregiert. Die Datensätze berücksichtigen ausschließlich USC-Werte – gegnerische Teams werden ignoriert.
 
 Aufrufbeispiel:
 
 ```bash
-python scripts/update_usc_stats_overview.py
+python Scouting/update_usc_stats_overview.py
 ```
 
 Die Spielplan-CSV aus `data/schedule.csv` wird bei vorhandener Datei wiederverwendet. Alternativ kann der Pfad per `--schedule-path` angepasst werden, ebenso wie Ziel- und Quell-URLs.
 
 ### Internationale Spiele (`docs/internationale_spiele.html`)
 
-Mit `scripts/update_international_matches.py` aggregierst du Champions-League-, Cup- und Challenge-Cup-Partien deutscher Teams direkt von der CEV. Das Ergebnis ist eine eigenständige HTML-Seite mit:
+Mit `Scouting/update_international_matches.py` aggregierst du Champions-League-, Cup- und Challenge-Cup-Partien deutscher Teams direkt von der CEV. Das Ergebnis ist eine eigenständige HTML-Seite mit:
 
 * Wettbewerbsübersichten inklusive Quellenlink zur jeweiligen CEV-Landingpage.
-* Auflistungen kommender und abgeschlossener Spiele pro Team, inklusive Terminangaben, Austragungsort, Match-Centre-Links und Satzergebnissen. 【F:scripts/update_international_matches.py†L91-L226】【F:scripts/update_international_matches.py†L228-L324】
+* Auflistungen kommender und abgeschlossener Spiele pro Team, inklusive Terminangaben, Austragungsort, Match-Centre-Links und Satzergebnissen. 【F:Scouting/update_international_matches.py†L91-L226】【F:Scouting/update_international_matches.py†L228-L324】
 
 Standardmäßig landet die Datei unter `docs/internationale_spiele.html` und kann ebenso über GitHub Pages bereitgestellt werden.
 
@@ -76,29 +76,29 @@ Standardmäßig landet die Datei unter `docs/internationale_spiele.html` und kan
    pip install -r requirements.txt
    ```
 
-3. Für einmalige Testläufe kannst du die wichtigsten Skripte direkt über `PYTHONPATH=src` aufrufen. Häufige Beispiele:
+3. Für einmalige Testläufe kannst du die wichtigsten Skripte direkt über `PYTHONPATH=Scouting` aufrufen. Häufige Beispiele:
 
    ```bash
-   PYTHONPATH=src python -m usc_kommentatoren --help
-   PYTHONPATH=src python scripts/update_lineups.py --limit 1
+   PYTHONPATH=Scouting python -m Scouting --help
+   PYTHONPATH=Scouting python Scouting/update_lineups.py --limit 1
    ```
 
 4. Wenn du Änderungen am Code testen möchtest, lösche bei Bedarf die Cache-Verzeichnisse in `data/` oder starte die Skripte mit geänderten `--schedule-path`- bzw. `--roster-dir`-Argumenten, damit neue Daten geladen werden.
 
-5. Für ein tägliches Update kannst du den bestehenden GitHub-Action-Workflow lokal simulieren, indem du `scripts/`-Befehle hintereinander ausführst oder `python -m usc_kommentatoren` in einem Cronjob einplanst.
+5. Für ein tägliches Update kannst du den bestehenden GitHub-Action-Workflow lokal simulieren, indem du die Skripte aus `Scouting/` hintereinander ausführst oder `python -m Scouting` in einem Cronjob einplanst.
 
 ## Manuelle Ausführung
 
 Das Paket stellt einen kleinen Helfer bereit, der den offiziellen Spielplan lädt, aktuelle Vereins- und VBL-Meldungen sammelt und die HTML-Dateien erzeugt. Standardmäßig schreibt der Befehl sowohl `docs/index.html` (normale Ansicht) als auch `docs/index_app.html` (Schriftgrößen ca. 75 % für die App-Einbindung), damit beide Varianten direkt von GitHub Pages oder einem anderen statischen Hoster ausgeliefert werden können. Beispiel:
 
 ```bash
-PYTHONPATH=src python -m usc_kommentatoren
+PYTHONPATH=Scouting python -m Scouting
 ```
 
 Beim ersten Aufruf (und bei jeder späteren Aktualisierung) lädt das Skript den CSV-Spielplan herunter und speichert ihn unter `data/schedule.csv`. Wenn bereits eine lokale Kopie existiert, wird sie überschrieben. Der Pfad kann mit `--schedule-path` angepasst werden. Zusätzlich lädt der Generator die offiziellen Teamkader als CSV-Export in `data/rosters/`, cacht Mannschaftsfotos im Verzeichnis `data/team_photos/`, ergänzt Saisonstatistiken aus `docs/data/season_results_2024_25.json` und wertet die Wechselbörse aus. Über `--app-output`, `--app-scale` und `--skip-app-output` steuerst du bei Bedarf, wohin die App-Variante geschrieben wird, wie stark die Schrift verkleinert werden soll oder ob sie komplett entfallen darf. Optional kannst du außerdem Zielpfad, Quelle, Anzahl der vergangenen Partien sowie den News-Zeitraum ändern:
 
 ```bash
-PYTHONPATH=src python -m usc_kommentatoren \
+PYTHONPATH=Scouting python -m Scouting \
   --schedule-url "https://www.volleyball-bundesliga.de/servlet/league/PlayingScheduleCsvExport?matchSeriesId=776311171" \
   --schedule-path data/custom_schedule.csv \
   --roster-dir data/kader \
@@ -113,14 +113,14 @@ PYTHONPATH=src python -m usc_kommentatoren \
 
 ### CLI-Optionen im Überblick
 
-* `--schedule-url`: CSV-Quelle des Spielplans (Standard: offizieller VBL-Export). 【F:src/usc_kommentatoren/__main__.py†L34-L41】
-* `--schedule-path`: Lokale Datei für den Spielplan-Cache (`data/schedule.csv`). 【F:src/usc_kommentatoren/__main__.py†L52-L58】
-* `--roster-dir`, `--photo-dir`: Zwischenspeicher für Kaderexporte und Teamfotos (Standard: `data/rosters/`, `data/team_photos/`). 【F:src/usc_kommentatoren/__main__.py†L59-L77】
-* `--season-results`: Optionaler JSON-Pfad für Saisonrückblicke. 【F:src/usc_kommentatoren/__main__.py†L78-L115】【F:src/usc_kommentatoren/report.py†L2134-L2245】
-* `--recent-limit`, `--news-lookback`: Anzahl berücksichtigter Spiele und News-Tage. 【F:src/usc_kommentatoren/__main__.py†L88-L103】
-* `--app-output`, `--app-scale`, `--skip-app-output`: Steuerung der App-optimierten HTML-Version. 【F:src/usc_kommentatoren/__main__.py†L42-L51】【F:src/usc_kommentatoren/__main__.py†L216-L233】
+* `--schedule-url`: CSV-Quelle des Spielplans (Standard: offizieller VBL-Export). 【F:Scouting/__main__.py†L34-L41】
+* `--schedule-path`: Lokale Datei für den Spielplan-Cache (`data/schedule.csv`). 【F:Scouting/__main__.py†L52-L58】
+* `--roster-dir`, `--photo-dir`: Zwischenspeicher für Kaderexporte und Teamfotos (Standard: `data/rosters/`, `data/team_photos/`). 【F:Scouting/__main__.py†L59-L77】
+* `--season-results`: Optionaler JSON-Pfad für Saisonrückblicke. 【F:Scouting/__main__.py†L78-L115】【F:Scouting/report.py†L2134-L2245】
+* `--recent-limit`, `--news-lookback`: Anzahl berücksichtigter Spiele und News-Tage. 【F:Scouting/__main__.py†L88-L103】
+* `--app-output`, `--app-scale`, `--skip-app-output`: Steuerung der App-optimierten HTML-Version. 【F:Scouting/__main__.py†L42-L51】【F:Scouting/__main__.py†L216-L233】
 
-Weitere Optionen lassen sich über `PYTHONPATH=src python -m usc_kommentatoren --help` einsehen.
+Weitere Optionen lassen sich über `PYTHONPATH=Scouting python -m Scouting --help` einsehen.
 
 ## Datenablage & Cache-Verzeichnisse
 

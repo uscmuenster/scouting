@@ -39,7 +39,7 @@ USC_CANONICAL_NAME = "USC Münster"
 USC_HOMEPAGE = "https://www.usc-muenster.de/"
 
 MANUAL_SCHEDULE_PATH = (
-    Path(__file__).resolve().parents[2] / "docs" / "data" / "manual_schedule.csv"
+    Path(__file__).resolve().parents[1] / "docs" / "data" / "manual_schedule.csv"
 )
 _MANUAL_SCHEDULE_METADATA: Dict[str, Dict[str, Optional[str]]] = {
     "2005": {
