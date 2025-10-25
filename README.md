@@ -1,4 +1,4 @@
-# USC Streaminginfos
+# Scouting Frauen-Volleyball-Bundesliga
 
 Dieses Repository erzeugt täglich eine schlanke HTML-Seite zum Frauen-Bundesligateam des USC Münster und stellt zusätzliche Datensichten für Streams oder Social-Media-Betreuung bereit. Alle Informationen werden aus frei zugänglichen Quellen geladen – der Spielplan kommt aus dem öffentlichen CSV-Export der Volleyball Bundesliga, News werden von den Vereinsseiten sowie den VBL-Portalen geholt und internationale Partien direkt von der CEV aggregiert.
 
