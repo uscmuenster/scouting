@@ -39,7 +39,7 @@ jobs:
         env:
           PYTHONPATH: Scouting
         run: |
-          python -m usc_kommentatoren
+          python -m scripts
 
           # Cache-Busting: Commit-Hash und Zeitstempel in HTML einfügen
           COMMIT_HASH=$(git rev-parse --short HEAD)
