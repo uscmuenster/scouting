@@ -5215,6 +5215,61 @@ def build_html_report(
       gap: clamp(1rem, 3vw, 1.8rem);
     }}
 
+    .team-overview__details {{
+      border-radius: 1.1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      background: var(--card-bg);
+      overflow: hidden;
+    }}
+
+    .team-overview__summary {{
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      cursor: pointer;
+      padding: clamp(1.1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.6rem) clamp(0.9rem, 2.4vw, 1.3rem);
+      font-weight: 600;
+      font-size: clamp(1.25rem, 3.4vw, 1.7rem);
+      list-style: none;
+    }}
+
+    .team-overview__summary::-webkit-details-marker {{
+      display: none;
+    }}
+
+    .team-overview__summary::after {{
+      content: '▾';
+      margin-left: auto;
+      font-size: 1.2rem;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }}
+
+    .team-overview__details[open] > .team-overview__summary::after {{
+      transform: rotate(-180deg);
+    }}
+
+    .team-overview__title {{
+      font-size: inherit;
+    }}
+
+    .team-overview__subtitle {{
+      font-size: clamp(0.95rem, 2.6vw, 1.1rem);
+      color: var(--muted);
+      font-weight: 500;
+    }}
+
+    .team-overview__content {{
+      display: grid;
+      gap: clamp(0.9rem, 2.6vw, 1.4rem);
+      padding: 0 clamp(1.1rem, 3vw, 1.6rem) clamp(1.2rem, 3vw, 1.6rem);
+    }}
+
+    .team-overview__content .section-hint {{
+      margin: 0;
+    }}
+
     h2 {{
       margin: 0;
       font-size: clamp(1.35rem, 3.2vw, 1.9rem);
@@ -5397,16 +5452,23 @@ def build_html_report(
       </p>
     </header>
 
-    <section>
-      <h2>Spielerinnen</h2>
-      <p class="section-hint" data-player-meta>{player_meta}</p>
-      <div class="table-container" data-player-table-container>
+    <section class="team-overview">
+      <details class="team-overview__details" open>
+        <summary class="team-overview__summary">
+          <span class="team-overview__title">USC Münster</span>
+          <span class="team-overview__subtitle">Mannschaftsdaten &amp; Statistiken</span>
+        </summary>
+        <div class="team-overview__content">
+          <p class="section-hint" data-player-meta>{player_meta}</p>
+          <div class="table-container" data-player-table-container>
 {player_table}
-      </div>
-      <div class="player-list" data-player-list>
+          </div>
+          <div class="player-list" data-player-list>
 {player_list}
-      </div>
-      <p class="empty-state" data-error hidden>Beim Laden der Scouting-Daten ist ein Fehler aufgetreten.</p>
+          </div>
+          <p class="empty-state" data-error hidden>Beim Laden der Scouting-Daten ist ein Fehler aufgetreten.</p>
+        </div>
+      </details>
     </section>
   </main>
   <script>
