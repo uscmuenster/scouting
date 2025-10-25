@@ -23,7 +23,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Generate international matches page
-        run: python scripts/update_international_matches.py
+        run: python Scouting/scripts/update_international_matches.py
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v6

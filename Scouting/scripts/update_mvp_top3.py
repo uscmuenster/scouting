@@ -7,20 +7,19 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import List, Mapping, MutableMapping, Sequence
 
-def _add_src_to_path() -> None:
-    repo_root = Path(__file__).resolve().parents[1]
-    src_dir = repo_root / "src"
-    if str(src_dir) not in sys.path:
-        sys.path.insert(0, str(src_dir))
+def _add_package_root_to_path() -> None:
+    package_root = Path(__file__).resolve().parents[1]
+    if str(package_root) not in sys.path:
+        sys.path.insert(0, str(package_root))
 
 
-_add_src_to_path()
+_add_package_root_to_path()
 
 from usc_kommentatoren.mvp import MVP_INDICATORS, TEAM_RANKING_FILTERS, collect_mvp_rankings
 from usc_kommentatoren.report import normalize_name
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LINEUPS_PATH = REPO_ROOT / "docs" / "data" / "aufstellungen.json"
 DEFAULT_OUTPUT_PATH = REPO_ROOT / "docs" / "data" / "mvp_top3.json"
 
