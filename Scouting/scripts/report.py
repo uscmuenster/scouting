@@ -324,6 +324,185 @@ class MatchPlayerStats:
     plus_minus: Optional[int] = None
 
 
+def _zero_player_metrics_dict() -> Dict[str, object]:
+    return {
+        "serves_attempts": 0,
+        "serves_errors": 0,
+        "serves_points": 0,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive_pct": "0%",
+        "receptions_perfect_pct": "0%",
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": "0%",
+        "blocks_points": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+    }
+
+
+PLAYER_STATS_OVERRIDES: Dict[str, Sequence[Dict[str, object]]] = {
+    "https://www.volleyball-bundesliga.de/uploads/eb523e7a-332e-481d-a2ad-a6f9d1615c3e": (
+        {
+            "team": "ETV Hamburger Volksbank Volleys",
+            "player": "KÖRTZINGER Leonie",
+            "jersey_number": 7,
+            "metrics": _zero_player_metrics_dict(),
+            "total_points": 0,
+            "break_points": 0,
+            "plus_minus": 0,
+        },
+        {
+            "team": "ETV Hamburger Volksbank Volleys",
+            "player": "VON MEYENN Constanze",
+            "jersey_number": 6,
+            "metrics": _zero_player_metrics_dict(),
+            "total_points": 0,
+            "break_points": 0,
+            "plus_minus": 0,
+        },
+    ),
+    "https://www.volleyball-bundesliga.de/uploads/831866c1-9e16-46f8-827c-4b0dd011928b": (
+        {
+            "team": "ETV Hamburger Volksbank Volleys",
+            "player": "KÖRTZINGER Leonie",
+            "jersey_number": 7,
+            "metrics": _zero_player_metrics_dict(),
+            "total_points": 0,
+            "break_points": 0,
+            "plus_minus": 0,
+            "add_if_missing": True,
+        },
+    ),
+}
+
+
+def _build_metrics_from_payload(payload: Mapping[str, object]) -> MatchStatsMetrics:
+    return MatchStatsMetrics(
+        serves_attempts=int(payload.get("serves_attempts", 0)),
+        serves_errors=int(payload.get("serves_errors", 0)),
+        serves_points=int(payload.get("serves_points", 0)),
+        receptions_attempts=int(payload.get("receptions_attempts", 0)),
+        receptions_errors=int(payload.get("receptions_errors", 0)),
+        receptions_positive_pct=str(payload.get("receptions_positive_pct", "0%")),
+        receptions_perfect_pct=str(payload.get("receptions_perfect_pct", "0%")),
+        attacks_attempts=int(payload.get("attacks_attempts", 0)),
+        attacks_errors=int(payload.get("attacks_errors", 0)),
+        attacks_blocked=int(payload.get("attacks_blocked", 0)),
+        attacks_points=int(payload.get("attacks_points", 0)),
+        attacks_success_pct=str(payload.get("attacks_success_pct", "0%")),
+        blocks_points=int(payload.get("blocks_points", 0)),
+        receptions_positive=int(payload.get("receptions_positive", 0)),
+        receptions_perfect=int(payload.get("receptions_perfect", 0)),
+    )
+
+
+def _apply_overrides_to_summary(
+    summary: MatchStatsTotals, overrides: Sequence[Dict[str, object]]
+) -> MatchStatsTotals:
+    normalized_team = normalize_name(summary.team_name)
+    players = list(summary.players)
+    index_lookup = {
+        normalize_name(player.player_name): idx for idx, player in enumerate(players)
+    }
+    modified = False
+
+    for override in overrides:
+        if normalize_name(str(override.get("team", ""))) != normalized_team:
+            continue
+
+        player_identifier = normalize_name(str(override.get("player", "")))
+        if not player_identifier:
+            continue
+
+        metrics_payload = override.get("metrics")
+        metrics_value = None
+        if isinstance(metrics_payload, Mapping):
+            metrics_value = _build_metrics_from_payload(metrics_payload)
+
+        jersey_override = override.get("jersey_number")
+        total_points_override = override.get("total_points", ...)
+        break_points_override = override.get("break_points", ...)
+        plus_minus_override = override.get("plus_minus", ...)
+
+        player_index = index_lookup.get(player_identifier)
+        if player_index is not None:
+            existing = players[player_index]
+            metrics = metrics_value or existing.metrics
+            jersey_number = (
+                jersey_override
+                if jersey_override is not None
+                else existing.jersey_number
+            )
+            total_points = (
+                total_points_override
+                if total_points_override is not ...
+                else existing.total_points
+            )
+            break_points = (
+                break_points_override
+                if break_points_override is not ...
+                else existing.break_points
+            )
+            plus_minus = (
+                plus_minus_override
+                if plus_minus_override is not ...
+                else existing.plus_minus
+            )
+            players[player_index] = MatchPlayerStats(
+                team_name=existing.team_name,
+                player_name=existing.player_name,
+                jersey_number=jersey_number,
+                metrics=metrics,
+                total_points=total_points,
+                break_points=break_points,
+                plus_minus=plus_minus,
+            )
+            modified = True
+        elif override.get("add_if_missing"):
+            metrics = metrics_value or _build_metrics_from_payload({})
+            players.append(
+                MatchPlayerStats(
+                    team_name=summary.team_name,
+                    player_name=pretty_name(str(override.get("player", ""))),
+                    jersey_number=jersey_override,
+                    metrics=metrics,
+                    total_points=
+                    None
+                    if total_points_override is ...
+                    else total_points_override,
+                    break_points=
+                    None
+                    if break_points_override is ...
+                    else break_points_override,
+                    plus_minus=
+                    None if plus_minus_override is ... else plus_minus_override,
+                )
+            )
+            modified = True
+
+    if not modified:
+        return summary
+
+    return replace(summary, players=tuple(players))
+
+
+def _apply_player_overrides(
+    stats_url: str, summaries: Sequence[MatchStatsTotals]
+) -> Tuple[MatchStatsTotals, ...]:
+    overrides = PLAYER_STATS_OVERRIDES.get(stats_url)
+    if not overrides:
+        return tuple(summaries)
+
+    updated: List[MatchStatsTotals] = []
+    for summary in summaries:
+        updated.append(_apply_overrides_to_summary(summary, overrides))
+    return tuple(updated)
+
+
 @dataclass(frozen=True)
 class NewsItem:
     title: str
@@ -2773,7 +2952,7 @@ def fetch_match_stats_totals(
         )
     except requests.RequestException:
         if manual_entries:
-            summaries = tuple(
+            manual_summaries = [
                 MatchStatsTotals(
                     team_name=team_name,
                     header_lines=(),
@@ -2782,9 +2961,10 @@ def fetch_match_stats_totals(
                     players=players,
                 )
                 for _, team_name, metrics, players in manual_entries
-            )
-            _STATS_TOTALS_CACHE[stats_url] = summaries
-            return summaries
+            ]
+            overridden = _apply_player_overrides(stats_url, manual_summaries)
+            _STATS_TOTALS_CACHE[stats_url] = overridden
+            return overridden
         _STATS_TOTALS_CACHE[stats_url] = ()
         return ()
     summaries = list(_parse_stats_totals_pdf(response.content))
@@ -2825,9 +3005,9 @@ def fetch_match_stats_totals(
                 )
             )
         summaries = updated
-    summaries_tuple = tuple(summaries)
-    _STATS_TOTALS_CACHE[stats_url] = summaries_tuple
-    return summaries_tuple
+    overridden = _apply_player_overrides(stats_url, summaries)
+    _STATS_TOTALS_CACHE[stats_url] = overridden
+    return overridden
 
 
 def collect_match_stats_totals(
