@@ -5762,6 +5762,10 @@ def build_html_report(
       return table;
     }}
 
+    function getPlayerMatchNumericClass(index) {{
+      return index >= 3 ? 'numeric-center' : 'numeric';
+    }}
+
     function buildPlayerMatchesTable(player) {{
       const matches = Array.isArray(player.matches)
         ? player.matches.filter(match => match && typeof match === 'object')
@@ -5798,10 +5802,10 @@ def build_html_report(
 
       const thead = document.createElement('thead');
       const headerRow = document.createElement('tr');
-      columns.forEach(column => {{
+      columns.forEach((column, index) => {{
         const th = document.createElement('th');
         th.scope = 'col';
-        if (column.numeric) th.className = 'numeric';
+        if (column.numeric) th.className = getPlayerMatchNumericClass(index);
         th.textContent = column.label;
         headerRow.appendChild(th);
       }});
@@ -5835,7 +5839,7 @@ def build_html_report(
         cells.forEach((cell, index) => {{
           const td = document.createElement('td');
           if (cell.numeric || (columns[index] && columns[index].numeric)) {{
-            td.className = 'numeric';
+            td.className = getPlayerMatchNumericClass(index);
           }}
           td.textContent = cell.value;
           row.appendChild(td);
@@ -5846,31 +5850,38 @@ def build_html_report(
       if (totals) {{
         const totalRow = document.createElement('tr');
         totalRow.className = 'stats-table__total player-match-table__total-row';
-        const cells = [
-          {{ value: 'Σ', numeric: true }},
-          {{ value: '–' }},
-          {{ value: '–' }},
-          {{ value: formatInt(totals.serves_attempts), numeric: true }},
-          {{ value: formatInt(totals.serves_errors), numeric: true }},
-          {{ value: formatInt(totals.serves_points), numeric: true }},
-          {{ value: formatInt(totals.receptions_attempts), numeric: true }},
-          {{ value: formatInt(totals.receptions_errors), numeric: true }},
-          {{ value: formatPctOrDash(totals.receptions_positive_pct), numeric: true }},
-          {{ value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true }},
-          {{ value: formatInt(totals.attacks_attempts), numeric: true }},
-          {{ value: formatInt(totals.attacks_errors), numeric: true }},
-          {{ value: formatInt(totals.attacks_blocked), numeric: true }},
-          {{ value: formatInt(totals.attacks_points), numeric: true }},
-          {{ value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
-          {{ value: formatInt(totals.blocks_points), numeric: true }},
-          {{ value: '–', numeric: true }},
-          {{ value: '–', numeric: true }},
-          {{ value: '–', numeric: true }},
+        const totalCells = [
+          {{ index: 0, header: true, value: 'Summe' }},
+          {{ index: 1, value: '' }},
+          {{ index: 2, value: '' }},
+          {{ index: 3, value: formatInt(totals.serves_attempts), numeric: true }},
+          {{ index: 4, value: formatInt(totals.serves_errors), numeric: true }},
+          {{ index: 5, value: formatInt(totals.serves_points), numeric: true }},
+          {{ index: 6, value: formatInt(totals.receptions_attempts), numeric: true }},
+          {{ index: 7, value: formatInt(totals.receptions_errors), numeric: true }},
+          {{ index: 8, value: formatPctOrDash(totals.receptions_positive_pct), numeric: true }},
+          {{ index: 9, value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true }},
+          {{ index: 10, value: formatInt(totals.attacks_attempts), numeric: true }},
+          {{ index: 11, value: formatInt(totals.attacks_errors), numeric: true }},
+          {{ index: 12, value: formatInt(totals.attacks_blocked), numeric: true }},
+          {{ index: 13, value: formatInt(totals.attacks_points), numeric: true }},
+          {{ index: 14, value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
+          {{ index: 15, value: formatInt(totals.blocks_points), numeric: true }},
+          {{ index: 16, value: formatIntOrDash(player ? player.total_points : null), numeric: true }},
+          {{ index: 17, value: formatIntOrDash(player ? player.break_points_total : null), numeric: true }},
+          {{ index: 18, value: formatIntOrDash(player ? player.plus_minus_total : null), numeric: true }},
         ];
-        cells.forEach((cell, index) => {{
+        totalCells.forEach(cell => {{
+          if (cell.header) {{
+            const th = document.createElement('th');
+            th.scope = 'row';
+            th.textContent = cell.value;
+            totalRow.appendChild(th);
+            return;
+          }}
           const td = document.createElement('td');
-          if (cell.numeric || (columns[index] && columns[index].numeric)) {{
-            td.className = 'numeric';
+          if (cell.numeric || (columns[cell.index] && columns[cell.index].numeric)) {{
+            td.className = getPlayerMatchNumericClass(cell.index);
           }}
           td.textContent = cell.value;
           totalRow.appendChild(td);
