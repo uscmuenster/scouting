@@ -1,0 +1,29 @@
+{
+  "team": "Allianz MTV Stuttgart",
+  "matches": [
+    {
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/eb523e7a-332e-481d-a2ad-a6f9d1615c3e",
+      "serve": {
+        "attempts": 74,
+        "errors": 7,
+        "points": 8
+      },
+      "reception": {
+        "attempts": 42,
+        "errors": 4,
+        "positive_pct": "52%",
+        "perfect_pct": "29%"
+      },
+      "attack": {
+        "attempts": 90,
+        "errors": 3,
+        "blocked": 6,
+        "points": 40,
+        "success_pct": "44%"
+      },
+      "block": {
+        "points": 8
+      }
+    }
+  ]
+}
