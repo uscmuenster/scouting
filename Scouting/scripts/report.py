@@ -2480,6 +2480,7 @@ def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsM
 
 _PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
 _COMPACT_VALUE_PATTERN = re.compile(r"^(?:[+\-\u2212]?\d+(?:[.,]\d+)?%?|\.)$")
+_COMPACT_SIGN_FOLLOW_PATTERN = re.compile(r"^\d+(?:[.,]\d+)?%?$")
 
 
 def _tokenize_compact_stats_text(text: str) -> List[str]:
@@ -2488,7 +2489,21 @@ def _tokenize_compact_stats_text(text: str) -> List[str]:
     sanitized = sanitized.replace("\u2212", "-")
     sanitized = re.sub(r"[()]+", " ", sanitized)
     parts = [part for part in sanitized.split() if part and part != "*"]
-    return parts
+    if not parts:
+        return []
+    merged: List[str] = []
+    index = 0
+    while index < len(parts):
+        token = parts[index]
+        if token in {"+", "-"} and index + 1 < len(parts):
+            follower = parts[index + 1]
+            if _COMPACT_SIGN_FOLLOW_PATTERN.match(follower):
+                merged.append(f"{token}{follower}")
+                index += 2
+                continue
+        merged.append(token)
+        index += 1
+    return merged
 
 
 def _extract_compact_value_tokens(parts: Sequence[str]) -> Optional[Tuple[List[str], int]]:
