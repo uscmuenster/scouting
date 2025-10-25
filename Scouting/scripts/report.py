@@ -5126,7 +5126,7 @@ def build_html_report(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scouting USC Münster</title>
+  <title>Scouting Übersicht - Frauen-Volleyball-Bundesliga 2025/26</title>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <style>
