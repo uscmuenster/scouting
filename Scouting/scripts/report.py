@@ -5524,7 +5524,7 @@ def build_html_report(
       </div>
       <p class="update-note" data-update-note data-generated="{generated_iso}">
         <span aria-hidden="true">📅</span>
-        <span>Aktualisiert am {generated_label} – {default_team_label}</span>
+        <span>Aktualisiert am {generated_label}</span>
       </p>
     </header>
 
@@ -5953,7 +5953,7 @@ def build_html_report(
       const label = team && team.label ? team.label : (data.team && typeof data.team === 'string' ? data.team : 'Team');
       if (note) {{
         if (data.generated) {{
-          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>> – ${{label}}`;
+          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>>`;
         }} else {{
           note.textContent = `Keine aktuellen Daten für ${{label}}`;
         }}
