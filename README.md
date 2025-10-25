@@ -9,12 +9,12 @@ Dieses Repository erzeugt täglich eine schlanke HTML-Seite zum Frauen-Bundeslig
 Der Kern des Projekts ist der automatisch erzeugte Spieltagsbericht. Er liefert alle relevanten Informationen zum nächsten USC-Heimspiel in einem responsiven Layout (inklusive App-optimierter Variante mit skalierter Schrift). Enthalten sind unter anderem:
 
 * Überschrift mit dem nächsten Heimgegner des USC Münster inklusive Datum, Uhrzeit und Austragungsort.
-* Verlinkungen auf die offiziellen Vereinsseiten, die Tabellenübersicht der Volleyball Bundesliga sowie veröffentlichte Spielinfos/Statistiken der VBL, sobald verfügbar. 【F:Scouting/usc_kommentatoren/report.py†L2336-L2388】【F:Scouting/usc_kommentatoren/report.py†L1893-L1900】
-* Die letzten Ergebnisse und das jeweils nächste Spiel sowohl des USC als auch des kommenden Gegners – inklusive Satzergebnisse, Ballpunkte, MVP-Ehrungen, Schiedsrichter*innen und Zuschauerzahlen, sofern die VBL diese Daten liefert. 【F:Scouting/usc_kommentatoren/report.py†L1850-L1905】【F:Scouting/usc_kommentatoren/report.py†L2331-L2344】【F:Scouting/usc_kommentatoren/__main__.py†L73-L213】
-* Geburtstags-Hinweise für Spielerinnen in einem sieben­tägigen Fenster rund um den Spieltag. 【F:Scouting/usc_kommentatoren/report.py†L2052-L2128】
-* Aufklappbare Kaderübersichten beider Teams mit inline eingebundenem Mannschaftsfoto, Positions- und Größenangaben sowie separaten Blöcken für Trainer*innen/Staff. 【F:Scouting/usc_kommentatoren/report.py†L2294-L2330】
-* Wechselbörse-Sektionen je Team, die Zu- und Abgänge aus der offiziellen VBL-Wechselbörse sammeln. 【F:Scouting/usc_kommentatoren/report.py†L2279-L2330】【F:Scouting/usc_kommentatoren/report.py†L1736-L1848】
-* News-, Instagram- und Saisonrückblick-Abschnitte, die aktuelle Artikel, Social-Media-Links und optional externe Saisonzusammenfassungen bündeln. 【F:Scouting/usc_kommentatoren/report.py†L1945-L2068】【F:Scouting/usc_kommentatoren/report.py†L2134-L2245】
+* Verlinkungen auf die offiziellen Vereinsseiten, die Tabellenübersicht der Volleyball Bundesliga sowie veröffentlichte Spielinfos/Statistiken der VBL, sobald verfügbar. 【F:Scouting/scripts/report.py†L2336-L2388】【F:Scouting/scripts/report.py†L1893-L1900】
+* Die letzten Ergebnisse und das jeweils nächste Spiel sowohl des USC als auch des kommenden Gegners – inklusive Satzergebnisse, Ballpunkte, MVP-Ehrungen, Schiedsrichter*innen und Zuschauerzahlen, sofern die VBL diese Daten liefert. 【F:Scouting/scripts/report.py†L1850-L1905】【F:Scouting/scripts/report.py†L2331-L2344】【F:Scouting/scripts/__main__.py†L73-L213】
+* Geburtstags-Hinweise für Spielerinnen in einem sieben­tägigen Fenster rund um den Spieltag. 【F:Scouting/scripts/report.py†L2052-L2128】
+* Aufklappbare Kaderübersichten beider Teams mit inline eingebundenem Mannschaftsfoto, Positions- und Größenangaben sowie separaten Blöcken für Trainer*innen/Staff. 【F:Scouting/scripts/report.py†L2294-L2330】
+* Wechselbörse-Sektionen je Team, die Zu- und Abgänge aus der offiziellen VBL-Wechselbörse sammeln. 【F:Scouting/scripts/report.py†L2279-L2330】【F:Scouting/scripts/report.py†L1736-L1848】
+* News-, Instagram- und Saisonrückblick-Abschnitte, die aktuelle Artikel, Social-Media-Links und optional externe Saisonzusammenfassungen bündeln. 【F:Scouting/scripts/report.py†L1945-L2068】【F:Scouting/scripts/report.py†L2134-L2245】
 
 Die App-Ansicht wird automatisch erzeugt (Schriftfaktor standardmäßig 0,75), kann aber über die CLI-Optionen skaliert oder deaktiviert werden.
 
@@ -22,9 +22,9 @@ Die App-Ansicht wird automatisch erzeugt (Schriftfaktor standardmäßig 0,75), k
 
 Das Skript `Scouting/scripts/update_lineups.py` lädt PDF-Spielberichtsbögen des USC sowie der jüngsten Partien des nächsten Gegners, extrahiert Startaufstellungen je Satz und schreibt alles als JSON. Der Datensatz enthält pro Spiel:
 
-* Metadaten (Matchnummer, Datum, Wettbewerb, Spielort) aus dem offiziellen Spielplan. 【F:Scouting/scripts/update_lineups.py†L33-L58】【F:Scouting/usc_kommentatoren/lineups.py†L24-L121】
-* Verlinkungen zu den Original-PDFs sowie die Positionscodes der VBL. 【F:Scouting/usc_kommentatoren/lineups.py†L640-L706】
-* Startsechs, Satzstände und zugehörige Kaderinformationen zur schnellen Wiederverwendung in Streams oder Social Posts. 【F:Scouting/usc_kommentatoren/lineups.py†L744-L825】
+* Metadaten (Matchnummer, Datum, Wettbewerb, Spielort) aus dem offiziellen Spielplan. 【F:Scouting/scripts/update_lineups.py†L33-L58】【F:Scouting/scripts/lineups.py†L24-L121】
+* Verlinkungen zu den Original-PDFs sowie die Positionscodes der VBL. 【F:Scouting/scripts/lineups.py†L640-L706】
+* Startsechs, Satzstände und zugehörige Kaderinformationen zur schnellen Wiederverwendung in Streams oder Social Posts. 【F:Scouting/scripts/lineups.py†L744-L825】
 
 Aufrufbeispiel:
 
@@ -79,26 +79,26 @@ Standardmäßig landet die Datei unter `docs/internationale_spiele.html` und kan
 3. Für einmalige Testläufe kannst du die wichtigsten Skripte direkt über `PYTHONPATH=Scouting` aufrufen. Häufige Beispiele:
 
    ```bash
-   PYTHONPATH=Scouting python -m usc_kommentatoren --help
+   PYTHONPATH=Scouting python -m scripts --help
    PYTHONPATH=Scouting python Scouting/scripts/update_lineups.py --limit 1
    ```
 
 4. Wenn du Änderungen am Code testen möchtest, lösche bei Bedarf die Cache-Verzeichnisse in `data/` oder starte die Skripte mit geänderten `--schedule-path`- bzw. `--roster-dir`-Argumenten, damit neue Daten geladen werden.
 
-5. Für ein tägliches Update kannst du den bestehenden GitHub-Action-Workflow lokal simulieren, indem du `Scouting/scripts/`-Befehle hintereinander ausführst oder `python -m usc_kommentatoren` in einem Cronjob einplanst.
+5. Für ein tägliches Update kannst du den bestehenden GitHub-Action-Workflow lokal simulieren, indem du `Scouting/scripts/`-Befehle hintereinander ausführst oder `python -m scripts` in einem Cronjob einplanst.
 
 ## Manuelle Ausführung
 
 Das Paket stellt einen kleinen Helfer bereit, der den offiziellen Spielplan lädt, aktuelle Vereins- und VBL-Meldungen sammelt und die HTML-Dateien erzeugt. Standardmäßig schreibt der Befehl sowohl `docs/index.html` (normale Ansicht) als auch `docs/index_app.html` (Schriftgrößen ca. 75 % für die App-Einbindung), damit beide Varianten direkt von GitHub Pages oder einem anderen statischen Hoster ausgeliefert werden können. Beispiel:
 
 ```bash
-PYTHONPATH=Scouting python -m usc_kommentatoren
+PYTHONPATH=Scouting python -m scripts
 ```
 
 Beim ersten Aufruf (und bei jeder späteren Aktualisierung) lädt das Skript den CSV-Spielplan herunter und speichert ihn unter `data/schedule.csv`. Wenn bereits eine lokale Kopie existiert, wird sie überschrieben. Der Pfad kann mit `--schedule-path` angepasst werden. Zusätzlich lädt der Generator die offiziellen Teamkader als CSV-Export in `data/rosters/`, cacht Mannschaftsfotos im Verzeichnis `data/team_photos/`, ergänzt Saisonstatistiken aus `docs/data/season_results_2024_25.json` und wertet die Wechselbörse aus. Über `--app-output`, `--app-scale` und `--skip-app-output` steuerst du bei Bedarf, wohin die App-Variante geschrieben wird, wie stark die Schrift verkleinert werden soll oder ob sie komplett entfallen darf. Optional kannst du außerdem Zielpfad, Quelle, Anzahl der vergangenen Partien sowie den News-Zeitraum ändern:
 
 ```bash
-PYTHONPATH=Scouting python -m usc_kommentatoren \
+PYTHONPATH=Scouting python -m scripts \
   --schedule-url "https://www.volleyball-bundesliga.de/servlet/league/PlayingScheduleCsvExport?matchSeriesId=776311171" \
   --schedule-path data/custom_schedule.csv \
   --roster-dir data/kader \
@@ -113,14 +113,14 @@ PYTHONPATH=Scouting python -m usc_kommentatoren \
 
 ### CLI-Optionen im Überblick
 
-* `--schedule-url`: CSV-Quelle des Spielplans (Standard: offizieller VBL-Export). 【F:Scouting/usc_kommentatoren/__main__.py†L34-L41】
-* `--schedule-path`: Lokale Datei für den Spielplan-Cache (`data/schedule.csv`). 【F:Scouting/usc_kommentatoren/__main__.py†L52-L58】
-* `--roster-dir`, `--photo-dir`: Zwischenspeicher für Kaderexporte und Teamfotos (Standard: `data/rosters/`, `data/team_photos/`). 【F:Scouting/usc_kommentatoren/__main__.py†L59-L77】
-* `--season-results`: Optionaler JSON-Pfad für Saisonrückblicke. 【F:Scouting/usc_kommentatoren/__main__.py†L78-L115】【F:Scouting/usc_kommentatoren/report.py†L2134-L2245】
-* `--recent-limit`, `--news-lookback`: Anzahl berücksichtigter Spiele und News-Tage. 【F:Scouting/usc_kommentatoren/__main__.py†L88-L103】
-* `--app-output`, `--app-scale`, `--skip-app-output`: Steuerung der App-optimierten HTML-Version. 【F:Scouting/usc_kommentatoren/__main__.py†L42-L51】【F:Scouting/usc_kommentatoren/__main__.py†L216-L233】
+* `--schedule-url`: CSV-Quelle des Spielplans (Standard: offizieller VBL-Export). 【F:Scouting/scripts/__main__.py†L34-L41】
+* `--schedule-path`: Lokale Datei für den Spielplan-Cache (`data/schedule.csv`). 【F:Scouting/scripts/__main__.py†L52-L58】
+* `--roster-dir`, `--photo-dir`: Zwischenspeicher für Kaderexporte und Teamfotos (Standard: `data/rosters/`, `data/team_photos/`). 【F:Scouting/scripts/__main__.py†L59-L77】
+* `--season-results`: Optionaler JSON-Pfad für Saisonrückblicke. 【F:Scouting/scripts/__main__.py†L78-L115】【F:Scouting/scripts/report.py†L2134-L2245】
+* `--recent-limit`, `--news-lookback`: Anzahl berücksichtigter Spiele und News-Tage. 【F:Scouting/scripts/__main__.py†L88-L103】
+* `--app-output`, `--app-scale`, `--skip-app-output`: Steuerung der App-optimierten HTML-Version. 【F:Scouting/scripts/__main__.py†L42-L51】【F:Scouting/scripts/__main__.py†L216-L233】
 
-Weitere Optionen lassen sich über `PYTHONPATH=Scouting python -m usc_kommentatoren --help` einsehen.
+Weitere Optionen lassen sich über `PYTHONPATH=Scouting python -m scripts --help` einsehen.
 
 ## Datenablage & Cache-Verzeichnisse
 

@@ -15,8 +15,8 @@ def _add_package_root_to_path() -> None:
 
 _add_package_root_to_path()
 
-from usc_kommentatoren.mvp import MVP_INDICATORS, TEAM_RANKING_FILTERS, collect_mvp_rankings
-from usc_kommentatoren.report import normalize_name
+from scripts.mvp import MVP_INDICATORS, TEAM_RANKING_FILTERS, collect_mvp_rankings
+from scripts.report import normalize_name
 
 
 REPO_ROOT = Path(__file__).resolve().parents[2]

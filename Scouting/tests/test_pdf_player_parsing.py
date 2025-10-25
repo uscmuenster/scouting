@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from usc_kommentatoren.report import (
+from scripts.report import (
     _parse_player_stats_line,
     _parse_team_player_lines,
 )
