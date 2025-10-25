@@ -5,6 +5,7 @@ import csv
 import json
 import time
 from dataclasses import dataclass, replace
+import hashlib
 import re
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -43,6 +44,7 @@ USC_HOMEPAGE = "https://www.usc-muenster.de/"
 MANUAL_SCHEDULE_PATH = (
     Path(__file__).resolve().parents[2] / "docs" / "data" / "manual_schedule.csv"
 )
+STATS_PDF_CACHE_DIR = Path(__file__).resolve().parents[2] / "docs" / "data" / "stats_pdfs"
 _MANUAL_SCHEDULE_METADATA: Dict[str, Dict[str, Optional[str]]] = {
     "2005": {
         "match_id": "777479976",
@@ -82,6 +84,46 @@ def _merge_manual_schedule_metadata(
             if value and not entry.get(key):
                 entry[key] = value
     return metadata
+
+
+def _sanitize_stats_filename(filename: str) -> str:
+    sanitized = re.sub(r"[^A-Za-z0-9._-]", "_", filename)
+    return sanitized or hashlib.sha256(filename.encode("utf-8")).hexdigest()
+
+
+def resolve_stats_pdf_cache_path(
+    stats_url: str,
+    *,
+    cache_dir: Optional[Path] = None,
+) -> Path:
+    base_dir = cache_dir or STATS_PDF_CACHE_DIR
+    parsed = urlparse(stats_url)
+    name = Path(parsed.path).name
+    if not name:
+        name = hashlib.sha256(stats_url.encode("utf-8")).hexdigest()
+    if not name.lower().endswith(".pdf"):
+        name = f"{name}.pdf"
+    sanitized = _sanitize_stats_filename(name)
+    return base_dir / sanitized
+
+
+def download_stats_pdf(
+    stats_url: str,
+    *,
+    output_path: Optional[Path] = None,
+    retries: int = 3,
+    delay_seconds: float = 2.0,
+) -> Path:
+    target_path = output_path or resolve_stats_pdf_cache_path(stats_url)
+    response = _http_get(
+        stats_url,
+        retries=retries,
+        delay_seconds=delay_seconds,
+    )
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+    target_path.write_bytes(response.content)
+    return target_path
+
 
 # Farbkonfiguration für Hervorhebungen von USC und Gegner.
 # Werte können bei Bedarf angepasst werden, um die farbliche Darstellung global zu ändern.
@@ -3014,13 +3056,9 @@ def fetch_match_stats_totals(
     if cached is not None:
         return cached
     manual_entries = _load_manual_stats_totals().get(stats_url)
-    try:
-        response = _http_get(
-            stats_url,
-            retries=retries,
-            delay_seconds=delay_seconds,
-        )
-    except requests.RequestException:
+    cache_path = resolve_stats_pdf_cache_path(stats_url)
+
+    def _return_manual_or_empty() -> Tuple[MatchStatsTotals, ...]:
         if manual_entries:
             manual_summaries = [
                 MatchStatsTotals(
@@ -3032,12 +3070,64 @@ def fetch_match_stats_totals(
                 )
                 for _, team_name, metrics, players in manual_entries
             ]
-            overridden = _apply_player_overrides(stats_url, manual_summaries)
-            _STATS_TOTALS_CACHE[stats_url] = overridden
-            return overridden
+            overridden_manual = _apply_player_overrides(stats_url, manual_summaries)
+            _STATS_TOTALS_CACHE[stats_url] = overridden_manual
+            return overridden_manual
         _STATS_TOTALS_CACHE[stats_url] = ()
         return ()
-    summaries = list(_parse_stats_totals_pdf(response.content))
+
+    def _parse_pdf_bytes(payload: bytes) -> Optional[List[MatchStatsTotals]]:
+        try:
+            return list(_parse_stats_totals_pdf(payload))
+        except (PdfReadError, ValueError):
+            return None
+
+    summaries: Optional[List[MatchStatsTotals]] = None
+    pdf_bytes: Optional[bytes] = None
+
+    if cache_path.exists():
+        try:
+            cached_bytes = cache_path.read_bytes()
+        except OSError:
+            cached_bytes = None
+        if cached_bytes:
+            parsed = _parse_pdf_bytes(cached_bytes)
+            if parsed is not None:
+                summaries = parsed
+                pdf_bytes = cached_bytes
+            else:
+                try:
+                    cache_path.unlink()
+                except OSError:
+                    pass
+
+    if summaries is None:
+        try:
+            downloaded_path = download_stats_pdf(
+                stats_url,
+                output_path=cache_path,
+                retries=retries,
+                delay_seconds=delay_seconds,
+            )
+        except requests.RequestException:
+            return _return_manual_or_empty()
+        try:
+            pdf_bytes = downloaded_path.read_bytes()
+        except OSError:
+            pdf_bytes = None
+        if not pdf_bytes:
+            return _return_manual_or_empty()
+        summaries = _parse_pdf_bytes(pdf_bytes)
+        if summaries is None:
+            try:
+                downloaded_path.unlink()
+            except OSError:
+                pass
+            return _return_manual_or_empty()
+
+    if summaries is None:
+        return _return_manual_or_empty()
+
     if manual_entries:
         index_lookup: Dict[str, int] = {}
         for idx, (keys, _, _, _) in enumerate(manual_entries):
