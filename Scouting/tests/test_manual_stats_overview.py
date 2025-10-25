@@ -4,16 +4,22 @@ import json
 
 from scripts.manual_stats import (
     build_manual_stats_overview,
+    find_manual_team_file,
     load_manual_team_files,
 )
 
 
-def _create_manual_stats_file(tmp_path):
+def _create_manual_stats_file(
+    tmp_path,
+    *,
+    team: str = "Test Team",
+    aliases: tuple[str, ...] = ("TT", "tt", "T T"),
+):
     directory = tmp_path / "manual"
     directory.mkdir()
     payload = {
-        "team": "Test Team",
-        "aliases": ["TT"],
+        "team": team,
+        "aliases": list(aliases),
         "matches": [
             {
                 "stats_url": "https://example.com/match-1",
@@ -91,10 +97,12 @@ def test_load_manual_team_files(tmp_path):
     team_file = entries[0]
 
     assert team_file.team == "Test Team"
+    assert team_file.aliases == ("TT",)
     assert len(team_file.matches) == 2
     first_match = team_file.matches[0]
     assert first_match.serve["attempts"] == 10
     assert first_match.reception["positive_pct"] == "40%"
+    assert first_match.aliases == team_file.aliases
 
 
 def test_build_manual_stats_overview(tmp_path):
@@ -124,3 +132,23 @@ def test_build_manual_stats_overview(tmp_path):
     first_reception = matches[0]["reception"]
     assert first_reception["positive"] == 8
     assert first_reception["perfect"] == 2
+
+
+def test_find_manual_team_file_by_alias(tmp_path):
+    directory = _create_manual_stats_file(tmp_path)
+
+    entry = find_manual_team_file("tt", directory=directory)
+    assert entry is not None
+    assert entry.team == "Test Team"
+
+
+def test_find_manual_team_file_handles_diacritics(tmp_path):
+    directory = _create_manual_stats_file(
+        tmp_path,
+        team="Über VC Münster",
+        aliases=("Über VC Münster",),
+    )
+
+    entry = find_manual_team_file("uber vc munster", directory=directory)
+    assert entry is not None
+    assert entry.team == "Über VC Münster"
