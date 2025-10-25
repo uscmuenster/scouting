@@ -51,19 +51,33 @@ def build_parser() -> argparse.ArgumentParser:
             "Zielpfad für die Hamburg-JSON-Datei (Standard: docs/data/hamburg_stats_overview.json)."
         ),
     )
+    parser.add_argument(
+        "--league-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Liga-JSON-Datei mit allen Teams (Standard: docs/data/league_stats_overview.json)."
+        ),
+    )
     return parser
 
 
 def main() -> int:
     _add_package_root_to_path()
-    from scripts import HAMBURG_CANONICAL_NAME, HAMBURG_OUTPUT_PATH, STATS_OUTPUT_PATH
-    from scripts.stats import build_stats_overview
+    from scripts import (
+        HAMBURG_CANONICAL_NAME,
+        HAMBURG_OUTPUT_PATH,
+        LEAGUE_STATS_OUTPUT_PATH,
+        STATS_OUTPUT_PATH,
+    )
+    from scripts.stats import build_league_stats_overview, build_stats_overview
 
     parser = build_parser()
     args = parser.parse_args()
 
     usc_output_path = args.output or STATS_OUTPUT_PATH
     hamburg_output_path = args.hamburg_output or HAMBURG_OUTPUT_PATH
+    league_output_path = args.league_output or LEAGUE_STATS_OUTPUT_PATH
 
     build_kwargs = {
         "schedule_path": args.schedule_path,
@@ -91,6 +105,17 @@ def main() -> int:
         "Hamburg-Scouting-Übersicht aktualisiert:",
         f"{hamburg_payload['match_count']} Spiele verarbeitet",
         f"-> {hamburg_output_path}",
+    )
+
+    league_payload = build_league_stats_overview(
+        output_path=league_output_path,
+        **build_kwargs,
+    )
+
+    print(
+        "Liga-Scouting-Übersicht aktualisiert:",
+        f"{league_payload['team_count']} Teams verarbeitet",
+        f"-> {league_output_path}",
     )
     return 0
 

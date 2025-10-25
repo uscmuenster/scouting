@@ -6,7 +6,7 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Iterable, List, Mapping, Optional, Sequence
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 import requests
 
@@ -38,6 +38,8 @@ STATS_OUTPUT_PATH = DEFAULT_OUTPUT_PATH
 
 HAMBURG_CANONICAL_NAME = "ETV Hamburger Volksbank Volleys"
 HAMBURG_OUTPUT_PATH = Path("docs/data/hamburg_stats_overview.json")
+
+LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
 
 
 @dataclass(frozen=True)
@@ -150,6 +152,12 @@ def _normalized_team_identifier(name: str) -> str:
     if canonical:
         normalized = normalize_name(canonical)
     return normalized
+
+
+def _ensure_path(path: Optional[Path | str]) -> Optional[Path]:
+    if path is None or isinstance(path, Path):
+        return path
+    return Path(path)
 
 
 def _resolve_focus_team_label(team_name: str) -> str:
@@ -407,19 +415,14 @@ def _load_enriched_matches(
     return enrich_matches(matches, metadata)
 
 
-def build_stats_overview(
+def _prepare_matches_and_lookup(
+    matches: Optional[Sequence[Match]],
     *,
-    matches: Optional[Sequence[Match]] = None,
-    schedule_csv_url: str = DEFAULT_SCHEDULE_URL,
-    schedule_page_url: str = SCHEDULE_PAGE_URL,
-    schedule_path: Optional[Path] = None,
-    output_path: Optional[Path] = None,
-    focus_team: str = USC_CANONICAL_NAME,
-    stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
-) -> Dict[str, object]:
-    if output_path is not None and not isinstance(output_path, Path):
-        output_path = Path(output_path)
-
+    schedule_csv_url: str,
+    schedule_page_url: str,
+    schedule_path: Optional[Path],
+    stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]],
+) -> Tuple[Sequence[Match], Mapping[str, Sequence[MatchStatsTotals]]]:
     if matches is None:
         matches = _load_enriched_matches(
             schedule_csv_url=schedule_csv_url,
@@ -430,6 +433,16 @@ def build_stats_overview(
     if stats_lookup is None:
         stats_lookup = collect_match_stats_totals(matches)
 
+    return matches, stats_lookup
+
+
+def _build_stats_payload(
+    matches: Sequence[Match],
+    *,
+    focus_team: str,
+    stats_lookup: Mapping[str, Sequence[MatchStatsTotals]],
+    generated_at: Optional[datetime] = None,
+) -> Dict[str, object]:
     focus_label = _resolve_focus_team_label(focus_team)
     usc_entries = collect_team_match_stats(
         matches,
@@ -490,8 +503,11 @@ def build_stats_overview(
         )
     )
 
-    payload = {
-        "generated": datetime.now(tz=timezone.utc).isoformat(),
+    if generated_at is None:
+        generated_at = datetime.now(tz=timezone.utc)
+
+    return {
+        "generated": generated_at.isoformat(),
         "team": focus_label,
         "match_count": len(usc_entries),
         "matches": [entry.to_dict() for entry in usc_entries],
@@ -500,8 +516,105 @@ def build_stats_overview(
         "players": players_payload,
     }
 
+
+def build_stats_overview(
+    *,
+    matches: Optional[Sequence[Match]] = None,
+    schedule_csv_url: str = DEFAULT_SCHEDULE_URL,
+    schedule_page_url: str = SCHEDULE_PAGE_URL,
+    schedule_path: Optional[Path] = None,
+    output_path: Optional[Path] = None,
+    focus_team: str = USC_CANONICAL_NAME,
+    stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
+) -> Dict[str, object]:
+    output_path = _ensure_path(output_path)
+
+    matches, stats_lookup = _prepare_matches_and_lookup(
+        matches,
+        schedule_csv_url=schedule_csv_url,
+        schedule_page_url=schedule_page_url,
+        schedule_path=schedule_path,
+        stats_lookup=stats_lookup,
+    )
+
+    payload = _build_stats_payload(
+        matches,
+        focus_team=focus_team,
+        stats_lookup=stats_lookup,
+    )
+
     if output_path is None:
         output_path = DEFAULT_OUTPUT_PATH
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    return payload
+
+
+def _collect_league_team_names(
+    matches: Sequence[Match],
+    *,
+    team_names: Optional[Sequence[str]] = None,
+) -> List[str]:
+    normalized_to_label: Dict[str, str] = {}
+
+    def _register(name: str) -> None:
+        label = _resolve_focus_team_label(name)
+        normalized = normalize_name(label)
+        normalized_to_label.setdefault(normalized, label)
+
+    if team_names:
+        for name in team_names:
+            _register(name)
+
+    for match in matches:
+        _register(match.home_team)
+        _register(match.away_team)
+
+    return sorted(normalized_to_label.values(), key=lambda value: value.lower())
+
+
+def build_league_stats_overview(
+    *,
+    matches: Optional[Sequence[Match]] = None,
+    schedule_csv_url: str = DEFAULT_SCHEDULE_URL,
+    schedule_page_url: str = SCHEDULE_PAGE_URL,
+    schedule_path: Optional[Path] = None,
+    output_path: Optional[Path] = None,
+    stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
+    team_names: Optional[Sequence[str]] = None,
+) -> Dict[str, object]:
+    output_path = _ensure_path(output_path)
+
+    matches, stats_lookup = _prepare_matches_and_lookup(
+        matches,
+        schedule_csv_url=schedule_csv_url,
+        schedule_page_url=schedule_page_url,
+        schedule_path=schedule_path,
+        stats_lookup=stats_lookup,
+    )
+
+    generated_at = datetime.now(tz=timezone.utc)
+    league_team_names = _collect_league_team_names(matches, team_names=team_names)
+
+    teams_payload = [
+        _build_stats_payload(
+            matches,
+            focus_team=team_name,
+            stats_lookup=stats_lookup,
+            generated_at=generated_at,
+        )
+        for team_name in league_team_names
+    ]
+
+    payload = {
+        "generated": generated_at.isoformat(),
+        "team_count": len(teams_payload),
+        "teams": teams_payload,
+    }
+
+    if output_path is None:
+        output_path = LEAGUE_STATS_OUTPUT_PATH
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
@@ -514,9 +627,11 @@ __all__ = [
     "STATS_OUTPUT_PATH",
     "HAMBURG_CANONICAL_NAME",
     "HAMBURG_OUTPUT_PATH",
+    "LEAGUE_STATS_OUTPUT_PATH",
     "USCMatchStatsEntry",
     "USCPlayerMatchEntry",
     "build_stats_overview",
+    "build_league_stats_overview",
     "collect_team_match_stats",
     "collect_team_player_stats",
     "collect_usc_match_stats",

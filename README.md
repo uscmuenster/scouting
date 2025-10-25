@@ -45,6 +45,7 @@ python Scouting/scripts/update_usc_stats_overview.py
 ```
 
 Die Spielplan-CSV aus `data/schedule.csv` wird bei vorhandener Datei wiederverwendet. Alternativ kann der Pfad per `--schedule-path` angepasst werden, ebenso wie Ziel- und Quell-URLs.
+Neben der USC-Datei entstehen so automatisch `docs/data/hamburg_stats_overview.json` für den ETV Hamburg und `docs/data/league_stats_overview.json` mit aggregierten Team- und Spielerinnenwerten für die komplette Bundesliga. Über `--hamburg-output` beziehungsweise `--league-output` lassen sich beide Pfade überschreiben.
 
 ### Internationale Spiele (`docs/internationale_spiele.html`)
 
