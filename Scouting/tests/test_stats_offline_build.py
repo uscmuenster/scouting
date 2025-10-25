@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import requests
 
+from datetime import datetime, timezone
+
 from scripts import stats as stats_module
 from scripts import report
 
@@ -63,3 +65,76 @@ def test_build_stats_overview_for_other_team(monkeypatch, tmp_path) -> None:
     assert match["opponent"] == "USC Münster"
     assert match["metrics"]["serves_attempts"] == 107
     assert match["metrics"]["attacks_points"] == 50
+
+
+def test_build_stats_overview_for_hamburg_includes_players(monkeypatch, tmp_path) -> None:
+    def offline_http_get(*args, **kwargs):
+        raise requests.RequestException("offline")
+
+    monkeypatch.setattr(report, "_http_get", offline_http_get)
+
+    output_path = tmp_path / "hamburg.json"
+    schwerin_url = "https://www.volleyball-bundesliga.de/uploads/831866c1-9e16-46f8-827c-4b0dd011928b"
+    stuttgart_url = "https://www.volleyball-bundesliga.de/uploads/eb523e7a-332e-481d-a2ad-a6f9d1615c3e"
+
+    matches = [
+        report.Match(
+            kickoff=datetime(2025, 10, 11, 17, 30, tzinfo=timezone.utc),
+            home_team="ETV Hamburger Volksbank Volleys",
+            away_team="Allianz MTV Stuttgart",
+            host="ETV Hamburger Volksbank Volleys",
+            location="CU Arena (21147 Hamburg)",
+            result=report.MatchResult(
+                score="0:3",
+                total_points="51:75",
+                sets=("14:25", "20:25", "17:25"),
+            ),
+            match_number="2005",
+            match_id="777479964",
+            info_url=None,
+            stats_url=stuttgart_url,
+            scoresheet_url=None,
+            attendance=None,
+        ),
+        report.Match(
+            kickoff=datetime(2025, 10, 18, 16, 0, tzinfo=timezone.utc),
+            home_team="SSC Palmberg Schwerin",
+            away_team="ETV Hamburger Volksbank Volleys",
+            host="SSC Palmberg Schwerin",
+            location="Palmberg Arena (19059 Schwerin)",
+            result=report.MatchResult(
+                score="3:0",
+                total_points="75:41",
+                sets=("25:16", "25:11", "25:14"),
+            ),
+            match_number="2012",
+            match_id="777480001",
+            info_url=None,
+            stats_url=schwerin_url,
+            scoresheet_url=None,
+            attendance=None,
+        ),
+    ]
+
+    payload = stats_module.build_stats_overview(
+        matches=matches,
+        output_path=output_path,
+        focus_team=stats_module.HAMBURG_CANONICAL_NAME,
+    )
+
+    assert payload["team"] == stats_module.HAMBURG_CANONICAL_NAME
+    assert payload["match_count"] == 2
+    assert payload["player_count"] > 0
+
+    players_by_name = {player["name"]: player for player in payload["players"]}
+    assert "FROBEL Svea" in players_by_name
+
+    frobel_matches = {
+        entry["stats_url"]: entry for entry in players_by_name["FROBEL Svea"]["matches"]
+    }
+
+    assert schwerin_url in frobel_matches
+    assert stuttgart_url in frobel_matches
+
+    assert frobel_matches[schwerin_url]["metrics"]["attacks_points"] == 6
+    assert frobel_matches[stuttgart_url]["metrics"]["attacks_points"] == 7
