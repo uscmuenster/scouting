@@ -3529,6 +3529,25 @@ def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     return names
 
 
+def _is_player_totals_marker(text: str) -> bool:
+    """Return True if the line marks the totals row in a stats PDF."""
+
+    cleaned = text.strip().lower()
+    if not cleaned:
+        return False
+    normalized = cleaned.replace("/", " ")
+    normalized = re.sub(r"\s+", " ", normalized)
+    if "spieler" in normalized and (
+        "insgesamt" in normalized or "gesamt" in normalized
+    ):
+        return True
+    if "players" in normalized and "total" in normalized:
+        return True
+    if "total" in normalized and "players" in normalized:
+        return True
+    return False
+
+
 def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
     try:
         reader = PdfReader(BytesIO(data))
@@ -3543,7 +3562,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
     lines = cleaned.splitlines()
     if not lines:
         return ()
-    markers = [idx for idx, line in enumerate(lines) if line.strip() == "Spieler insgesamt"]
+    markers = [idx for idx, line in enumerate(lines) if _is_player_totals_marker(line)]
     if not markers:
         return ()
     team_names = _extract_stats_team_names(lines)
@@ -3568,7 +3587,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
                 continue
             if candidate.startswith("Satz"):
                 break
-            if "Spieler insgesamt" in candidate:
+            if _is_player_totals_marker(candidate):
                 break
             if not re.search(r"\d", candidate):
                 if totals_candidates:
@@ -5029,15 +5048,15 @@ def _build_player_card_html(player: Mapping[str, Any]) -> str:
 
 
 def _render_player_overview_content(
-    usc_scouting: Optional[Mapping[str, Any]]
+    scouting: Optional[Mapping[str, Any]]
 ) -> tuple[str, str, str]:
     default_meta = "Die Daten werden geladen…"
     default_table = '        <p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>'
     default_list = '        <p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>'
-    if not usc_scouting:
+    if not scouting:
         return default_meta, default_table, default_list
 
-    players = usc_scouting.get("players") or []
+    players = scouting.get("players") or []
     if not players:
         return "Keine Spielerinnendaten verfügbar.", default_table, default_list
 
@@ -5066,14 +5085,14 @@ def _render_player_overview_content(
 
 
 def _render_match_overview_content(
-    usc_scouting: Optional[Mapping[str, Any]]
+    scouting: Optional[Mapping[str, Any]]
 ) -> str:
     default_html = '        <p class="empty-state">Keine Spiele verfügbar.</p>'
-    if not usc_scouting:
+    if not scouting:
         return default_html
 
-    matches = usc_scouting.get("matches") or []
-    totals = usc_scouting.get("totals")
+    matches = scouting.get("matches") or []
+    totals = scouting.get("totals")
     table_html = _build_match_table_html(matches, totals if isinstance(totals, Mapping) else None)
     if not table_html:
         return default_html
@@ -5104,6 +5123,7 @@ def build_html_report(
     match_stats=None,
     mvp_rankings=None,
     usc_scouting: Optional[Mapping[str, Any]] = None,
+    hamburg_scouting: Optional[Mapping[str, Any]] = None,
 ) -> str:
     """Generate a lightweight scouting landing page for USC Münster."""
 
@@ -5116,17 +5136,76 @@ def build_html_report(
         player_table_html,
         player_list_html,
     ) = _render_player_overview_content(usc_scouting)
-    preloaded_overview_json = "null"
-    if usc_scouting:
-        preloaded_overview_json = json.dumps(usc_scouting, ensure_ascii=False)
-        preloaded_overview_json = preloaded_overview_json.replace("</", "<\\/")
+
+    usc_team_label = "USC Münster"
+    if usc_scouting and isinstance(usc_scouting.get("team"), str):
+        team_value = str(usc_scouting["team"]).strip()
+        if team_value:
+            usc_team_label = team_value
+
+    player_meta_text = f"{usc_team_label}: {player_meta_text}"
+
+    team_configs: List[Dict[str, str]] = [
+        {
+            "key": "usc",
+            "label": usc_team_label,
+            "path": "data/usc_stats_overview.json",
+        }
+    ]
+
+    preloaded_overviews: Dict[str, Optional[Mapping[str, Any]]] = {
+        "usc": usc_scouting,
+    }
+
+    if hamburg_scouting is not None:
+        hamburg_team_label = "ETV Hamburger Volksbank Volleys"
+        team_value = hamburg_scouting.get("team") if isinstance(hamburg_scouting, Mapping) else None
+        if isinstance(team_value, str) and team_value.strip():
+            hamburg_team_label = team_value.strip()
+        team_configs.append(
+            {
+                "key": "hamburg",
+                "label": hamburg_team_label,
+                "path": "data/hamburg_stats_overview.json",
+            }
+        )
+        preloaded_overviews["hamburg"] = hamburg_scouting
+
+    default_team_label = team_configs[0]["label"] if team_configs else "Team"
+    team_selector_options = "\n".join(
+        (
+            f'            <option value="{escape(config["key"])}"'
+            f"{' selected' if index == 0 else ''}>"
+            f"{escape(config['label'])}</option>"
+        )
+        for index, config in enumerate(team_configs)
+    )
+    if team_selector_options:
+        team_selector_options += "\n"
+
+    team_configs_json = json.dumps(team_configs, ensure_ascii=False)
+    team_configs_json = team_configs_json.replace("</", "<\\/")
+    preloaded_overviews_payload = {
+        config["key"]: preloaded_overviews.get(config["key"])
+        for config in team_configs
+    }
+    preloaded_overviews_json = json.dumps(preloaded_overviews_payload, ensure_ascii=False)
+    preloaded_overviews_json = preloaded_overviews_json.replace("</", "<\\/")
+
+    page_title = f"Scouting {default_team_label}"
+    page_intro_text = (
+        "Aggregierte Statistiken aus den offiziellen VBL-PDFs. "
+        "Wähle eine Mannschaft, um die Übersicht einzublenden."
+    )
+    team_heading = page_title
+    team_subtitle = f"{default_team_label} · Mannschaftsdaten & Statistiken"
 
     html = """<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scouting USC Münster</title>
+  <title>{page_title}</title>
   <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
   <link rel="manifest" href="manifest.webmanifest">
   <style>
@@ -5194,6 +5273,38 @@ def build_html_report(
       max-width: 72rem;
       font-size: clamp(1rem, 2.4vw, 1.2rem);
       color: var(--muted);
+    }}
+
+    .team-selector {{
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 0.4rem;
+    }}
+
+    .team-selector label {{
+      font-weight: 600;
+      color: var(--muted);
+    }}
+
+    .team-selector select {{
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 0.35rem 1.8rem 0.35rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      color: var(--fg);
+      font-size: 0.95rem;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      position: relative;
+    }}
+
+    .team-selector select:focus-visible {{
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
     }}
 
     .update-note {{
@@ -5270,21 +5381,10 @@ def build_html_report(
       margin: 0;
     }}
 
-    h2 {{
-      margin: 0;
-      font-size: clamp(1.35rem, 3.2vw, 1.9rem);
-    }}
-
     .section-hint {{
       margin: 0;
       color: var(--muted);
       font-size: 0.95rem;
-    }}
-
-    .metrics-grid {{
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-      gap: clamp(1rem, 3vw, 1.6rem);
     }}
 
     .table-container {{
@@ -5325,53 +5425,25 @@ def build_html_report(
       border-bottom: 2px solid var(--card-border);
     }}
 
-    .stats-table tbody tr:nth-child(even) {{
-      background: rgba(15, 118, 110, 0.06);
+    .stats-table__total {{
+      font-weight: 700;
+      background: rgba(15, 118, 110, 0.07);
     }}
 
-    .stats-table td.numeric,
-    .stats-table th.numeric {{
-      text-align: right !important;
+    .stats-table .numeric {{
+      text-align: right;
       font-variant-numeric: tabular-nums;
-    }}
-
-    .stats-table td.numeric-center,
-    .stats-table th.numeric-center {{
-      text-align: center !important;
-      font-variant-numeric: tabular-nums;
-    }}
-
-    .stats-table__total th,
-    .stats-table__total td {{
-      font-weight: 600;
-      border-top: 2px solid var(--card-border);
-      background: rgba(15, 118, 110, 0.08);
-    }}
-
-    @media (prefers-color-scheme: dark) {{
-      .stats-table tbody tr:nth-child(even) {{
-        background: rgba(148, 210, 189, 0.08);
-      }}
-      .stats-table__total th,
-      .stats-table__total td {{
-        background: rgba(148, 210, 189, 0.12);
-        border-top: 2px solid rgba(94, 234, 212, 0.28);
-      }}
-      .stats-table th,
-      .stats-table td {{
-        border-bottom: 1px solid rgba(94, 234, 212, 0.18);
-      }}
     }}
 
     .player-list {{
       display: grid;
-      gap: clamp(1.2rem, 3vw, 2rem);
+      gap: clamp(1rem, 3vw, 1.6rem);
     }}
 
     .player-card {{
-      background: var(--card-bg);
-      border-radius: 1.1rem;
+      border-radius: 1rem;
       border: 1px solid var(--card-border);
+      background: var(--card-bg);
       box-shadow: var(--shadow);
       overflow: hidden;
     }}
@@ -5433,7 +5505,6 @@ def build_html_report(
       font-variant-numeric: tabular-nums;
     }}
 
-
     .empty-state {{
       margin: 0;
       color: var(--muted);
@@ -5444,19 +5515,24 @@ def build_html_report(
 <body>
   <main>
     <header class="page-header">
-      <h1>Scouting USC Münster</h1>
-      <p class="page-intro">Aggregierte Statistiken aller verfügbaren USC-Partien aus den offiziellen VBL-PDFs. Die Übersicht gruppiert alle Werte pro Spielerin und zeigt Summen über alle erfassten Spiele.</p>
+      <h1 data-team-heading>{team_heading}</h1>
+      <p class="page-intro">{page_intro}</p>
+      <div class="team-selector">
+        <label for="team-select">Mannschaft</label>
+        <select id="team-select" data-team-select>
+{team_selector_options}        </select>
+      </div>
       <p class="update-note" data-update-note data-generated="{generated_iso}">
         <span aria-hidden="true">📅</span>
-        <span>Aktualisiert am {generated_label}</span>
+        <span>Aktualisiert am {generated_label} – {default_team_label}</span>
       </p>
     </header>
 
     <section class="team-overview">
       <details class="team-overview__details" open>
         <summary class="team-overview__summary">
-          <span class="team-overview__title">USC Münster</span>
-          <span class="team-overview__subtitle">Mannschaftsdaten &amp; Statistiken</span>
+          <span class="team-overview__title" data-team-name>{default_team_label}</span>
+          <span class="team-overview__subtitle" data-team-subtitle>{team_subtitle}</span>
         </summary>
         <div class="team-overview__content">
           <p class="section-hint" data-player-meta>{player_meta}</p>
@@ -5472,8 +5548,45 @@ def build_html_report(
     </section>
   </main>
   <script>
-    const OVERVIEW_PATH = 'data/usc_stats_overview.json';
-    const PRELOADED_OVERVIEW = __PRELOADED_OVERVIEW__;
+    const TEAM_CONFIGS = __TEAM_CONFIGS__;
+    const PRELOADED_OVERVIEWS = __PRELOADED_OVERVIEWS__;
+    const overviewCache = new Map();
+    const pendingRequests = new Map();
+    const fetchedFromNetwork = new Set();
+    let currentTeamKey = TEAM_CONFIGS.length ? TEAM_CONFIGS[0].key : null;
+
+    TEAM_CONFIGS.forEach(config => {{
+      const preloaded = PRELOADED_OVERVIEWS && PRELOADED_OVERVIEWS[config.key];
+      if (preloaded) {{
+        overviewCache.set(config.key, preloaded);
+      }}
+    }});
+
+    function getTeamConfig(key) {{
+      return TEAM_CONFIGS.find(config => config.key === key) || null;
+    }}
+
+    function updateTeamSelection(key) {{
+      const select = document.querySelector('[data-team-select]');
+      if (select && select.value !== key) {{
+        select.value = key;
+      }}
+    }}
+
+    function updateTeamChrome(team) {{
+      const heading = document.querySelector('[data-team-heading]');
+      if (heading) {{
+        heading.textContent = `Scouting ${team.label}`;
+      }}
+      const summaryTitle = document.querySelector('[data-team-name]');
+      if (summaryTitle) {{
+        summaryTitle.textContent = team.label;
+      }}
+      const summarySubtitle = document.querySelector('[data-team-subtitle]');
+      if (summarySubtitle) {{
+        summarySubtitle.textContent = `${team.label} · Mannschaftsdaten & Statistiken`;
+      }}
+    }}
 
     function formatDate(value) {{
       if (!value) return '–';
@@ -5621,11 +5734,10 @@ def build_html_report(
       if (totals) {{
         const totalRow = document.createElement('tr');
         totalRow.className = 'stats-table__total player-match-table__total-row';
-
-        const totalCells = [
-          {{ type: 'th', value: 'Summe', attrs: {{ scope: 'row' }} }},
-          {{ value: '' }},
-          {{ value: '' }},
+        const cells = [
+          {{ value: 'Σ', numeric: true }},
+          {{ value: '–' }},
+          {{ value: '–' }},
           {{ value: formatInt(totals.serves_attempts), numeric: true }},
           {{ value: formatInt(totals.serves_errors), numeric: true }},
           {{ value: formatInt(totals.serves_points), numeric: true }},
@@ -5639,142 +5751,45 @@ def build_html_report(
           {{ value: formatInt(totals.attacks_points), numeric: true }},
           {{ value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
           {{ value: formatInt(totals.blocks_points), numeric: true }},
-          {{ value: formatIntOrDash(player.total_points), numeric: true }},
-          {{ value: formatIntOrDash(player.break_points_total), numeric: true }},
-          {{ value: formatIntOrDash(player.plus_minus_total), numeric: true }},
+          {{ value: '–', numeric: true }},
+          {{ value: '–', numeric: true }},
+          {{ value: '–', numeric: true }},
         ];
-
-        totalCells.forEach((cell, index) => {{
-          const isNumeric = cell.numeric || (columns[index] && columns[index].numeric);
-          if (cell.type === 'th') {{
-            const th = document.createElement('th');
-            if (cell.attrs && cell.attrs.scope) {{
-              th.scope = cell.attrs.scope;
-            }}
-            th.textContent = cell.value;
-            totalRow.appendChild(th);
-          }} else {{
-            const td = document.createElement('td');
-            if (isNumeric) td.className = 'numeric';
-            td.textContent = cell.value;
-            totalRow.appendChild(td);
+        cells.forEach((cell, index) => {{
+          const td = document.createElement('td');
+          if (cell.numeric || (columns[index] && columns[index].numeric)) {{
+            td.className = 'numeric';
           }}
+          td.textContent = cell.value;
+          totalRow.appendChild(td);
         }});
-
         tbody.appendChild(totalRow);
       }}
-
       table.appendChild(tbody);
       return table;
     }}
 
-    function buildPlayerSummaryTable(players) {{
-      const validPlayers = Array.isArray(players)
-        ? players.filter(player => player && typeof player === 'object')
-        : [];
-      if (!validPlayers.length) {{
-        return null;
-      }}
-
-      const columns = [
-        {{ label: '#', title: 'Rückennummer', numeric: true }},
-        {{ label: 'Spielerin' }},
-        {{ label: 'Sp.', title: 'Spiele mit Statistikdaten', numeric: true }},
-        {{ label: 'Auf-Ges', title: 'Aufschlag-Versuche', numeric: true }},
-        {{ label: 'Auf-Fhl', title: 'Aufschlag-Fehler', numeric: true }},
-        {{ label: 'Auf-Pkt', title: 'Aufschlag-Asse', numeric: true }},
-        {{ label: 'An-Ges', title: 'Annahme-Versuche', numeric: true }},
-        {{ label: 'An-Fhl', title: 'Annahme-Fehler', numeric: true }},
-        {{ label: 'An-Pos%', title: 'Positive Annahmen', numeric: true }},
-        {{ label: 'An-Prf%', title: 'Perfekte Annahmen', numeric: true }},
-        {{ label: 'Ag-Ges', title: 'Angriffs-Versuche', numeric: true }},
-        {{ label: 'Ag-Fhl', title: 'Angriffs-Fehler', numeric: true }},
-        {{ label: 'Ag-Blo', title: 'Geblockte Angriffe', numeric: true }},
-        {{ label: 'Ag-Pkt', title: 'Angriffspunkte', numeric: true }},
-        {{ label: 'Ag-%', title: 'Angriffsquote', numeric: true }},
-        {{ label: 'Block', title: 'Blockpunkte', numeric: true }},
-        {{ label: 'Pkt.', title: 'Gesamtpunkte', numeric: true }},
-        {{ label: 'Breakpkt.', title: 'Breakpunkte', numeric: true }},
-        {{ label: '+/-', title: 'Plus/Minus', numeric: true }},
-      ];
-
-      const table = document.createElement('table');
-      table.className = 'stats-table';
-
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      columns.forEach(column => {{
-        const th = document.createElement('th');
-        th.scope = 'col';
-        if (column.numeric) th.className = 'numeric';
-        if (column.title) th.title = column.title;
-        th.textContent = column.label;
-        headerRow.appendChild(th);
-      }});
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      const tbody = document.createElement('tbody');
-      validPlayers.forEach(player => {{
-        const totals = player && typeof player.totals === 'object' ? player.totals : {{}};
-        const matches = Array.isArray(player.matches) ? player.matches : [];
-        const matchCount = typeof player.match_count === 'number'
-          ? player.match_count
-          : matches.length;
-        const row = document.createElement('tr');
-        const jersey = player.jersey_number;
-        const values = [
-          {{ value: jersey === null || jersey === undefined || jersey === '' ? '–' : String(jersey), numeric: true }},
-          {{ value: player.name || 'Unbekannt' }},
-          {{ value: formatInt(matchCount), numeric: true }},
-          {{ value: formatInt(totals.serves_attempts), numeric: true }},
-          {{ value: formatInt(totals.serves_errors), numeric: true }},
-          {{ value: formatInt(totals.serves_points), numeric: true }},
-          {{ value: formatInt(totals.receptions_attempts), numeric: true }},
-          {{ value: formatInt(totals.receptions_errors), numeric: true }},
-          {{ value: formatPctOrDash(totals.receptions_positive_pct), numeric: true }},
-          {{ value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true }},
-          {{ value: formatInt(totals.attacks_attempts), numeric: true }},
-          {{ value: formatInt(totals.attacks_errors), numeric: true }},
-          {{ value: formatInt(totals.attacks_blocked), numeric: true }},
-          {{ value: formatInt(totals.attacks_points), numeric: true }},
-          {{ value: formatPctOrDash(totals.attacks_success_pct), numeric: true }},
-          {{ value: formatInt(totals.blocks_points), numeric: true }},
-          {{ value: formatIntOrDash(player.total_points), numeric: true }},
-          {{ value: formatIntOrDash(player.break_points_total), numeric: true }},
-          {{ value: formatIntOrDash(player.plus_minus_total), numeric: true }},
-        ];
-        values.forEach((entry, index) => {{
-          const cell = document.createElement('td');
-          if (entry.numeric || (columns[index] && columns[index].numeric)) {{
-            cell.className = 'numeric';
-          }}
-          cell.textContent = entry.value;
-          row.appendChild(cell);
-        }});
-        tbody.appendChild(row);
-      }});
-      table.appendChild(tbody);
-      return table;
-    }}
-
-    function renderPlayers(data) {{
+    function renderPlayers(data, team) {{
       const container = document.querySelector('[data-player-list]');
       const tableContainer = document.querySelector('[data-player-table-container]');
       const metaNode = document.querySelector('[data-player-meta]');
       const errorNode = document.querySelector('[data-error]');
-      container.innerHTML = '';
+      if (container) container.innerHTML = '';
       if (tableContainer) tableContainer.innerHTML = '';
       if (errorNode) errorNode.hidden = true;
       const players = Array.isArray(data.players) ? data.players : [];
+      const teamLabel = team && team.label ? team.label : (data && data.team ? data.team : 'Team');
       if (metaNode) {{
-        metaNode.textContent = players.length === 1 ? '1 Spielerin mit Statistikdaten.' : `<<players.length>> Spielerinnen mit Statistikdaten.`;
+        const countText = players.length === 1 ? '1 Spielerin mit Statistikdaten.' : `<<players.length>> Spielerinnen mit Statistikdaten.`;
+        metaNode.textContent = `${teamLabel}: ${countText}`;
       }}
       if (!players.length) {{
         if (tableContainer) {{
           tableContainer.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
         }}
-        container.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        if (container) {{
+          container.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        }}
         return;
       }}
       if (tableContainer) {{
@@ -5815,54 +5830,153 @@ def build_html_report(
       }}
     }}
 
-    function applyOverview(data) {{
-      if (!data) return;
-      renderPlayers(data);
-      const note = document.querySelector('[data-update-note] span:last-child');
-      if (note && data.generated) {{
-        note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>>`;
+    function applyOverview(data, team) {{
+      if (!data || !team) return;
+      renderPlayers(data, team);
+      const wrapper = document.querySelector('[data-update-note]');
+      const note = wrapper ? wrapper.querySelector('span:last-child') : null;
+      if (wrapper) {{
+        wrapper.dataset.generated = data.generated || '';
       }}
+      const label = team && team.label ? team.label : (data.team && typeof data.team === 'string' ? data.team : 'Team');
+      if (note) {{
+        if (data.generated) {{
+          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>> – ${label}`;
+        }} else {{
+          note.textContent = `Keine aktuellen Daten für ${label}`;
+        }}
+      }}
+    }}
+
+    async function fetchTeamOverview(config) {{
+      const response = await fetch(config.path, {{ cache: 'no-store' }});
+      if (!response.ok) {{
+        throw new Error(`HTTP <<response.status>>`);
+      }}
+      return response.json();
+    }}
+
+    function showLoadingState(team) {{
+      const container = document.querySelector('[data-player-list]');
+      const tableContainer = document.querySelector('[data-player-table-container]');
+      const metaNode = document.querySelector('[data-player-meta]');
+      const errorNode = document.querySelector('[data-error]');
+      if (container) {{
+        container.innerHTML = '<p class="empty-state">Lade Daten…</p>';
+      }}
+      if (tableContainer) {{
+        tableContainer.innerHTML = '<p class="empty-state">Lade Daten…</p>';
+      }}
+      const label = team && team.label ? team.label : 'Team';
+      if (metaNode) {{
+        metaNode.textContent = `${label}: Daten werden geladen…`;
+      }}
+      if (errorNode) {{
+        errorNode.hidden = true;
+      }}
+    }}
+
+    function showLoadError(team, error, hasFallback) {{
+      const label = team && team.label ? team.label : 'Team';
+      const message = `Fehler beim Laden der Scouting-Daten für ${label}: <<error instanceof Error ? error.message : String(error)>>`;
+      const errorNode = document.querySelector('[data-error]');
+      if (errorNode) {{
+        errorNode.hidden = false;
+        errorNode.textContent = message;
+      }}
+      if (!hasFallback) {{
+        const container = document.querySelector('[data-player-list]');
+        if (container) {{
+          container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+        }}
+        const tableContainer = document.querySelector('[data-player-table-container]');
+        if (tableContainer) {{
+          tableContainer.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+        }}
+        const metaNode = document.querySelector('[data-player-meta]');
+        if (metaNode) {{
+          metaNode.textContent = `${label}: Keine Daten verfügbar.`;
+        }}
+      }} else {{
+        console.error(error);
+      }}
+    }}
+
+    async function loadTeam(teamKey, {{ forceRefresh = false }} = {{}}) {{
+      const team = getTeamConfig(teamKey);
+      if (!team) return null;
+      if (!forceRefresh && overviewCache.has(teamKey)) {{
+        return overviewCache.get(teamKey);
+      }}
+      if (pendingRequests.has(teamKey)) {{
+        return pendingRequests.get(teamKey);
+      }}
+      const request = fetchTeamOverview(team)
+        .then(data => {{
+          if (data) {{
+            overviewCache.set(teamKey, data);
+            fetchedFromNetwork.add(teamKey);
+            if (currentTeamKey === teamKey) {{
+              applyOverview(data, team);
+            }}
+          }}
+          return data;
+        }})
+        .catch(error => {{
+          const hasFallback = overviewCache.has(teamKey);
+          showLoadError(team, error, hasFallback);
+          throw error;
+        }})
+        .finally(() => {{
+          pendingRequests.delete(teamKey);
+        }});
+      pendingRequests.set(teamKey, request);
+      return request;
+    }}
+
+    async function setTeam(teamKey) {{
+      const team = getTeamConfig(teamKey);
+      if (!team) return;
+      currentTeamKey = teamKey;
+      updateTeamSelection(teamKey);
+      updateTeamChrome(team);
+
+      const cached = overviewCache.get(teamKey);
+      if (cached) {{
+        applyOverview(cached, team);
+      }} else {{
+        showLoadingState(team);
+      }}
+
+      const shouldRefresh = !fetchedFromNetwork.has(teamKey);
+      await loadTeam(teamKey, {{ forceRefresh: shouldRefresh }});
+    }}
+
+    function handleTeamChange(event) {{
+      const value = event && event.target ? event.target.value : null;
+      if (!value) return;
+      setTeam(value);
     }}
 
     async function bootstrap() {{
-      let hasData = false;
-      if (PRELOADED_OVERVIEW) {{
-        applyOverview(PRELOADED_OVERVIEW);
-        hasData = true;
+      if (!TEAM_CONFIGS.length) {{
+        return;
       }}
-      try {{
-        const response = await fetch(OVERVIEW_PATH, {{ cache: 'no-store' }});
-        if (!response.ok) {{
-          throw new Error(`HTTP <<response.status>>`);
-        }}
-        const data = await response.json();
-        applyOverview(data);
-        hasData = true;
-      }} catch (error) {{
-        if (!hasData) {{
-          const container = document.querySelector('[data-player-list]');
-          if (container) {{
-            container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
-          }}
-          const tableContainer = document.querySelector('[data-player-table-container]');
-          if (tableContainer) {{
-            tableContainer.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
-          }}
-          const errorNode = document.querySelector('[data-error]');
-          if (errorNode) {{
-            errorNode.hidden = false;
-            errorNode.textContent = `Fehler beim Laden: <<error instanceof Error ? error.message : String(error)>>`;
-          }}
-        }} else {{
-          console.error(error);
-        }}
+      const select = document.querySelector('[data-team-select]');
+      if (select) {{
+        select.addEventListener('change', handleTeamChange);
       }}
+      const initialKey = currentTeamKey || TEAM_CONFIGS[0].key;
+      await setTeam(initialKey);
     }}
 
-    document.addEventListener('DOMContentLoaded', bootstrap);
+    document.addEventListener('DOMContentLoaded', () => {{
+      bootstrap().catch(error => console.error(error));
+    }});
   </script>
 </body>
 </html>"""
+
     class _SafeFormatDict(dict):
         def __missing__(self, key):
             return "{" + key + "}"
@@ -5870,11 +5984,18 @@ def build_html_report(
     html = html.format_map(_SafeFormatDict(
         generated_iso=escape(generated_iso),
         generated_label=escape(generated_label),
+        page_title=escape(page_title),
+        page_intro=escape(page_intro_text),
+        team_heading=escape(team_heading),
+        team_subtitle=escape(team_subtitle),
+        default_team_label=escape(default_team_label),
+        team_selector_options=team_selector_options,
         player_meta=escape(player_meta_text),
         player_table=player_table_html,
         player_list=player_list_html,
     ))
-    html = html.replace("__PRELOADED_OVERVIEW__", preloaded_overview_json)
+    html = html.replace("__TEAM_CONFIGS__", team_configs_json)
+    html = html.replace("__PRELOADED_OVERVIEWS__", preloaded_overviews_json)
     html = html.replace("<<", "${").replace(">>", "}")
     return html
 
