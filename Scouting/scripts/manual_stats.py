@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import re
+import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -15,6 +17,7 @@ __all__ = [
     "ManualTeamStats",
     "ManualTeamFile",
     "build_manual_stats_overview",
+    "find_manual_team_file",
     "load_manual_stats_directory",
     "load_manual_team_files",
 ]
@@ -126,12 +129,33 @@ def _load_manual_players(entries: Sequence[Mapping[str, object]]) -> List[Manual
     return players
 
 
+def _normalize_lookup_key(value: object) -> str:
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    normalized = unicodedata.normalize("NFKD", text.casefold())
+    normalized = normalized.replace("ß", "ss")
+    normalized = "".join(
+        char for char in normalized if not unicodedata.combining(char)
+    )
+    normalized = normalized.replace("muenster", "munster")
+    normalized = re.sub(r"[^a-z0-9]+", " ", normalized)
+    normalized = re.sub(r"\s+", " ", normalized).strip()
+    return normalized.replace(" ", "")
+
+
 def _normalize_aliases(values: Sequence[object]) -> List[str]:
     aliases: List[str] = []
+    seen: set[str] = set()
     for value in values:
         alias = str(value).strip()
-        if alias and alias not in aliases:
-            aliases.append(alias)
+        if not alias:
+            continue
+        normalized = _normalize_lookup_key(alias)
+        if not normalized or normalized in seen:
+            continue
+        seen.add(normalized)
+        aliases.append(alias)
     return aliases
 
 
@@ -419,3 +443,28 @@ def build_manual_stats_overview(
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     return payload
+
+
+def find_manual_team_file(
+    identifier: str, *, directory: Optional[Path] = None
+) -> Optional[ManualTeamFile]:
+    """Return the manual stats file for a team or one of its aliases.
+
+    The lookup is case-insensitive and tolerant of diacritics, ensuring that
+    ``"USC Münster"`` and ``"usc munster"`` are treated as the same identifier.
+    Duplicate aliases that normalize to the same key are ignored when the
+    manual files are loaded, so the first occurrence wins.
+    """
+
+    normalized_identifier = _normalize_lookup_key(identifier)
+    if not normalized_identifier:
+        return None
+
+    for team_file in load_manual_team_files(directory):
+        candidates = (team_file.team, *team_file.aliases)
+        if any(
+            _normalize_lookup_key(candidate) == normalized_identifier
+            for candidate in candidates
+        ):
+            return team_file
+    return None
