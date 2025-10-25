@@ -41,36 +41,56 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         type=Path,
         default=None,
-        help="Zielpfad für die erzeugte JSON-Datei (Standard: docs/data/usc_stats_overview.json).",
+        help="Zielpfad für die USC-JSON-Datei (Standard: docs/data/usc_stats_overview.json).",
+    )
+    parser.add_argument(
+        "--hamburg-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Hamburg-JSON-Datei (Standard: docs/data/hamburg_stats_overview.json)."
+        ),
     )
     return parser
 
 
 def main() -> int:
     _add_package_root_to_path()
-    from scripts import STATS_OUTPUT_PATH
+    from scripts import HAMBURG_CANONICAL_NAME, HAMBURG_OUTPUT_PATH, STATS_OUTPUT_PATH
     from scripts.stats import build_stats_overview
 
     parser = build_parser()
     args = parser.parse_args()
 
-    output_path = args.output or STATS_OUTPUT_PATH
+    usc_output_path = args.output or STATS_OUTPUT_PATH
+    hamburg_output_path = args.hamburg_output or HAMBURG_OUTPUT_PATH
 
     build_kwargs = {
         "schedule_path": args.schedule_path,
-        "output_path": output_path,
     }
     if args.schedule_url:
         build_kwargs["schedule_csv_url"] = args.schedule_url
     if args.schedule_page_url:
         build_kwargs["schedule_page_url"] = args.schedule_page_url
 
-    payload = build_stats_overview(**build_kwargs)
+    usc_payload = build_stats_overview(output_path=usc_output_path, **build_kwargs)
 
     print(
         "Scouting-Übersicht aktualisiert:",
-        f"{payload['match_count']} Spiele verarbeitet",
-        f"-> {output_path}",
+        f"{usc_payload['match_count']} Spiele verarbeitet",
+        f"-> {usc_output_path}",
+    )
+
+    hamburg_payload = build_stats_overview(
+        output_path=hamburg_output_path,
+        focus_team=HAMBURG_CANONICAL_NAME,
+        **build_kwargs,
+    )
+
+    print(
+        "Hamburg-Scouting-Übersicht aktualisiert:",
+        f"{hamburg_payload['match_count']} Spiele verarbeitet",
+        f"-> {hamburg_output_path}",
     )
     return 0
 

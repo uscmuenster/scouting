@@ -40,3 +40,26 @@ def test_build_stats_overview_offline(monkeypatch, tmp_path) -> None:
     assert ford_schwerin["metrics"]["attacks_points"] == 17
     assert ford_schwerin["metrics"]["serves_points"] == 4
     assert ford_schwerin["total_points"] == 24
+
+
+def test_build_stats_overview_for_other_team(monkeypatch, tmp_path) -> None:
+    def offline_http_get(*args, **kwargs):
+        raise requests.RequestException("offline")
+
+    monkeypatch.setattr(report, "_http_get", offline_http_get)
+
+    output_path = tmp_path / "schwerin.json"
+    payload = stats_module.build_stats_overview(
+        output_path=output_path,
+        focus_team="SSC Palmberg Schwerin",
+    )
+
+    assert output_path.exists()
+    assert payload["team"] == "SSC Palmberg Schwerin"
+    assert payload["match_count"] == 1
+    assert payload["player_count"] == 0
+
+    match = payload["matches"][0]
+    assert match["opponent"] == "USC Münster"
+    assert match["metrics"]["serves_attempts"] == 107
+    assert match["metrics"]["attacks_points"] == 50
