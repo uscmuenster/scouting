@@ -4762,10 +4762,13 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
         ("+/−", True),
     ]
 
+    def _player_match_numeric_class(index: int) -> str:
+        return "numeric-center" if index >= 3 else "numeric"
+
     lines = ['<table class="stats-table player-match-table">', '  <thead>', '    <tr>']
     for index, (label, is_numeric) in enumerate(columns):
         if is_numeric:
-            class_name = "numeric-center" if index >= 3 else "numeric"
+            class_name = _player_match_numeric_class(index)
             cell_class = f' class="{class_name}"'
         else:
             cell_class = ""
@@ -4826,8 +4829,12 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
         ]
 
         lines.append("    <tr>")
-        for value, is_numeric in row_values:
-            cell_class = " class=\"numeric\"" if is_numeric else ""
+        for column_index, (value, is_numeric) in enumerate(row_values):
+            if is_numeric:
+                class_name = _player_match_numeric_class(column_index)
+                cell_class = f' class="{class_name}"'
+            else:
+                cell_class = ""
             lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.append("    </tr>")
 
@@ -4837,52 +4844,52 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
         lines.append('      <td></td>')
         lines.append('      <td></td>')
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_attempts')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(3)}\">{escape(_format_int_value(totals.get('serves_attempts')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_errors')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(4)}\">{escape(_format_int_value(totals.get('serves_errors')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('serves_points')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(5)}\">{escape(_format_int_value(totals.get('serves_points')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('receptions_attempts')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(6)}\">{escape(_format_int_value(totals.get('receptions_attempts')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('receptions_errors')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(7)}\">{escape(_format_int_value(totals.get('receptions_errors')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_pct_value(totals.get('receptions_positive_pct'), default='–'))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(8)}\">{escape(_format_pct_value(totals.get('receptions_positive_pct'), default='–'))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_pct_value(totals.get('receptions_perfect_pct'), default='–'))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(9)}\">{escape(_format_pct_value(totals.get('receptions_perfect_pct'), default='–'))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_attempts')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(10)}\">{escape(_format_int_value(totals.get('attacks_attempts')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_errors')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(11)}\">{escape(_format_int_value(totals.get('attacks_errors')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_blocked')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(12)}\">{escape(_format_int_value(totals.get('attacks_blocked')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('attacks_points')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(13)}\">{escape(_format_int_value(totals.get('attacks_points')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_pct_value(totals.get('attacks_success_pct'), default='–'))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(14)}\">{escape(_format_pct_value(totals.get('attacks_success_pct'), default='–'))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(totals.get('blocks_points')))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(15)}\">{escape(_format_int_value(totals.get('blocks_points')))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(player.get('total_points'), default='–'))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(16)}\">{escape(_format_int_value(player.get('total_points'), default='–'))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(player.get('break_points_total'), default='–'))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(17)}\">{escape(_format_int_value(player.get('break_points_total'), default='–'))}</td>"
         )
         lines.append(
-            f"      <td class=\"numeric\">{escape(_format_int_value(player.get('plus_minus_total'), default='–'))}</td>"
+            f"      <td class=\"{_player_match_numeric_class(18)}\">{escape(_format_int_value(player.get('plus_minus_total'), default='–'))}</td>"
         )
         lines.append("    </tr>")
 
@@ -4917,11 +4924,14 @@ def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str
         ("+/−", "Plus/Minus", True),
     )
 
+    def _player_totals_numeric_class(index: int) -> str:
+        return "numeric-center" if index >= 2 else "numeric"
+
     lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
     for index, (label, title, is_numeric) in enumerate(columns):
         title_attr = f' title="{escape(title)}"' if title else ""
         if is_numeric:
-            class_name = "numeric-center" if index >= 3 else "numeric"
+            class_name = _player_totals_numeric_class(index)
             numeric_class = f' class="{class_name}"'
         else:
             numeric_class = ""
@@ -4972,8 +4982,12 @@ def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str
         )
 
         lines.append("    <tr>")
-        for value, is_numeric in values:
-            cell_class = ' class="numeric"' if is_numeric else ""
+        for column_index, (value, is_numeric) in enumerate(values):
+            if is_numeric:
+                class_name = _player_totals_numeric_class(column_index)
+                cell_class = f' class="{class_name}"'
+            else:
+                cell_class = ""
             lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.append("    </tr>")
 
