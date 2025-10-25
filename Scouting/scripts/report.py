@@ -5172,16 +5172,37 @@ def build_html_report(
         preloaded_overviews["hamburg"] = hamburg_scouting
 
     default_team_label = team_configs[0]["label"] if team_configs else "Team"
-    team_selector_options = "\n".join(
+    team_selector_options = "".join(
         (
             f'            <option value="{escape(config["key"])}"'
             f"{' selected' if index == 0 else ''}>"
-            f"{escape(config['label'])}</option>"
+            f"{escape(config['label'])}</option>\n"
         )
         for index, config in enumerate(team_configs)
     )
-    if team_selector_options:
-        team_selector_options += "\n"
+
+    has_team_selector = len(team_configs) > 1
+    team_selector_html = ""
+    if has_team_selector:
+        team_selector_html = (
+            "      <div class=\"team-selector\">\n"
+            "        <label for=\"team-select\">Mannschaft</label>\n"
+            "        <select id=\"team-select\" data-team-select>\n"
+            f"{team_selector_options}"
+            "        </select>\n"
+            "      </div>\n"
+        )
+
+    is_team_overview_collapsible = not has_team_selector
+    team_overview_wrapper_open = (
+        '<details class="team-overview__details" open>'
+        if is_team_overview_collapsible
+        else '<div class="team-overview__details" data-static>'
+    )
+    team_overview_wrapper_close = (
+        "</details>" if is_team_overview_collapsible else "</div>"
+    )
+    team_overview_summary_tag = "summary" if is_team_overview_collapsible else "div"
 
     team_configs_json = json.dumps(team_configs, ensure_ascii=False)
     team_configs_json = team_configs_json.replace("</", "<\\/")
@@ -5361,6 +5382,14 @@ def build_html_report(
       transform: rotate(-180deg);
     }}
 
+    .team-overview__details[data-static] > .team-overview__summary {{
+      cursor: default;
+    }}
+
+    .team-overview__details[data-static] > .team-overview__summary::after {{
+      content: none;
+    }}
+
     .team-overview__title {{
       font-size: inherit;
     }}
@@ -5517,11 +5546,7 @@ def build_html_report(
     <header class="page-header">
       <h1 data-team-heading>{team_heading}</h1>
       <p class="page-intro">{page_intro}</p>
-      <div class="team-selector">
-        <label for="team-select">Mannschaft</label>
-        <select id="team-select" data-team-select>
-{team_selector_options}        </select>
-      </div>
+{team_selector_html}
       <p class="update-note" data-update-note data-generated="{generated_iso}">
         <span aria-hidden="true">📅</span>
         <span>Aktualisiert am {generated_label}</span>
@@ -5529,11 +5554,11 @@ def build_html_report(
     </header>
 
     <section class="team-overview">
-      <details class="team-overview__details" open>
-        <summary class="team-overview__summary">
+      {team_overview_wrapper_open}
+        <{team_overview_summary_tag} class="team-overview__summary">
           <span class="team-overview__title" data-team-name>{default_team_label}</span>
           <span class="team-overview__subtitle" data-team-subtitle>{team_subtitle}</span>
-        </summary>
+        </{team_overview_summary_tag}>
         <div class="team-overview__content">
           <p class="section-hint" data-player-meta>{player_meta}</p>
           <div class="table-container" data-player-table-container>
@@ -5544,7 +5569,7 @@ def build_html_report(
           </div>
           <p class="empty-state" data-error hidden>Beim Laden der Scouting-Daten ist ein Fehler aufgetreten.</p>
         </div>
-      </details>
+      {team_overview_wrapper_close}
     </section>
   </main>
   <script>
@@ -6101,7 +6126,10 @@ def build_html_report(
         team_heading=escape(team_heading),
         team_subtitle=escape(team_subtitle),
         default_team_label=escape(default_team_label),
-        team_selector_options=team_selector_options,
+        team_selector_html=team_selector_html,
+        team_overview_wrapper_open=team_overview_wrapper_open,
+        team_overview_wrapper_close=team_overview_wrapper_close,
+        team_overview_summary_tag=team_overview_summary_tag,
         player_meta=escape(player_meta_text),
         player_table=player_table_html,
         player_list=player_list_html,
