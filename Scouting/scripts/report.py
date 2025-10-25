@@ -2461,6 +2461,45 @@ def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsM
 _PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
 _COMPACT_VALUE_PATTERN = re.compile(r"^(?:[+\-\u2212]?\d+(?:[.,]\d+)?%?|\.)$")
 _COMPACT_SIGN_FOLLOW_PATTERN = re.compile(r"^\d+(?:[.,]\d+)?%?$")
+_PLAYER_ROW_START_PATTERN = re.compile(r"^\s*\d{1,3}\s+(?=[^\d\s])")
+_PLAYER_IDENTIFIER_PATTERN = re.compile(r"^\s*(\d{1,3})\b")
+_PLAYER_ROLE_KEYWORDS = {
+    "außenangreifer",
+    "außenangreiferin",
+    "aussenangreifer",
+    "aussenangreiferin",
+    "diagonal",
+    "diagonalangreifer",
+    "diagonalangreiferin",
+    "mittelblock",
+    "mittelblocker",
+    "mittelblockerin",
+    "zuspiel",
+    "zuspieler",
+    "zuspielerin",
+    "libera",
+    "universal",
+    "universalspielerin",
+}
+_ZERO_COMPACT_VALUE_TOKENS: Tuple[str, ...] = (
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0%",
+    "0%",
+    "0",
+    "0",
+    "0",
+    "0",
+    "0%",
+    "0",
+)
+_ZERO_COMPACT_SUFFIX = " " + " ".join(_ZERO_COMPACT_VALUE_TOKENS)
 
 
 def _tokenize_compact_stats_text(text: str) -> List[str]:
@@ -2755,11 +2794,49 @@ def _parse_team_player_lines(
             return None
         return _parse_player_stats_line(normalized, team_name)
 
+    def finalize_pending_as_zero() -> None:
+        nonlocal pending
+        if pending is None:
+            return
+        normalized_pending = re.sub(r"\s+", " ", pending.strip())
+        if not normalized_pending:
+            pending = None
+            return
+        identifier_match = _PLAYER_IDENTIFIER_PATTERN.match(normalized_pending)
+        if not identifier_match:
+            pending = None
+            return
+        prefix = normalized_pending[: identifier_match.end()].strip()
+        remainder = normalized_pending[identifier_match.end() :].strip()
+        if re.search(r"\d", remainder):
+            pending = None
+            return
+        remainder_tokens = remainder.split()
+        while remainder_tokens and remainder_tokens[-1].casefold() in _PLAYER_ROLE_KEYWORDS:
+            remainder_tokens.pop()
+        cleaned_remainder = " ".join(remainder_tokens).strip()
+        base_line = prefix if not cleaned_remainder else f"{prefix} {cleaned_remainder}"
+        parsed_pending = try_parse(base_line)
+        if parsed_pending is not None:
+            players.append(parsed_pending)
+            pending = None
+            return
+        zero_candidate = try_parse(f"{base_line}{_ZERO_COMPACT_SUFFIX}")
+        if zero_candidate is not None:
+            players.append(zero_candidate)
+        pending = None
+
     for raw_line in lines:
         stripped = raw_line.strip()
         if not stripped:
             continue
         lowered = stripped.lower()
+        if pending is not None and (
+            _PLAYER_ROW_START_PATTERN.match(stripped)
+            or lowered.startswith("libero")
+            or re.match(r"(?i)^nr\b", stripped)
+        ):
+            finalize_pending_as_zero()
         if re.match(r"(?i)^nr\b", stripped):
             pending = None
             continue
@@ -2798,9 +2875,7 @@ def _parse_team_player_lines(
         pending = stripped
 
     if pending is not None:
-        parsed = try_parse(pending)
-        if parsed is not None:
-            players.append(parsed)
+        finalize_pending_as_zero()
 
     return players
 

@@ -46,6 +46,33 @@ def test_parse_team_player_lines_handles_multiline_rows() -> None:
     assert players == [expected_first, expected_second]
 
 
+def test_parse_team_player_lines_adds_zero_stats_for_inactive_player() -> None:
+    lines = [
+        "Nr Spielerin Pos Aufschlag Annahme Angriff Block Punkte",
+        "6 VON MEYENN Constanze Diagonal",
+        "9 Jordan, Emilia 12 2 1 15 3 40% 20% 25 5 2 10 45% 3 18",
+    ]
+
+    players = _parse_team_player_lines(
+        lines, "ETV Hamburger Volksbank Volleys"
+    )
+
+    assert len(players) == 2
+
+    inactive, active = players
+    assert inactive.player_name == "VON MEYENN Constanze"
+    assert inactive.jersey_number == 6
+    assert inactive.total_points == 0
+    assert inactive.break_points == 0
+    assert inactive.plus_minus == 0
+    assert inactive.metrics.serves_attempts == 0
+    assert inactive.metrics.receptions_attempts == 0
+    assert inactive.metrics.attacks_attempts == 0
+    assert inactive.metrics.blocks_points == 0
+
+    assert active.player_name == "Jordan, Emilia"
+
+
 def test_parse_compact_player_stats_includes_counts() -> None:
     line = "5 MALM Cecilia 1 2 * * 6 4 +2 13 1 2 10 . 40% ( 20%) 12 3 . 4 33% ."
     parsed = _parse_player_stats_line(line, "USC Münster")
