@@ -1,5 +1,10 @@
 """Generate USC Münster volleyball reports from schedule CSV exports."""
 
+from .manual_stats import (
+    DEFAULT_MANUAL_STATS_OVERVIEW_PATH,
+    build_manual_stats_overview,
+    load_manual_team_files,
+)
 from .report import (
     DEFAULT_SCHEDULE_URL,
     NEWS_LOOKBACK_DAYS,
@@ -76,4 +81,7 @@ __all__ = [
     "collect_usc_match_stats",
     "collect_usc_player_stats",
     "summarize_metrics",
+    "DEFAULT_MANUAL_STATS_OVERVIEW_PATH",
+    "build_manual_stats_overview",
+    "load_manual_team_files",
 ]
