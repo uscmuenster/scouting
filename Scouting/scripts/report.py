@@ -5576,7 +5576,7 @@ def build_html_report(
     function updateTeamChrome(team) {{
       const heading = document.querySelector('[data-team-heading]');
       if (heading) {{
-        heading.textContent = `Scouting ${team.label}`;
+        heading.textContent = `Scouting ${{team.label}}`;
       }}
       const summaryTitle = document.querySelector('[data-team-name]');
       if (summaryTitle) {{
@@ -5584,7 +5584,7 @@ def build_html_report(
       }}
       const summarySubtitle = document.querySelector('[data-team-subtitle]');
       if (summarySubtitle) {{
-        summarySubtitle.textContent = `${team.label} · Mannschaftsdaten & Statistiken`;
+        summarySubtitle.textContent = `${{team.label}} · Mannschaftsdaten & Statistiken`;
       }}
     }}
 
@@ -5781,7 +5781,7 @@ def build_html_report(
       const teamLabel = team && team.label ? team.label : (data && data.team ? data.team : 'Team');
       if (metaNode) {{
         const countText = players.length === 1 ? '1 Spielerin mit Statistikdaten.' : `<<players.length>> Spielerinnen mit Statistikdaten.`;
-        metaNode.textContent = `${teamLabel}: ${countText}`;
+        metaNode.textContent = `${{teamLabel}}: ${{countText}}`;
       }}
       if (!players.length) {{
         if (tableContainer) {{
@@ -5841,9 +5841,9 @@ def build_html_report(
       const label = team && team.label ? team.label : (data.team && typeof data.team === 'string' ? data.team : 'Team');
       if (note) {{
         if (data.generated) {{
-          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>> – ${label}`;
+          note.textContent = `Aktualisiert am <<formatDateTime(data.generated)>> – ${{label}}`;
         }} else {{
-          note.textContent = `Keine aktuellen Daten für ${label}`;
+          note.textContent = `Keine aktuellen Daten für ${{label}}`;
         }}
       }}
     }}
@@ -5869,7 +5869,7 @@ def build_html_report(
       }}
       const label = team && team.label ? team.label : 'Team';
       if (metaNode) {{
-        metaNode.textContent = `${label}: Daten werden geladen…`;
+        metaNode.textContent = `${{label}}: Daten werden geladen…`;
       }}
       if (errorNode) {{
         errorNode.hidden = true;
@@ -5878,7 +5878,7 @@ def build_html_report(
 
     function showLoadError(team, error, hasFallback) {{
       const label = team && team.label ? team.label : 'Team';
-      const message = `Fehler beim Laden der Scouting-Daten für ${label}: <<error instanceof Error ? error.message : String(error)>>`;
+      const message = `Fehler beim Laden der Scouting-Daten für ${{label}}: <<error instanceof Error ? error.message : String(error)>>`;
       const errorNode = document.querySelector('[data-error]');
       if (errorNode) {{
         errorNode.hidden = false;
@@ -5895,7 +5895,7 @@ def build_html_report(
         }}
         const metaNode = document.querySelector('[data-player-meta]');
         if (metaNode) {{
-          metaNode.textContent = `${label}: Keine Daten verfügbar.`;
+          metaNode.textContent = `${{label}}: Keine Daten verfügbar.`;
         }}
       }} else {{
         console.error(error);
