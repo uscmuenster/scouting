@@ -8,12 +8,18 @@ from .report import (
     DEFAULT_SCHEDULE_URL,
     SCHEDULE_PAGE_URL,
     build_html_report,
+    collect_match_stats_totals,
     download_schedule,
     enrich_matches,
     fetch_schedule_match_metadata,
     load_schedule_from_file,
 )
-from .stats import STATS_OUTPUT_PATH, build_stats_overview
+from .stats import (
+    HAMBURG_CANONICAL_NAME,
+    HAMBURG_OUTPUT_PATH,
+    STATS_OUTPUT_PATH,
+    build_stats_overview,
+)
 
 DEFAULT_OUTPUT_PATH = Path("docs/index.html")
 
@@ -63,17 +69,31 @@ def main() -> int:
     detail_cache: dict[str, dict[str, object]] = {}
     enriched_matches = enrich_matches(matches, metadata, detail_cache)
 
+    stats_lookup = collect_match_stats_totals(enriched_matches)
+
     stats_payload = build_stats_overview(
         matches=enriched_matches,
         schedule_csv_url=args.schedule_url,
         schedule_page_url=args.schedule_page_url,
         schedule_path=args.schedule_path,
         output_path=args.data_output,
+        stats_lookup=stats_lookup,
+    )
+
+    hamburg_stats_payload = build_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=HAMBURG_OUTPUT_PATH,
+        focus_team=HAMBURG_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
     )
 
     html = build_html_report(
         generated_at=datetime.now(tz=BERLIN_TZ),
         usc_scouting=stats_payload,
+        hamburg_scouting=hamburg_stats_payload,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
