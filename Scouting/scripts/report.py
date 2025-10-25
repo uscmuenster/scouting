@@ -345,26 +345,6 @@ def _zero_player_metrics_dict() -> Dict[str, object]:
 
 
 PLAYER_STATS_OVERRIDES: Dict[str, Sequence[Dict[str, object]]] = {
-    "https://www.volleyball-bundesliga.de/uploads/eb523e7a-332e-481d-a2ad-a6f9d1615c3e": (
-        {
-            "team": "ETV Hamburger Volksbank Volleys",
-            "player": "KÖRTZINGER Leonie",
-            "jersey_number": 7,
-            "metrics": _zero_player_metrics_dict(),
-            "total_points": 0,
-            "break_points": 0,
-            "plus_minus": 0,
-        },
-        {
-            "team": "ETV Hamburger Volksbank Volleys",
-            "player": "VON MEYENN Constanze",
-            "jersey_number": 6,
-            "metrics": _zero_player_metrics_dict(),
-            "total_points": 0,
-            "break_points": 0,
-            "plus_minus": 0,
-        },
-    ),
     "https://www.volleyball-bundesliga.de/uploads/831866c1-9e16-46f8-827c-4b0dd011928b": (
         {
             "team": "ETV Hamburger Volksbank Volleys",
