@@ -3529,6 +3529,25 @@ def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     return names
 
 
+def _is_player_totals_marker(text: str) -> bool:
+    """Return True if the line marks the totals row in a stats PDF."""
+
+    cleaned = text.strip().lower()
+    if not cleaned:
+        return False
+    normalized = cleaned.replace("/", " ")
+    normalized = re.sub(r"\s+", " ", normalized)
+    if "spieler" in normalized and (
+        "insgesamt" in normalized or "gesamt" in normalized
+    ):
+        return True
+    if "players" in normalized and "total" in normalized:
+        return True
+    if "total" in normalized and "players" in normalized:
+        return True
+    return False
+
+
 def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
     try:
         reader = PdfReader(BytesIO(data))
@@ -3543,7 +3562,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
     lines = cleaned.splitlines()
     if not lines:
         return ()
-    markers = [idx for idx, line in enumerate(lines) if line.strip() == "Spieler insgesamt"]
+    markers = [idx for idx, line in enumerate(lines) if _is_player_totals_marker(line)]
     if not markers:
         return ()
     team_names = _extract_stats_team_names(lines)
@@ -3568,7 +3587,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
                 continue
             if candidate.startswith("Satz"):
                 break
-            if "Spieler insgesamt" in candidate:
+            if _is_player_totals_marker(candidate):
                 break
             if not re.search(r"\d", candidate):
                 if totals_candidates:
