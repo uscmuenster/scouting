@@ -17,17 +17,17 @@ Dieser Workflow beschreibt, wie die Startaufstellungen der beiden letzten Bundes
 
 ### Manuelle Aktualisierung
 
-Für lokale Aktualisierungen steht das Hilfsskript `scripts/update_lineups.py` zur Verfügung. Es kümmert sich um die korrekte `PYTHONPATH`-Konfiguration und ruft das Lineup-Modul mit den passenden Standardpfaden auf.
+Für lokale Aktualisierungen steht das Hilfsskript `Scouting/scripts/update_lineups.py` zur Verfügung. Es kümmert sich um die korrekte `PYTHONPATH`-Konfiguration und ruft das Lineup-Modul mit den passenden Standardpfaden auf.
 
 ```bash
-python scripts/update_lineups.py
+python Scouting/scripts/update_lineups.py
 ```
 
 Optional lassen sich Parameter wie die Anzahl der Spiele (`--limit`), alternative Datenquellen oder ein anderer Ausgabeort übergeben. Mit `--cache-dir` und `--roster-dir` können die Ablageorte für Spielberichtsbögen (`data/lineups/`) bzw. Kaderexporte (`data/rosters/`) überschrieben werden. Das Skript wertet standardmäßig die beiden letzten USC-Partien **und** die zwei jüngsten Begegnungen des kommenden Gegners aus und erzeugt daraus einen gemeinsamen Datensatz mit Trennung nach Fokus-Team.
 
 ### Tägliche Ausführung via GitHub Actions
 
-Der Workflow `.github/workflows/update-lineups.yml` startet täglich um 04:30 Uhr (UTC) sowie auf manuellen Workflow-Dispatch. Er installiert die Python-Abhängigkeiten, führt `python scripts/update_lineups.py` aus und erstellt bei Änderungen automatisch einen Pull Request mit dem aktualisierten Datensatz `docs/data/aufstellungen.json`.
+Der Workflow `.github/workflows/update-lineups.yml` startet täglich um 04:30 Uhr (UTC) sowie auf manuellen Workflow-Dispatch. Er installiert die Python-Abhängigkeiten, führt `python Scouting/scripts/update_lineups.py` aus und erstellt bei Änderungen automatisch einen Pull Request mit dem aktualisierten Datensatz `docs/data/aufstellungen.json`.
 
 ## Abhängigkeiten
 
