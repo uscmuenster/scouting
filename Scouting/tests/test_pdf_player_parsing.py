@@ -55,3 +55,30 @@ def test_parse_compact_player_stats_includes_counts() -> None:
     assert parsed.plus_minus == 2
     assert parsed.metrics.receptions_positive == 4
     assert parsed.metrics.receptions_perfect == 2
+
+
+def test_parse_compact_stats_handles_split_sign_tokens() -> None:
+    line = (
+        "4 ten Brinke Marije 3 3 6 * * * * 12 9 + 10 7 . 1 1 . 100% . 9 1 1 7 78% 4"
+    )
+    parsed = _parse_player_stats_line(line, "SSC Palmberg Schwerin")
+    assert parsed is not None
+    assert parsed.total_points == 12
+    assert parsed.break_points == 9
+    assert parsed.plus_minus == 10
+    assert parsed.metrics.serves_attempts == 7
+    assert parsed.metrics.receptions_attempts == 1
+    assert parsed.metrics.attacks_points == 7
+
+
+def test_parse_compact_stats_handles_split_negative_tokens() -> None:
+    line = (
+        "11 Frobel Svea 2 4 4 * * 9 1 - 5 8 . . 30 5 33% ( 10%) 30 5 4 9 30% ."
+    )
+    parsed = _parse_player_stats_line(line, "ETV Hamburger Volksbank Volleys")
+    assert parsed is not None
+    assert parsed.total_points == 9
+    assert parsed.break_points == 1
+    assert parsed.plus_minus == -5
+    assert parsed.metrics.receptions_attempts == 30
+    assert parsed.metrics.attacks_points == 9
