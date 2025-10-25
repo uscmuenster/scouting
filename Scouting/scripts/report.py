@@ -5311,7 +5311,7 @@ def build_html_report(
 
     .stats-table th,
     .stats-table td {{
-      padding: 0.55rem 0.75rem;
+      padding: 0.15rem 0.75rem;
       text-align: left;
       white-space: nowrap;
       border-bottom: 1px solid rgba(15, 118, 110, 0.15);
