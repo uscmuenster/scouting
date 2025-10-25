@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import requests
+from requests import HTTPError
 
 
 def _add_package_root_to_path() -> None:
@@ -99,6 +100,7 @@ def main() -> int:
     downloaded = 0
     skipped = 0
     failed: List[str] = []
+    missing: List[str] = []
     index_payload: Dict[str, str] = {}
 
     for stats_url, match_numbers in sorted(
@@ -117,7 +119,14 @@ def main() -> int:
                     delay_seconds=args.delay_seconds,
                 )
             except requests.RequestException as exc:  # pragma: no cover - Netzwerk
-                failed.append(f"{match_numbers[0]}: {stats_url} -> {exc}")
+                status_code = getattr(getattr(exc, "response", None), "status_code", None)
+                if isinstance(exc, HTTPError) and status_code == 404:
+                    missing.append(f"{match_numbers[0]}: {stats_url}")
+                    print(
+                        f"✖︎ Statistik nicht gefunden für Match {', '.join(match_numbers)}: {stats_url} (404)"
+                    )
+                else:
+                    failed.append(f"{match_numbers[0]}: {stats_url} -> {exc}")
                 continue
             downloaded += 1
             existing = True
@@ -138,12 +147,16 @@ def main() -> int:
         encoding="utf-8",
     )
 
-    print(
-        "Zusammenfassung:",
-        f"{downloaded} neue PDFs",
-        f"{skipped} übersprungen",
-        f"{len(failed)} Fehler",
-    )
+    summary_parts = [f"{downloaded} neue PDFs", f"{skipped} übersprungen"]
+    if missing:
+        summary_parts.append(f"{len(missing)} fehlend")
+    summary_parts.append(f"{len(failed)} Fehler")
+    print("Zusammenfassung:", *summary_parts)
+
+    if missing:
+        print("Nicht gefunden (404):")
+        for entry in missing:
+            print(f"  {entry}")
 
     if failed:
         print("Fehler beim Download:")
