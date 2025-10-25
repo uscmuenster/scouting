@@ -1,7 +1,6 @@
 name: HTML Report
 
 on:
-  push:
   workflow_dispatch:
   schedule:
     - cron: '0 1 * * *'  # täglich um 01:00 Uhr
