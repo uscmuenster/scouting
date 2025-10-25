@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import requests
 
-from usc_kommentatoren import stats as stats_module
-from usc_kommentatoren import report
+from scripts import stats as stats_module
+from scripts import report
 
 
 def test_build_stats_overview_offline(monkeypatch, tmp_path) -> None:

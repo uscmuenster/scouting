@@ -1,4 +1,4 @@
-from usc_kommentatoren.report import _parse_match_stats_metrics
+from scripts.report import _parse_match_stats_metrics
 
 
 def test_parse_match_stats_metrics_handles_keyword_totals() -> None:

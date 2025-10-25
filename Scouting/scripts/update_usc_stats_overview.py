@@ -48,8 +48,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     _add_package_root_to_path()
-    from usc_kommentatoren import STATS_OUTPUT_PATH
-    from usc_kommentatoren.stats import build_stats_overview
+    from scripts import STATS_OUTPUT_PATH
+    from scripts.stats import build_stats_overview
 
     parser = build_parser()
     args = parser.parse_args()

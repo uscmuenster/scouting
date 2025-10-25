@@ -60,7 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     _add_package_root_to_path()
-    from usc_kommentatoren import lineups
+    from scripts import lineups
 
     parser = build_parser()
     args = parser.parse_args()

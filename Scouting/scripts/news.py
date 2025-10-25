@@ -49,7 +49,9 @@ def _collect_from_rss(source: NewsSource) -> Iterable[Article]:
 
 
 def _collect_from_html(source: NewsSource) -> Iterable[Article]:
-    response = requests.get(source.url, headers={"User-Agent": "usc_kommentatoren/1.0"}, timeout=30)
+    response = requests.get(
+        source.url, headers={"User-Agent": "usc_scouting/1.0"}, timeout=30
+    )
     response.raise_for_status()
     soup = BeautifulSoup(response.text, "html.parser")
     items = soup.select("article a, h2 a, h3 a")
