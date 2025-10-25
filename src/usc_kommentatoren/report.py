@@ -5276,13 +5276,13 @@ def build_html_report(
 
     .stats-table td.numeric,
     .stats-table th.numeric {{
-      text-align: right;
+      text-align: right !important;
       font-variant-numeric: tabular-nums;
     }}
 
     .stats-table td.numeric-center,
     .stats-table th.numeric-center {{
-      text-align: center;
+      text-align: center !important;
       font-variant-numeric: tabular-nums;
     }}
 
