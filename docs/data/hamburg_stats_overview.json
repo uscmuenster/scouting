@@ -1,0 +1,132 @@
+{
+  "generated": "2025-10-25T18:51:16.039577+00:00",
+  "team": "ETV Hamburger Volksbank Volleys",
+  "match_count": 2,
+  "matches": [
+    {
+      "match_number": "2005",
+      "match_id": "777479964",
+      "kickoff": "2025-10-11T19:30:00+02:00",
+      "is_home": true,
+      "opponent": "Allianz MTV Stuttgart",
+      "opponent_short": "Stuttgart",
+      "host": "ETV Hamburger Volksbank Volleys",
+      "location": "CU Arena (21147 Hamburg)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479964&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/eb523e7a-332e-481d-a2ad-a6f9d1615c3e",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/aae9d894-244e-443b-be12-d7c49eeda627/2005",
+      "attendance": "1018",
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Hartig, Anna",
+          "team": "ETV Hamburger Volksbank Volleys"
+        },
+        {
+          "medal": "Gold",
+          "name": "Stautz, Antonia",
+          "team": "Allianz MTV Stuttgart"
+        }
+      ],
+      "result": {
+        "score": "0:3",
+        "total_points": "51:75",
+        "sets": [
+          "14:25",
+          "20:25",
+          "17:25"
+        ],
+        "summary": "0:3 / 51:75 (14:25 20:25 17:25)"
+      },
+      "metrics": {
+        "serves_attempts": 8,
+        "serves_errors": 0,
+        "serves_points": 0,
+        "receptions_attempts": 91,
+        "receptions_errors": 8,
+        "receptions_positive_pct": "828%",
+        "receptions_perfect_pct": "31%",
+        "attacks_attempts": 6,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": "0%",
+        "blocks_points": 0,
+        "receptions_positive": 753,
+        "receptions_perfect": 28
+      }
+    },
+    {
+      "match_number": "2012",
+      "match_id": "777480001",
+      "kickoff": "2025-10-18T18:00:00+02:00",
+      "is_home": false,
+      "opponent": "SSC Palmberg Schwerin",
+      "opponent_short": "Schwerin",
+      "host": "SSC Palmberg Schwerin",
+      "location": "Palmberg Arena (19059 Schwerin)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480001&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/831866c1-9e16-46f8-827c-4b0dd011928b",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/5f7c46e5-55ba-4b5c-9dbe-c65ce1e42d6e/2012",
+      "attendance": "1857",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Grozer, Leana",
+          "team": "SSC Palmberg Schwerin"
+        },
+        {
+          "medal": "Silber",
+          "name": "Meiser, Jana-Marie",
+          "team": "ETV Hamburger Volksbank Volleys"
+        }
+      ],
+      "result": {
+        "score": "0:3",
+        "total_points": "41:75",
+        "sets": [
+          "16:25",
+          "11:25",
+          "14:25"
+        ],
+        "summary": "0:3 / 41:75 (16:25 11:25 14:25)"
+      },
+      "metrics": {
+        "serves_attempts": 42,
+        "serves_errors": 5,
+        "serves_points": 3,
+        "receptions_attempts": 68,
+        "receptions_errors": 10,
+        "receptions_positive_pct": "29%",
+        "receptions_perfect_pct": "12%",
+        "attacks_attempts": 81,
+        "attacks_errors": 9,
+        "attacks_blocked": 11,
+        "attacks_points": 19,
+        "attacks_success_pct": "23%",
+        "blocks_points": 3,
+        "receptions_positive": 20,
+        "receptions_perfect": 8
+      }
+    }
+  ],
+  "totals": {
+    "serves_attempts": 50,
+    "serves_errors": 5,
+    "serves_points": 3,
+    "receptions_attempts": 159,
+    "receptions_errors": 18,
+    "receptions_positive": 773,
+    "receptions_perfect": 36,
+    "receptions_positive_pct": "486%",
+    "receptions_perfect_pct": "23%",
+    "attacks_attempts": 87,
+    "attacks_errors": 9,
+    "attacks_blocked": 11,
+    "attacks_points": 19,
+    "attacks_success_pct": "21%",
+    "blocks_points": 3
+  },
+  "player_count": 0,
+  "players": []
+}
