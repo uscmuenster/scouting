@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scouting USC Münster</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7f9;
+      --fg: #0f172a;
+      --muted: #475569;
+      --accent: #0f766e;
+      --accent-soft: rgba(15, 118, 110, 0.12);
+      --card-bg: #ffffff;
+      --card-border: rgba(15, 118, 110, 0.2);
+      --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
+    }
+
+    html {
+      font-size: 100%;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1f24;
+        --fg: #e2f1f4;
+        --muted: #93b4bf;
+        --accent-soft: rgba(94, 234, 212, 0.16);
+        --card-bg: #132a30;
+        --card-border: rgba(94, 234, 212, 0.28);
+        --shadow: 0 16px 30px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: min(120rem, 96vw);
+      margin: 0 auto;
+      padding: clamp(1.4rem, 4vw, 3rem) clamp(1.2rem, 5vw, 3.6rem);
+      display: grid;
+      gap: clamp(1.8rem, 4vw, 3rem);
+    }
+
+    header.page-header {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.1rem, 5vw, 3rem);
+      letter-spacing: -0.01em;
+    }
+
+    p.page-intro {
+      margin: 0;
+      max-width: 72rem;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      color: var(--muted);
+    }
+
+    .update-note {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.65rem;
+      border: 1px solid var(--card-border);
+    }
+
+    section {
+      display: grid;
+      gap: clamp(1rem, 3vw, 1.8rem);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3.2vw, 1.9rem);
+    }
+
+    .section-hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      gap: clamp(1rem, 3vw, 1.6rem);
+    }
+
+    .table-container {
+      overflow-x: auto;
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      padding: clamp(0.35rem, 1.5vw, 0.75rem);
+    }
+
+    .stats-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 52rem;
+    }
+
+    .stats-table caption {
+      text-align: left;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .stats-table th,
+    .stats-table td {
+      padding: 0.55rem 0.75rem;
+      text-align: left;
+      white-space: nowrap;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.15);
+    }
+
+    .stats-table thead th {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent);
+      border-bottom: 2px solid var(--card-border);
+    }
+
+    .stats-table tbody tr:nth-child(even) {
+      background: rgba(15, 118, 110, 0.06);
+    }
+
+    .stats-table td.numeric,
+    .stats-table th.numeric {
+      text-align: right !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stats-table td.numeric-center,
+    .stats-table th.numeric-center {
+      text-align: center !important;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stats-table__total th,
+    .stats-table__total td {
+      font-weight: 600;
+      border-top: 2px solid var(--card-border);
+      background: rgba(15, 118, 110, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .stats-table tbody tr:nth-child(even) {
+        background: rgba(148, 210, 189, 0.08);
+      }
+      .stats-table__total th,
+      .stats-table__total td {
+        background: rgba(148, 210, 189, 0.12);
+        border-top: 2px solid rgba(94, 234, 212, 0.28);
+      }
+      .stats-table th,
+      .stats-table td {
+        border-bottom: 1px solid rgba(94, 234, 212, 0.18);
+      }
+    }
+
+    .player-list {
+      display: grid;
+      gap: clamp(1.2rem, 3vw, 2rem);
+    }
+
+    .player-card {
+      background: var(--card-bg);
+      border-radius: 1.1rem;
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .player-card__summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: clamp(1.1rem, 3vw, 1.6rem);
+      list-style: none;
+      user-select: none;
+    }
+
+    .player-card__summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .player-card__summary::after {
+      content: '▾';
+      font-size: 1.1rem;
+      color: var(--muted);
+      transition: transform 0.2s ease;
+    }
+
+    .player-card[open] > .player-card__summary::after {
+      transform: rotate(-180deg);
+    }
+
+    .player-card__summary h3 {
+      margin: 0;
+      font-size: clamp(1.25rem, 3vw, 1.6rem);
+    }
+
+    .player-card__summary:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    .player-card__content {
+      display: grid;
+      gap: clamp(0.9rem, 2.6vw, 1.3rem);
+      padding: clamp(0.8rem, 2.4vw, 1.1rem) clamp(1.1rem, 3vw, 1.6rem) clamp(1.1rem, 3vw, 1.6rem);
+      border-top: 1px solid var(--card-border);
+    }
+
+    .player-card__table-wrapper {
+      overflow-x: auto;
+    }
+
+    .player-match-table {
+      min-width: 52rem;
+    }
+
+    .player-match-table th:nth-child(n+4),
+    .player-match-table td:nth-child(n+4) {
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+
+    .empty-state {
+      margin: 0;
+      color: var(--muted);
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <h1>Scouting USC Münster</h1>
+      <p class="page-intro">Aggregierte Statistiken aller verfügbaren USC-Partien aus den offiziellen VBL-PDFs. Die Übersicht gruppiert alle Werte pro Spielerin und zeigt Summen über alle erfassten Spiele.</p>
+      <p class="update-note" data-update-note data-generated="2025-10-25T11:13:02.497108+02:00">
+        <span aria-hidden="true">📅</span>
+        <span>Aktualisiert am Samstag, 25. Oktober 2025 um 11:13:02</span>
+      </p>
+    </header>
+
+    <section>
+      <h2>Spielerinnen</h2>
+      <p class="section-hint" data-player-meta>14 Spielerinnen mit Statistikdaten.</p>
+      <div class="table-container" data-player-table-container>
+        <table class="stats-table">
+          <thead>
+            <tr>
+              <th scope="col" class="numeric" title="Rückennummer">#</th>
+              <th scope="col">Spielerin</th>
+              <th scope="col" class="numeric-center" title="Spiele mit Statistikdaten">Sp.</th>
+              <th scope="col" class="numeric-center" title="Aufschlag-Versuche">Auf-Ges</th>
+              <th scope="col" class="numeric-center" title="Aufschlag-Fehler">Auf-Fhl</th>
+              <th scope="col" class="numeric-center" title="Aufschlag-Asse">Auf-Pkt</th>
+              <th scope="col" class="numeric-center" title="Annahme-Versuche">An-Ges</th>
+              <th scope="col" class="numeric-center" title="Annahme-Fehler">An-Fhl</th>
+              <th scope="col" class="numeric-center" title="Positive Annahmen">An-Pos%</th>
+              <th scope="col" class="numeric-center" title="Perfekte Annahmen">An-Prf%</th>
+              <th scope="col" class="numeric-center" title="Angriffs-Versuche">Ag-Ges</th>
+              <th scope="col" class="numeric-center" title="Angriffs-Fehler">Ag-Fhl</th>
+              <th scope="col" class="numeric-center" title="Geblockte Angriffe">Ag-Blo</th>
+              <th scope="col" class="numeric-center" title="Angriffspunkte">Ag-Pkt</th>
+              <th scope="col" class="numeric-center" title="Angriffsquote">Ag-%</th>
+              <th scope="col" class="numeric-center" title="Blockpunkte">Block</th>
+              <th scope="col" class="numeric-center" title="Gesamtpunkte">Pkt.</th>
+              <th scope="col" class="numeric-center" title="Breakpunkte">Breakpkt.</th>
+              <th scope="col" class="numeric-center" title="Plus/Minus">+/−</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="numeric">1</td>
+              <td>MOLENAAR Pippa</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">35</td>
+              <td class="numeric-center">5</td>
+              <td class="numeric-center">37%</td>
+              <td class="numeric-center">20%</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">2</td>
+            </tr>
+            <tr>
+              <td class="numeric">2</td>
+              <td>SCHAEFER Lara-Marie</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">17</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">29%</td>
+              <td class="numeric-center">12%</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">1</td>
+            </tr>
+            <tr>
+              <td class="numeric">3</td>
+              <td>SPÖLER Esther</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">19</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">20</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">30%</td>
+              <td class="numeric-center">10%</td>
+              <td class="numeric-center">34</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">15</td>
+              <td class="numeric-center">44%</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">17</td>
+              <td class="numeric-center">7</td>
+              <td class="numeric-center">8</td>
+            </tr>
+            <tr>
+              <td class="numeric">5</td>
+              <td>MALM Cecilia</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">25</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">26</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">31%</td>
+              <td class="numeric-center">16%</td>
+              <td class="numeric-center">36</td>
+              <td class="numeric-center">5</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">13</td>
+              <td class="numeric-center">36%</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">14</td>
+              <td class="numeric-center">7</td>
+              <td class="numeric-center">6</td>
+            </tr>
+            <tr>
+              <td class="numeric">7</td>
+              <td>KÖMMLING Elena</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+            </tr>
+            <tr>
+              <td class="numeric">8</td>
+              <td>LIU Yina</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">13</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">50%</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">1</td>
+            </tr>
+            <tr>
+              <td class="numeric">9</td>
+              <td>JORDAN Emilia</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">38</td>
+              <td class="numeric-center">8</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0%</td>
+              <td class="numeric-center">0%</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">50%</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">-2</td>
+            </tr>
+            <tr>
+              <td class="numeric">10</td>
+              <td>STROTHOFF Amelie</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">10</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">10</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">20%</td>
+              <td class="numeric-center">20%</td>
+              <td class="numeric-center">14</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">6</td>
+              <td class="numeric-center">43%</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">8</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">1</td>
+            </tr>
+            <tr>
+              <td class="numeric">11</td>
+              <td>HEIL Franziska</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0%</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+            </tr>
+            <tr>
+              <td class="numeric">12</td>
+              <td>WAELKENS Anke</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">14</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">9</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">34%</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">12</td>
+              <td class="numeric-center">7</td>
+              <td class="numeric-center">5</td>
+            </tr>
+            <tr>
+              <td class="numeric">14</td>
+              <td>FORD Brianna</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">28</td>
+              <td class="numeric-center">5</td>
+              <td class="numeric-center">5</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">67</td>
+              <td class="numeric-center">5</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">33</td>
+              <td class="numeric-center">49%</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">41</td>
+              <td class="numeric-center">22</td>
+              <td class="numeric-center">18</td>
+            </tr>
+            <tr>
+              <td class="numeric">16</td>
+              <td>SCHULTZE Lena</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">25%</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+            </tr>
+            <tr>
+              <td class="numeric">17</td>
+              <td>MARTIN Isabel Rebecca</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">18</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">16</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">31%</td>
+              <td class="numeric-center">6%</td>
+              <td class="numeric-center">34</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">14</td>
+              <td class="numeric-center">41%</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">20</td>
+              <td class="numeric-center">10</td>
+              <td class="numeric-center">4</td>
+            </tr>
+            <tr>
+              <td class="numeric">18</td>
+              <td>SEYBERING Diane</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">10</td>
+              <td class="numeric-center">3</td>
+              <td class="numeric-center">1</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">–</td>
+              <td class="numeric-center">9</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">0</td>
+              <td class="numeric-center">4</td>
+              <td class="numeric-center">44%</td>
+              <td class="numeric-center">2</td>
+              <td class="numeric-center">9</td>
+              <td class="numeric-center">6</td>
+              <td class="numeric-center">3</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="player-list" data-player-list>
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#1 MOLENAAR Pippa</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">32</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">34%</td>
+                    <td class="numeric-center">19%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">67%</td>
+                    <td class="numeric-center">33%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">35</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">37%</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#2 SCHAEFER Lara-Marie</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">33%</td>
+                    <td class="numeric-center">17%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">17</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">29%</td>
+                    <td class="numeric-center">12%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#3 SPÖLER Esther</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">18</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">22%</td>
+                    <td class="numeric-center">11%</td>
+                    <td class="numeric-center">23</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">35%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">100%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">11</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">64%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">7</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">19</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">20</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">30%</td>
+                    <td class="numeric-center">10%</td>
+                    <td class="numeric-center">34</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">15</td>
+                    <td class="numeric-center">44%</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">17</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">8</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#5 MALM Cecilia</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">16</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">25%</td>
+                    <td class="numeric-center">13%</td>
+                    <td class="numeric-center">24</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">38%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">4</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">13</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">40%</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">33%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">25</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">26</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">31%</td>
+                    <td class="numeric-center">16%</td>
+                    <td class="numeric-center">36</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">13</td>
+                    <td class="numeric-center">36%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">14</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">6</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#7 KÖMMLING Elena</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#8 LIU Yina</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">50%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">13</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">50%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#9 JORDAN Emilia</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">25</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">50%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">13</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">50%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">-3</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">38</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">50%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">-2</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#10 STROTHOFF Amelie</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">40%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">50%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">20%</td>
+                    <td class="numeric-center">14</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">43%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#11 HEIL Franziska</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#12 WAELKENS Anke</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">38%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">3</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">14</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">34%</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">5</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#14 FORD Brianna</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">18</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">38</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">17</td>
+                    <td class="numeric-center">45%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">24</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">5</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">29</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">16</td>
+                    <td class="numeric-center">55%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">17</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">13</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">28</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">67</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">33</td>
+                    <td class="numeric-center">49%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">41</td>
+                    <td class="numeric-center">22</td>
+                    <td class="numeric-center">18</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#16 SCHULTZE Lena</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">25%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">25%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#17 MARTIN Isabel Rebecca</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">30%</td>
+                    <td class="numeric-center">10%</td>
+                    <td class="numeric-center">18</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">39%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">12</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">33%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">16</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">7</td>
+                    <td class="numeric-center">44%</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">8</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">18</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">16</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">31%</td>
+                    <td class="numeric-center">6%</td>
+                    <td class="numeric-center">34</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">14</td>
+                    <td class="numeric-center">41%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">20</td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">4</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+
+        <details class="player-card">
+          <summary class="player-card__summary">
+            <h3>#18 SEYBERING Diane</h3>
+          </summary>
+          <div class="player-card__content">
+            <div class="player-card__table-wrapper">
+              <table class="stats-table player-match-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Datum</th>
+                    <th scope="col">Gegner</th>
+                    <th scope="col">Sätze</th>
+                    <th scope="col" class="numeric-center">Auf-Ges</th>
+                    <th scope="col" class="numeric-center">Auf-Fhl</th>
+                    <th scope="col" class="numeric-center">Auf-Pkt</th>
+                    <th scope="col" class="numeric-center">An-Ges</th>
+                    <th scope="col" class="numeric-center">An-Fhl</th>
+                    <th scope="col" class="numeric-center">An-Pos%</th>
+                    <th scope="col" class="numeric-center">An-Prf%</th>
+                    <th scope="col" class="numeric-center">Ag-Ges</th>
+                    <th scope="col" class="numeric-center">Ag-Fhl</th>
+                    <th scope="col" class="numeric-center">Ag-Blo</th>
+                    <th scope="col" class="numeric-center">Ag-Pkt</th>
+                    <th scope="col" class="numeric-center">Ag-%</th>
+                    <th scope="col" class="numeric-center">Block</th>
+                    <th scope="col" class="numeric-center">Pkt.</th>
+                    <th scope="col" class="numeric-center">Breakpkt.</th>
+                    <th scope="col" class="numeric-center">+/−</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>12.10.2025</td>
+                    <td>Schwerin</td>
+                    <td>3:2</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">33%</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">5</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">2</td>
+                  </tr>
+                  <tr>
+                    <td>15.10.2025</td>
+                    <td>Flacht</td>
+                    <td>3:0</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">0%</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">67%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">1</td>
+                  </tr>
+                  <tr class="stats-table__total player-match-table__total-row">
+                    <th scope="row">Summe</th>
+                    <td></td>
+                    <td></td>
+                    <td class="numeric-center">10</td>
+                    <td class="numeric-center">3</td>
+                    <td class="numeric-center">1</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">–</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">0</td>
+                    <td class="numeric-center">4</td>
+                    <td class="numeric-center">44%</td>
+                    <td class="numeric-center">2</td>
+                    <td class="numeric-center">9</td>
+                    <td class="numeric-center">6</td>
+                    <td class="numeric-center">3</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+      </div>
+      <p class="empty-state" data-error hidden>Beim Laden der Scouting-Daten ist ein Fehler aufgetreten.</p>
+    </section>
+  </main>
+  <script>
+    const OVERVIEW_PATH = 'data/usc_stats_overview.json';
+    const PRELOADED_OVERVIEW = {"generated": "2025-10-25T09:13:02.495225+00:00", "team": "USC Münster", "match_count": 2, "matches": [{"match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "host": "USC Münster", "location": "Sporthalle Berg Fidel (48153 Münster)", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/e58c59f9-6b0f-4d2b-b725-6205fd7aaf65/2001", "attendance": "2124", "mvps": [{"medal": "Gold", "name": "Jordan, Emilia", "team": "USC Münster"}, {"medal": "Silber", "name": "Kirchhoff, Mia", "team": "SSC Palmberg Schwerin"}], "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 105, "serves_errors": 19, "serves_points": 14, "receptions_attempts": 88, "receptions_errors": 15, "receptions_positive_pct": "30%", "receptions_perfect_pct": "15%", "attacks_attempts": 132, "attacks_errors": 10, "attacks_blocked": 8, "attacks_points": 52, "attacks_success_pct": "39%", "blocks_points": 9, "receptions_positive": 26, "receptions_perfect": 13}}, {"match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "host": "Binder Blaubären TSV Flacht", "location": "Heckengäusporthalle II (71287 Weissach)", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/ab4891bf-921b-4fe1-8aaa-97f2b9acb6d9/2011", "attendance": "433", "mvps": [{"medal": "Silber", "name": "Neuhaus, Frauke", "team": "Binder Blaubären TSV Flacht"}, {"medal": "Gold", "name": "Ford, Brianna", "team": "USC Münster"}], "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 74, "serves_errors": 13, "serves_points": 5, "receptions_attempts": 37, "receptions_errors": 2, "receptions_positive_pct": "35%", "receptions_perfect_pct": "14%", "attacks_attempts": 82, "attacks_errors": 7, "attacks_blocked": 6, "attacks_points": 40, "attacks_success_pct": "49%", "blocks_points": 7, "receptions_positive": 13, "receptions_perfect": 5}}], "totals": {"serves_attempts": 179, "serves_errors": 32, "serves_points": 19, "receptions_attempts": 125, "receptions_errors": 17, "receptions_positive": 39, "receptions_perfect": 18, "receptions_positive_pct": "31%", "receptions_perfect_pct": "15%", "attacks_attempts": 214, "attacks_errors": 17, "attacks_blocked": 14, "attacks_points": 92, "attacks_success_pct": "43%", "blocks_points": 16}, "player_count": 14, "players": [{"name": "MOLENAAR Pippa", "jersey_number": 1, "match_count": 2, "matches": [{"player": "MOLENAAR Pippa", "jersey_number": 1, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 1, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 32, "receptions_errors": 5, "receptions_positive_pct": "34%", "receptions_perfect_pct": "19%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 11, "receptions_perfect": 6}, "total_points": 0, "break_points": 0, "plus_minus": 2}, {"player": "MOLENAAR Pippa", "jersey_number": 1, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 3, "receptions_errors": 0, "receptions_positive_pct": "67%", "receptions_perfect_pct": "33%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 2, "receptions_perfect": 1}, "total_points": 0, "break_points": 0, "plus_minus": 0}], "totals": {"serves_attempts": 1, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 35, "receptions_errors": 5, "receptions_positive": 13, "receptions_perfect": 7, "receptions_positive_pct": "37%", "receptions_perfect_pct": "20%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": null, "blocks_points": 0}, "total_points": 0, "break_points_total": 0, "plus_minus_total": 2}, {"name": "SCHAEFER Lara-Marie", "jersey_number": 2, "match_count": 2, "matches": [{"player": "SCHAEFER Lara-Marie", "jersey_number": 2, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 12, "receptions_errors": 3, "receptions_positive_pct": "33%", "receptions_perfect_pct": "17%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 4, "receptions_perfect": 2}, "total_points": 0, "break_points": 0, "plus_minus": 1}, {"player": "SCHAEFER Lara-Marie", "jersey_number": 2, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 5, "receptions_errors": 0, "receptions_positive_pct": "20%", "receptions_perfect_pct": "0%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 1, "receptions_perfect": 0}, "total_points": 0, "break_points": 0, "plus_minus": 0}], "totals": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 17, "receptions_errors": 3, "receptions_positive": 5, "receptions_perfect": 2, "receptions_positive_pct": "29%", "receptions_perfect_pct": "12%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": null, "blocks_points": 0}, "total_points": 0, "break_points_total": 0, "plus_minus_total": 1}, {"name": "SPÖLER Esther", "jersey_number": 3, "match_count": 2, "matches": [{"player": "SPÖLER Esther", "jersey_number": 3, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 10, "serves_errors": 2, "serves_points": 1, "receptions_attempts": 18, "receptions_errors": 3, "receptions_positive_pct": "22%", "receptions_perfect_pct": "11%", "attacks_attempts": 23, "attacks_errors": 2, "attacks_blocked": 1, "attacks_points": 8, "attacks_success_pct": "35%", "blocks_points": 1, "receptions_positive": 4, "receptions_perfect": 2}, "total_points": 7, "break_points": 3, "plus_minus": 1}, {"player": "SPÖLER Esther", "jersey_number": 3, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 9, "serves_errors": 1, "serves_points": 1, "receptions_attempts": 2, "receptions_errors": 0, "receptions_positive_pct": "100%", "receptions_perfect_pct": "0%", "attacks_attempts": 11, "attacks_errors": 1, "attacks_blocked": 1, "attacks_points": 7, "attacks_success_pct": "64%", "blocks_points": 2, "receptions_positive": 2, "receptions_perfect": 0}, "total_points": 10, "break_points": 4, "plus_minus": 7}], "totals": {"serves_attempts": 19, "serves_errors": 3, "serves_points": 2, "receptions_attempts": 20, "receptions_errors": 3, "receptions_positive": 6, "receptions_perfect": 2, "receptions_positive_pct": "30%", "receptions_perfect_pct": "10%", "attacks_attempts": 34, "attacks_errors": 3, "attacks_blocked": 2, "attacks_points": 15, "attacks_success_pct": "44%", "blocks_points": 3}, "total_points": 17, "break_points_total": 7, "plus_minus_total": 8}, {"name": "MALM Cecilia", "jersey_number": 5, "match_count": 2, "matches": [{"player": "MALM Cecilia", "jersey_number": 5, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 12, "serves_errors": 3, "serves_points": 2, "receptions_attempts": 16, "receptions_errors": 3, "receptions_positive_pct": "25%", "receptions_perfect_pct": "13%", "attacks_attempts": 24, "attacks_errors": 2, "attacks_blocked": 2, "attacks_points": 9, "attacks_success_pct": "38%", "blocks_points": 2, "receptions_positive": 4, "receptions_perfect": 2}, "total_points": 8, "break_points": 3, "plus_minus": 4}, {"player": "MALM Cecilia", "jersey_number": 5, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 13, "serves_errors": 1, "serves_points": 2, "receptions_attempts": 10, "receptions_errors": 0, "receptions_positive_pct": "40%", "receptions_perfect_pct": "20%", "attacks_attempts": 12, "attacks_errors": 3, "attacks_blocked": 0, "attacks_points": 4, "attacks_success_pct": "33%", "blocks_points": 0, "receptions_positive": 4, "receptions_perfect": 2}, "total_points": 6, "break_points": 4, "plus_minus": 2}], "totals": {"serves_attempts": 25, "serves_errors": 4, "serves_points": 4, "receptions_attempts": 26, "receptions_errors": 3, "receptions_positive": 8, "receptions_perfect": 4, "receptions_positive_pct": "31%", "receptions_perfect_pct": "16%", "attacks_attempts": 36, "attacks_errors": 5, "attacks_blocked": 2, "attacks_points": 13, "attacks_success_pct": "36%", "blocks_points": 2}, "total_points": 14, "break_points_total": 7, "plus_minus_total": 6}, {"name": "KÖMMLING Elena", "jersey_number": 7, "match_count": 2, "matches": [{"player": "KÖMMLING Elena", "jersey_number": 7, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 0, "break_points": 0, "plus_minus": 0}, {"player": "KÖMMLING Elena", "jersey_number": 7, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 0, "break_points": 0, "plus_minus": 0}], "totals": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": null, "blocks_points": 0}, "total_points": 0, "break_points_total": 0, "plus_minus_total": 0}, {"name": "LIU Yina", "jersey_number": 8, "match_count": 2, "matches": [{"player": "LIU Yina", "jersey_number": 8, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 12, "serves_errors": 2, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 2, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 1, "attacks_success_pct": "50%", "blocks_points": 1, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 2, "break_points": 1, "plus_minus": 1}, {"player": "LIU Yina", "jersey_number": 8, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 1, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 0, "break_points": 0, "plus_minus": 0}], "totals": {"serves_attempts": 13, "serves_errors": 2, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 2, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 1, "attacks_success_pct": "50%", "blocks_points": 1}, "total_points": 2, "break_points_total": 1, "plus_minus_total": 1}, {"name": "JORDAN Emilia", "jersey_number": 9, "match_count": 2, "matches": [{"player": "JORDAN Emilia", "jersey_number": 9, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 25, "serves_errors": 5, "serves_points": 4, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 2, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 1, "attacks_success_pct": "50%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 1, "break_points": 1, "plus_minus": 1}, {"player": "JORDAN Emilia", "jersey_number": 9, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 13, "serves_errors": 3, "serves_points": 0, "receptions_attempts": 1, "receptions_errors": 1, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 2, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 1, "attacks_success_pct": "50%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 1, "break_points": 1, "plus_minus": -3}], "totals": {"serves_attempts": 38, "serves_errors": 8, "serves_points": 4, "receptions_attempts": 1, "receptions_errors": 1, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 4, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 2, "attacks_success_pct": "50%", "blocks_points": 0}, "total_points": 2, "break_points_total": 2, "plus_minus_total": -2}, {"name": "STROTHOFF Amelie", "jersey_number": 10, "match_count": 2, "matches": [{"player": "STROTHOFF Amelie", "jersey_number": 10, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 5, "serves_errors": 1, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 10, "attacks_errors": 0, "attacks_blocked": 1, "attacks_points": 4, "attacks_success_pct": "40%", "blocks_points": 1, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 6, "break_points": 2, "plus_minus": 1}, {"player": "STROTHOFF Amelie", "jersey_number": 10, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 5, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 10, "receptions_errors": 1, "receptions_positive_pct": "20%", "receptions_perfect_pct": "20%", "attacks_attempts": 4, "attacks_errors": 0, "attacks_blocked": 1, "attacks_points": 2, "attacks_success_pct": "50%", "blocks_points": 0, "receptions_positive": 2, "receptions_perfect": 2}, "total_points": 2, "break_points": 1, "plus_minus": 0}], "totals": {"serves_attempts": 10, "serves_errors": 1, "serves_points": 0, "receptions_attempts": 10, "receptions_errors": 1, "receptions_positive": 2, "receptions_perfect": 2, "receptions_positive_pct": "20%", "receptions_perfect_pct": "20%", "attacks_attempts": 14, "attacks_errors": 0, "attacks_blocked": 2, "attacks_points": 6, "attacks_success_pct": "43%", "blocks_points": 1}, "total_points": 8, "break_points_total": 3, "plus_minus_total": 1}, {"name": "HEIL Franziska", "jersey_number": 11, "match_count": 2, "matches": [{"player": "HEIL Franziska", "jersey_number": 11, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 1, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 1, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 1, "break_points": 0, "plus_minus": 0}, {"player": "HEIL Franziska", "jersey_number": 11, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 0, "break_points": 0, "plus_minus": 0}], "totals": {"serves_attempts": 1, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 1, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0}, "total_points": 1, "break_points_total": 0, "plus_minus_total": 0}, {"name": "WAELKENS Anke", "jersey_number": 12, "match_count": 2, "matches": [{"player": "WAELKENS Anke", "jersey_number": 12, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 6, "serves_errors": 1, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 8, "attacks_errors": 1, "attacks_blocked": 1, "attacks_points": 3, "attacks_success_pct": "38%", "blocks_points": 2, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 9, "break_points": 4, "plus_minus": 3}, {"player": "WAELKENS Anke", "jersey_number": 12, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 8, "serves_errors": 1, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 1, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 2, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 3, "break_points": 3, "plus_minus": 2}], "totals": {"serves_attempts": 14, "serves_errors": 2, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 9, "attacks_errors": 1, "attacks_blocked": 1, "attacks_points": 3, "attacks_success_pct": "34%", "blocks_points": 4}, "total_points": 12, "break_points_total": 7, "plus_minus_total": 5}, {"name": "FORD Brianna", "jersey_number": 14, "match_count": 2, "matches": [{"player": "FORD Brianna", "jersey_number": 14, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 18, "serves_errors": 3, "serves_points": 4, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 38, "attacks_errors": 4, "attacks_blocked": 2, "attacks_points": 17, "attacks_success_pct": "45%", "blocks_points": 1, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 24, "break_points": 12, "plus_minus": 5}, {"player": "FORD Brianna", "jersey_number": 14, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 10, "serves_errors": 2, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 29, "attacks_errors": 1, "attacks_blocked": 1, "attacks_points": 16, "attacks_success_pct": "55%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 17, "break_points": 10, "plus_minus": 13}], "totals": {"serves_attempts": 28, "serves_errors": 5, "serves_points": 5, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 67, "attacks_errors": 5, "attacks_blocked": 3, "attacks_points": 33, "attacks_success_pct": "49%", "blocks_points": 1}, "total_points": 41, "break_points_total": 22, "plus_minus_total": 18}, {"name": "SCHULTZE Lena", "jersey_number": 16, "match_count": 2, "matches": [{"player": "SCHULTZE Lena", "jersey_number": 16, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 2, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 0, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 0, "attacks_success_pct": "0%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 0, "break_points": 0, "plus_minus": 0}, {"player": "SCHULTZE Lena", "jersey_number": 16, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 0, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 4, "attacks_errors": 1, "attacks_blocked": 0, "attacks_points": 1, "attacks_success_pct": "25%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 1, "break_points": 0, "plus_minus": 0}], "totals": {"serves_attempts": 2, "serves_errors": 0, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 4, "attacks_errors": 1, "attacks_blocked": 0, "attacks_points": 1, "attacks_success_pct": "25%", "blocks_points": 0}, "total_points": 1, "break_points_total": 0, "plus_minus_total": 0}, {"name": "MARTIN Isabel Rebecca", "jersey_number": 17, "match_count": 2, "matches": [{"player": "MARTIN Isabel Rebecca", "jersey_number": 17, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 9, "serves_errors": 2, "serves_points": 1, "receptions_attempts": 10, "receptions_errors": 1, "receptions_positive_pct": "30%", "receptions_perfect_pct": "10%", "attacks_attempts": 18, "attacks_errors": 1, "attacks_blocked": 1, "attacks_points": 7, "attacks_success_pct": "39%", "blocks_points": 1, "receptions_positive": 3, "receptions_perfect": 1}, "total_points": 12, "break_points": 4, "plus_minus": 2}, {"player": "MARTIN Isabel Rebecca", "jersey_number": 17, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 9, "serves_errors": 2, "serves_points": 0, "receptions_attempts": 6, "receptions_errors": 0, "receptions_positive_pct": "33%", "receptions_perfect_pct": "0%", "attacks_attempts": 16, "attacks_errors": 1, "attacks_blocked": 3, "attacks_points": 7, "attacks_success_pct": "44%", "blocks_points": 1, "receptions_positive": 2, "receptions_perfect": 0}, "total_points": 8, "break_points": 6, "plus_minus": 2}], "totals": {"serves_attempts": 18, "serves_errors": 4, "serves_points": 1, "receptions_attempts": 16, "receptions_errors": 1, "receptions_positive": 5, "receptions_perfect": 1, "receptions_positive_pct": "31%", "receptions_perfect_pct": "6%", "attacks_attempts": 34, "attacks_errors": 2, "attacks_blocked": 4, "attacks_points": 14, "attacks_success_pct": "41%", "blocks_points": 2}, "total_points": 20, "break_points_total": 10, "plus_minus_total": 4}, {"name": "SEYBERING Diane", "jersey_number": 18, "match_count": 2, "matches": [{"player": "SEYBERING Diane", "jersey_number": 18, "match_number": "2001", "match_id": "777479976", "kickoff": "2025-10-12T16:00:00+02:00", "is_home": true, "opponent": "SSC Palmberg Schwerin", "opponent_short": "Schwerin", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6", "result": {"score": "3:2", "total_points": "106:106", "sets": ["20:25", "25:22", "21:25", "25:21", "15:13"], "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"}, "metrics": {"serves_attempts": 4, "serves_errors": 0, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 6, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 2, "attacks_success_pct": "33%", "blocks_points": 0, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 5, "break_points": 3, "plus_minus": 2}, {"player": "SEYBERING Diane", "jersey_number": 18, "match_number": "2011", "match_id": "777479989", "kickoff": "2025-10-15T19:30:00+02:00", "is_home": false, "opponent": "Binder Blaubären TSV Flacht", "opponent_short": "Flacht", "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true", "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964", "result": {"score": "3:0", "total_points": "75:49", "sets": ["25:14", "25:15", "25:20"], "summary": "3:0 / 75:49 (25:14 25:15 25:20)"}, "metrics": {"serves_attempts": 6, "serves_errors": 3, "serves_points": 0, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive_pct": "0%", "receptions_perfect_pct": "0%", "attacks_attempts": 3, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 2, "attacks_success_pct": "67%", "blocks_points": 2, "receptions_positive": 0, "receptions_perfect": 0}, "total_points": 4, "break_points": 3, "plus_minus": 1}], "totals": {"serves_attempts": 10, "serves_errors": 3, "serves_points": 1, "receptions_attempts": 0, "receptions_errors": 0, "receptions_positive": 0, "receptions_perfect": 0, "receptions_positive_pct": null, "receptions_perfect_pct": null, "attacks_attempts": 9, "attacks_errors": 0, "attacks_blocked": 0, "attacks_points": 4, "attacks_success_pct": "44%", "blocks_points": 2}, "total_points": 9, "break_points_total": 6, "plus_minus_total": 3}]};
+
+    function formatDate(value) {
+      if (!value) return '–';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '–';
+      return new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }).format(date);
+    }
+
+    function formatDateTime(value) {
+      if (!value) return '–';
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return '–';
+      return new Intl.DateTimeFormat('de-DE', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      }).format(date);
+    }
+
+    function formatInt(value) {
+      if (value === null || value === undefined) return '0';
+      return Number(value).toString();
+    }
+
+    function formatIntOrDash(value) {
+      if (value === null || value === undefined || value === '') return '–';
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value)) return '–';
+        return Number.isInteger(value) ? value.toString() : value.toString();
+      }
+      const trimmed = String(value).trim();
+      if (!trimmed) return '–';
+      const parsed = Number(trimmed);
+      if (!Number.isNaN(parsed)) {
+        return Number.isInteger(parsed) ? Math.trunc(parsed).toString() : parsed.toString();
+      }
+      return trimmed;
+    }
+
+    function formatPctOrDash(value) {
+      if (value === null || value === undefined || value === '') return '–';
+      return String(value);
+    }
+
+    function getOpponentLabel(match) {
+      if (match && match.opponent_short) return match.opponent_short;
+      if (match && match.opponent) return match.opponent;
+      return 'Unbekannt';
+    }
+
+    function formatSetScores(match) {
+      if (!match || !match.result) return '–';
+      const sets = Array.isArray(match.result.sets) ? match.result.sets : [];
+      const cleaned = sets
+        .map(item => (item === null || item === undefined ? '' : String(item).trim()))
+        .filter(Boolean);
+      return cleaned.length ? cleaned.join(' ') : '–';
+    }
+
+    function getMatchMetric(match, key) {
+      if (!match || !match.metrics || typeof match.metrics !== 'object') return undefined;
+      return match.metrics[key];
+    }
+
+    function buildPlayerMatchesTable(player) {
+      const matches = Array.isArray(player.matches)
+        ? player.matches.filter(match => match && typeof match === 'object')
+        : [];
+      const totals = player && typeof player.totals === 'object' ? player.totals : null;
+      if (!matches.length && !totals) {
+        return null;
+      }
+
+      const columns = [
+        { label: 'Datum' },
+        { label: 'Gegner' },
+        { label: 'Sätze' },
+        { label: 'Auf-Ges', numeric: true },
+        { label: 'Auf-Fhl', numeric: true },
+        { label: 'Auf-Pkt', numeric: true },
+        { label: 'An-Ges', numeric: true },
+        { label: 'An-Fhl', numeric: true },
+        { label: 'An-Pos%', numeric: true },
+        { label: 'An-Prf%', numeric: true },
+        { label: 'Ag-Ges', numeric: true },
+        { label: 'Ag-Fhl', numeric: true },
+        { label: 'Ag-Blo', numeric: true },
+        { label: 'Ag-Pkt', numeric: true },
+        { label: 'Ag-%', numeric: true },
+        { label: 'Block', numeric: true },
+        { label: 'Pkt.', numeric: true },
+        { label: 'Breakpkt.', numeric: true },
+        { label: '+/-', numeric: true },
+      ];
+
+      const table = document.createElement('table');
+      table.className = 'stats-table player-match-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) th.className = 'numeric';
+        th.textContent = column.label;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      matches.forEach(match => {
+        const row = document.createElement('tr');
+        const cells = [
+          { value: formatDate(match.kickoff) },
+          { value: getOpponentLabel(match) },
+          { value: formatSetScores(match) },
+          { value: formatInt(getMatchMetric(match, 'serves_attempts')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'serves_errors')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'serves_points')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'receptions_attempts')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'receptions_errors')), numeric: true },
+          { value: formatPctOrDash(getMatchMetric(match, 'receptions_positive_pct')), numeric: true },
+          { value: formatPctOrDash(getMatchMetric(match, 'receptions_perfect_pct')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'attacks_attempts')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'attacks_errors')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'attacks_blocked')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'attacks_points')), numeric: true },
+          { value: formatPctOrDash(getMatchMetric(match, 'attacks_success_pct')), numeric: true },
+          { value: formatInt(getMatchMetric(match, 'blocks_points')), numeric: true },
+          { value: formatIntOrDash(match.total_points), numeric: true },
+          { value: formatIntOrDash(match.break_points), numeric: true },
+          { value: formatIntOrDash(match.plus_minus), numeric: true },
+        ];
+        cells.forEach((cell, index) => {
+          const td = document.createElement('td');
+          if (cell.numeric || (columns[index] && columns[index].numeric)) {
+            td.className = 'numeric';
+          }
+          td.textContent = cell.value;
+          row.appendChild(td);
+        });
+        tbody.appendChild(row);
+      });
+
+      if (totals) {
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'stats-table__total player-match-table__total-row';
+
+        const totalCells = [
+          { type: 'th', value: 'Summe', attrs: { scope: 'row' } },
+          { value: '' },
+          { value: '' },
+          { value: formatInt(totals.serves_attempts), numeric: true },
+          { value: formatInt(totals.serves_errors), numeric: true },
+          { value: formatInt(totals.serves_points), numeric: true },
+          { value: formatInt(totals.receptions_attempts), numeric: true },
+          { value: formatInt(totals.receptions_errors), numeric: true },
+          { value: formatPctOrDash(totals.receptions_positive_pct), numeric: true },
+          { value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true },
+          { value: formatInt(totals.attacks_attempts), numeric: true },
+          { value: formatInt(totals.attacks_errors), numeric: true },
+          { value: formatInt(totals.attacks_blocked), numeric: true },
+          { value: formatInt(totals.attacks_points), numeric: true },
+          { value: formatPctOrDash(totals.attacks_success_pct), numeric: true },
+          { value: formatInt(totals.blocks_points), numeric: true },
+          { value: formatIntOrDash(player.total_points), numeric: true },
+          { value: formatIntOrDash(player.break_points_total), numeric: true },
+          { value: formatIntOrDash(player.plus_minus_total), numeric: true },
+        ];
+
+        totalCells.forEach((cell, index) => {
+          const isNumeric = cell.numeric || (columns[index] && columns[index].numeric);
+          if (cell.type === 'th') {
+            const th = document.createElement('th');
+            if (cell.attrs && cell.attrs.scope) {
+              th.scope = cell.attrs.scope;
+            }
+            th.textContent = cell.value;
+            totalRow.appendChild(th);
+          } else {
+            const td = document.createElement('td');
+            if (isNumeric) td.className = 'numeric';
+            td.textContent = cell.value;
+            totalRow.appendChild(td);
+          }
+        });
+
+        tbody.appendChild(totalRow);
+      }
+
+      table.appendChild(tbody);
+      return table;
+    }
+
+    function buildPlayerSummaryTable(players) {
+      const validPlayers = Array.isArray(players)
+        ? players.filter(player => player && typeof player === 'object')
+        : [];
+      if (!validPlayers.length) {
+        return null;
+      }
+
+      const columns = [
+        { label: '#', title: 'Rückennummer', numeric: true },
+        { label: 'Spielerin' },
+        { label: 'Sp.', title: 'Spiele mit Statistikdaten', numeric: true },
+        { label: 'Auf-Ges', title: 'Aufschlag-Versuche', numeric: true },
+        { label: 'Auf-Fhl', title: 'Aufschlag-Fehler', numeric: true },
+        { label: 'Auf-Pkt', title: 'Aufschlag-Asse', numeric: true },
+        { label: 'An-Ges', title: 'Annahme-Versuche', numeric: true },
+        { label: 'An-Fhl', title: 'Annahme-Fehler', numeric: true },
+        { label: 'An-Pos%', title: 'Positive Annahmen', numeric: true },
+        { label: 'An-Prf%', title: 'Perfekte Annahmen', numeric: true },
+        { label: 'Ag-Ges', title: 'Angriffs-Versuche', numeric: true },
+        { label: 'Ag-Fhl', title: 'Angriffs-Fehler', numeric: true },
+        { label: 'Ag-Blo', title: 'Geblockte Angriffe', numeric: true },
+        { label: 'Ag-Pkt', title: 'Angriffspunkte', numeric: true },
+        { label: 'Ag-%', title: 'Angriffsquote', numeric: true },
+        { label: 'Block', title: 'Blockpunkte', numeric: true },
+        { label: 'Pkt.', title: 'Gesamtpunkte', numeric: true },
+        { label: 'Breakpkt.', title: 'Breakpunkte', numeric: true },
+        { label: '+/-', title: 'Plus/Minus', numeric: true },
+      ];
+
+      const table = document.createElement('table');
+      table.className = 'stats-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      columns.forEach(column => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) th.className = 'numeric';
+        if (column.title) th.title = column.title;
+        th.textContent = column.label;
+        headerRow.appendChild(th);
+      });
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      validPlayers.forEach(player => {
+        const totals = player && typeof player.totals === 'object' ? player.totals : {};
+        const matches = Array.isArray(player.matches) ? player.matches : [];
+        const matchCount = typeof player.match_count === 'number'
+          ? player.match_count
+          : matches.length;
+        const row = document.createElement('tr');
+        const jersey = player.jersey_number;
+        const values = [
+          { value: jersey === null || jersey === undefined || jersey === '' ? '–' : String(jersey), numeric: true },
+          { value: player.name || 'Unbekannt' },
+          { value: formatInt(matchCount), numeric: true },
+          { value: formatInt(totals.serves_attempts), numeric: true },
+          { value: formatInt(totals.serves_errors), numeric: true },
+          { value: formatInt(totals.serves_points), numeric: true },
+          { value: formatInt(totals.receptions_attempts), numeric: true },
+          { value: formatInt(totals.receptions_errors), numeric: true },
+          { value: formatPctOrDash(totals.receptions_positive_pct), numeric: true },
+          { value: formatPctOrDash(totals.receptions_perfect_pct), numeric: true },
+          { value: formatInt(totals.attacks_attempts), numeric: true },
+          { value: formatInt(totals.attacks_errors), numeric: true },
+          { value: formatInt(totals.attacks_blocked), numeric: true },
+          { value: formatInt(totals.attacks_points), numeric: true },
+          { value: formatPctOrDash(totals.attacks_success_pct), numeric: true },
+          { value: formatInt(totals.blocks_points), numeric: true },
+          { value: formatIntOrDash(player.total_points), numeric: true },
+          { value: formatIntOrDash(player.break_points_total), numeric: true },
+          { value: formatIntOrDash(player.plus_minus_total), numeric: true },
+        ];
+        values.forEach((entry, index) => {
+          const cell = document.createElement('td');
+          if (entry.numeric || (columns[index] && columns[index].numeric)) {
+            cell.className = 'numeric';
+          }
+          cell.textContent = entry.value;
+          row.appendChild(cell);
+        });
+        tbody.appendChild(row);
+      });
+      table.appendChild(tbody);
+      return table;
+    }
+
+    function renderPlayers(data) {
+      const container = document.querySelector('[data-player-list]');
+      const tableContainer = document.querySelector('[data-player-table-container]');
+      const metaNode = document.querySelector('[data-player-meta]');
+      const errorNode = document.querySelector('[data-error]');
+      container.innerHTML = '';
+      if (tableContainer) tableContainer.innerHTML = '';
+      if (errorNode) errorNode.hidden = true;
+      const players = Array.isArray(data.players) ? data.players : [];
+      if (metaNode) {
+        metaNode.textContent = players.length === 1 ? '1 Spielerin mit Statistikdaten.' : `${players.length} Spielerinnen mit Statistikdaten.`;
+      }
+      if (!players.length) {
+        if (tableContainer) {
+          tableContainer.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        }
+        container.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        return;
+      }
+      if (tableContainer) {
+        const table = buildPlayerSummaryTable(players);
+        if (table) {
+          tableContainer.appendChild(table);
+        } else {
+          tableContainer.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        }
+      }
+      for (const player of players) {
+        const card = document.createElement('details');
+        card.className = 'player-card';
+
+        const summary = document.createElement('summary');
+        summary.className = 'player-card__summary';
+        const title = document.createElement('h3');
+        const playerName = player && player.name ? player.name : 'Unbekannt';
+        title.textContent = player.jersey_number ? `#${player.jersey_number} ${playerName}` : playerName;
+        summary.appendChild(title);
+        card.appendChild(summary);
+
+        const content = document.createElement('div');
+        content.className = 'player-card__content';
+
+        const tableWrapper = document.createElement('div');
+        tableWrapper.className = 'player-card__table-wrapper';
+        const table = buildPlayerMatchesTable(player);
+        if (table) {
+          tableWrapper.appendChild(table);
+        } else {
+          tableWrapper.innerHTML = '<p class="empty-state">Keine Spiele verfügbar.</p>';
+        }
+        content.appendChild(tableWrapper);
+        card.appendChild(content);
+
+        container.appendChild(card);
+      }
+    }
+
+    function applyOverview(data) {
+      if (!data) return;
+      renderPlayers(data);
+      const note = document.querySelector('[data-update-note] span:last-child');
+      if (note && data.generated) {
+        note.textContent = `Aktualisiert am ${formatDateTime(data.generated)}`;
+      }
+    }
+
+    async function bootstrap() {
+      let hasData = false;
+      if (PRELOADED_OVERVIEW) {
+        applyOverview(PRELOADED_OVERVIEW);
+        hasData = true;
+      }
+      try {
+        const response = await fetch(OVERVIEW_PATH, { cache: 'no-store' });
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        const data = await response.json();
+        applyOverview(data);
+        hasData = true;
+      } catch (error) {
+        if (!hasData) {
+          const container = document.querySelector('[data-player-list]');
+          if (container) {
+            container.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+          }
+          const tableContainer = document.querySelector('[data-player-table-container]');
+          if (tableContainer) {
+            tableContainer.innerHTML = '<p class="empty-state">Die Scouting-Daten konnten nicht geladen werden.</p>';
+          }
+          const errorNode = document.querySelector('[data-error]');
+          if (errorNode) {
+            errorNode.hidden = false;
+            errorNode.textContent = `Fehler beim Laden: ${error instanceof Error ? error.message : String(error)}`;
+          }
+        } else {
+          console.error(error);
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', bootstrap);
+  </script>
+</body>
+</html><!-- Build ee41eac 2025-10-25T09:13:02Z -->
