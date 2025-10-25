@@ -1,5 +1,5 @@
 {
-  "generated": "2025-10-25T20:25:48.609042+00:00",
+  "generated": "2025-10-25T20:43:56.157892+00:00",
   "team": "ETV Hamburger Volksbank Volleys",
   "match_count": 2,
   "matches": [
@@ -503,9 +503,7 @@
             "attacks_success_pct": "0%",
             "blocks_points": 0,
             "receptions_positive": 0,
-            "receptions_perfect": 0,
-            "break_points": 0,
-            "plus_minus": 0
+            "receptions_perfect": 0
           },
           "total_points": 0,
           "break_points": 0,
@@ -547,9 +545,7 @@
             "attacks_success_pct": "0%",
             "blocks_points": 0,
             "receptions_positive": 0,
-            "receptions_perfect": 0,
-            "break_points": 0,
-            "plus_minus": 0
+            "receptions_perfect": 0
           },
           "total_points": 0,
           "break_points": 0,
@@ -618,9 +614,7 @@
             "attacks_success_pct": "0%",
             "blocks_points": 0,
             "receptions_positive": 0,
-            "receptions_perfect": 0,
-            "break_points": 0,
-            "plus_minus": 0
+            "receptions_perfect": 0
           },
           "total_points": 0,
           "break_points": 0,
