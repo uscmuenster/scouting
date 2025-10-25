@@ -5650,6 +5650,118 @@ def build_html_report(
       return match.metrics[key];
     }}
 
+    function buildPlayerSummaryTable(players) {{
+      const entries = Array.isArray(players)
+        ? players.filter(player => player && typeof player === 'object')
+        : [];
+      if (!entries.length) {{
+        return null;
+      }}
+
+      const columns = [
+        {{ label: '#', title: 'Rückennummer', numeric: true }},
+        {{ label: 'Spielerin', numeric: false }},
+        {{ label: 'Sp.', title: 'Spiele mit Statistikdaten', numeric: true }},
+        {{ label: 'Auf-Ges', title: 'Aufschlag-Versuche', numeric: true }},
+        {{ label: 'Auf-Fhl', title: 'Aufschlag-Fehler', numeric: true }},
+        {{ label: 'Auf-Pkt', title: 'Aufschlag-Asse', numeric: true }},
+        {{ label: 'An-Ges', title: 'Annahme-Versuche', numeric: true }},
+        {{ label: 'An-Fhl', title: 'Annahme-Fehler', numeric: true }},
+        {{ label: 'An-Pos%', title: 'Positive Annahmen', numeric: true }},
+        {{ label: 'An-Prf%', title: 'Perfekte Annahmen', numeric: true }},
+        {{ label: 'Ag-Ges', title: 'Angriffs-Versuche', numeric: true }},
+        {{ label: 'Ag-Fhl', title: 'Angriffs-Fehler', numeric: true }},
+        {{ label: 'Ag-Blo', title: 'Geblockte Angriffe', numeric: true }},
+        {{ label: 'Ag-Pkt', title: 'Angriffspunkte', numeric: true }},
+        {{ label: 'Ag-%', title: 'Angriffsquote', numeric: true }},
+        {{ label: 'Block', title: 'Blockpunkte', numeric: true }},
+        {{ label: 'Pkt.', title: 'Gesamtpunkte', numeric: true }},
+        {{ label: 'Breakpkt.', title: 'Breakpunkte', numeric: true }},
+        {{ label: '+/-', title: 'Plus/Minus', numeric: true }},
+      ];
+
+      const table = document.createElement('table');
+      table.className = 'stats-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      columns.forEach((column, index) => {{
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) {{
+          th.className = index >= 2 ? 'numeric-center' : 'numeric';
+        }}
+        if (column.title) {{
+          th.title = column.title;
+        }}
+        th.textContent = column.label;
+        headerRow.appendChild(th);
+      }});
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+
+      entries.forEach(player => {{
+        const totals = player && typeof player.totals === 'object' ? player.totals : null;
+        const matches = Array.isArray(player.matches)
+          ? player.matches.filter(match => match && typeof match === 'object')
+          : [];
+        let matchCount = matches.length;
+        if (player && typeof player.match_count === 'number' && Number.isFinite(player.match_count)) {{
+          matchCount = player.match_count;
+        }} else if (player && typeof player.match_count === 'string') {{
+          const parsed = Number(player.match_count);
+          if (Number.isFinite(parsed)) {{
+            matchCount = parsed;
+          }}
+        }}
+
+        const jersey = player ? player.jersey_number : null;
+        const jerseyLabel = jersey === null || jersey === undefined || jersey === ''
+          ? '–'
+          : String(jersey).trim();
+
+        const getTotal = key => (totals && key in totals ? totals[key] : null);
+
+        const cells = [
+          {{ value: jerseyLabel, numeric: true }},
+          {{ value: player && player.name ? String(player.name) : 'Unbekannt' }},
+          {{ value: formatInt(matchCount), numeric: true }},
+          {{ value: formatInt(getTotal('serves_attempts')), numeric: true }},
+          {{ value: formatInt(getTotal('serves_errors')), numeric: true }},
+          {{ value: formatInt(getTotal('serves_points')), numeric: true }},
+          {{ value: formatInt(getTotal('receptions_attempts')), numeric: true }},
+          {{ value: formatInt(getTotal('receptions_errors')), numeric: true }},
+          {{ value: formatPctOrDash(getTotal('receptions_positive_pct')), numeric: true }},
+          {{ value: formatPctOrDash(getTotal('receptions_perfect_pct')), numeric: true }},
+          {{ value: formatInt(getTotal('attacks_attempts')), numeric: true }},
+          {{ value: formatInt(getTotal('attacks_errors')), numeric: true }},
+          {{ value: formatInt(getTotal('attacks_blocked')), numeric: true }},
+          {{ value: formatInt(getTotal('attacks_points')), numeric: true }},
+          {{ value: formatPctOrDash(getTotal('attacks_success_pct')), numeric: true }},
+          {{ value: formatInt(getTotal('blocks_points')), numeric: true }},
+          {{ value: formatIntOrDash(player ? player.total_points : null), numeric: true }},
+          {{ value: formatIntOrDash(player ? player.break_points_total : null), numeric: true }},
+          {{ value: formatIntOrDash(player ? player.plus_minus_total : null), numeric: true }},
+        ];
+
+        const row = document.createElement('tr');
+        cells.forEach((cell, index) => {{
+          const td = document.createElement('td');
+          if (cell.numeric || (columns[index] && columns[index].numeric)) {{
+            td.className = index >= 2 ? 'numeric-center' : 'numeric';
+          }}
+          td.textContent = cell.value;
+          row.appendChild(td);
+        }});
+        tbody.appendChild(row);
+      }});
+
+      table.appendChild(tbody);
+      return table;
+    }}
+
     function buildPlayerMatchesTable(player) {{
       const matches = Array.isArray(player.matches)
         ? player.matches.filter(match => match && typeof match === 'object')
