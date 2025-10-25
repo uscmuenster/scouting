@@ -5372,6 +5372,12 @@ def build_html_report(
       min-width: 52rem;
     }}
 
+    .player-match-table th:nth-child(n+4),
+    .player-match-table td:nth-child(n+4) {{
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }}
+
 
     .empty-state {{
       margin: 0;
