@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
 Extrahiert Text aus allen PDF-Spielberichten in docs/data/stats_pdfs/.
-Funktioniert lokal und in GitHub Actions.
-Verwendet pdfminer (direkter Text) oder optimiertes OCR (Tesseract + Poppler) als Fallback.
+Funktioniert lokal und auf GitHub Actions.
+Verwendet pdfminer (direkter Text) oder optimiertes OCR (Tesseract + Poppler).
+Anschließend werden nur Buchstaben, Zahlen, Punkte und runde Klammern behalten.
 """
 
 from __future__ import annotations
 from pathlib import Path
+import re
 import logging
 from PIL import Image, ImageOps, ImageFilter
 
@@ -30,36 +32,42 @@ except ImportError:
 # 🧩 Bildvorverarbeitung für bessere OCR-Erkennung
 # ------------------------------------------------------------
 def _preprocess_image(img: Image.Image) -> Image.Image:
-    """
-    Verbessert Kontrast, Schärfe und Lesbarkeit für OCR.
-    Ideal für Tabellen mit feinen Linien und Zahlen.
-    """
+    """Verbessert Kontrast und Lesbarkeit für OCR."""
     img = img.convert("L")  # Graustufen
     img = ImageOps.autocontrast(img)
-    img = ImageOps.invert(img)  # Dunkle Schrift auf hellem Grund bevorzugen
+    img = ImageOps.invert(img)  # Dunkle Schrift auf hellem Grund
     img = img.filter(ImageFilter.SHARPEN)
     return img
+
+
+# ------------------------------------------------------------
+# 🧹 Textbereinigung: nur Zahlen, Buchstaben, Punkte, Klammern, Leerzeichen
+# ------------------------------------------------------------
+def clean_text(raw_text: str) -> str:
+    # Nur erlaubte Zeichen behalten
+    cleaned = re.sub(r"[^A-Za-zÄÖÜäöüß0-9()%. ]+", " ", raw_text)
+    # Mehrfache Leerzeichen reduzieren
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    # Zeilenumbrüche vereinheitlichen
+    cleaned = re.sub(r"\s*\n\s*", "\n", cleaned)
+    return cleaned.strip()
 
 
 # ------------------------------------------------------------
 # 🧠 Intelligente Textextraktion (Text oder OCR)
 # ------------------------------------------------------------
 def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
-    """
-    Liest Text aus PDF automatisch:
-    1. Versucht pdfminer (für "echten" Text)
-    2. Fällt auf OCR (Tesseract) zurück, wenn pdfminer leer bleibt
-    """
+    """Liest Text aus PDF automatisch (pdfminer oder OCR) und bereinigt ihn."""
     pdf_path = Path(pdf_path)
     text = ""
 
-    # 1️⃣ Versuch: pdfminer (für echte PDFs)
+    # 1️⃣ Versuch: pdfminer
     if pdfminer_extract:
         try:
             text = pdfminer_extract(pdf_path)
             if text and len(text.strip()) > 10:
                 print(f"✅ {pdf_path.name}: direkter Text extrahiert")
-                return text
+                return clean_text(text)
         except Exception as e:
             print(f"⚠️ pdfminer fehlgeschlagen ({pdf_path.name}): {e}")
 
@@ -68,8 +76,6 @@ def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
         try:
             print(f"📄 {pdf_path.name}: OCR-Fallback aktiviert (optimiert)")
             pages = convert_from_path(pdf_path, dpi=300)
-
-            # OCR-Konfiguration: besser für Tabellen
             custom_config = r"--oem 3 --psm 6 -c preserve_interword_spaces=1"
 
             text_parts = []
@@ -77,13 +83,12 @@ def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
                 img = _preprocess_image(page)
                 ocr_text = pytesseract.image_to_string(img, lang=lang, config=custom_config)
                 text_parts.append(ocr_text)
-                print(f"   🔸 Seite {i}: OCR erfolgreich ({len(ocr_text.split())} Wörter)")
+                print(f"   🔸 Seite {i}: OCR abgeschlossen ({len(ocr_text.split())} Wörter)")
 
-            return "\n\n".join(text_parts)
+            return clean_text("\n\n".join(text_parts))
         except Exception as e:
             print(f"⚠️ OCR fehlgeschlagen ({pdf_path.name}): {e}")
 
-    # 3️⃣ Nichts gefunden
     print(f"❌ {pdf_path.name}: keine Textextraktion möglich")
     return ""
 
@@ -92,7 +97,7 @@ def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
 # 🚀 Hauptlogik – verarbeitet alle PDFs
 # ------------------------------------------------------------
 def main() -> None:
-    # zwei Ebenen hoch, da Skript in Scouting/scripts liegt
+    # zwei Ebenen hoch (Scouting/scripts → root)
     root = Path(__file__).resolve().parents[2]
     pdf_dir = root / "docs" / "data" / "stats_pdfs"
     output_dir = root / "docs" / "data" / "stats_texts"
