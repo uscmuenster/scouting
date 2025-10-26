@@ -2660,6 +2660,7 @@ def _parse_compact_player_stats(
     ]
     if cleaned_parts:
         name_segment = " ".join(cleaned_parts)
+    name_segment = _clean_player_name_segment(name_segment)
     player_name = pretty_name(name_segment)
     total_points = _parse_int_token(value_tokens[0])
     break_points = _parse_int_token(value_tokens[1])
@@ -2723,12 +2724,47 @@ def _compute_percentage_count(attempts: int, pct: str) -> int:
     return int(round(attempts * (value / 100)))
 
 
+_STAFF_PREFIXES = (
+    "kotrainerin",
+    "kotrainer",
+    "co-trainerin",
+    "co-trainer",
+    "co trainerin",
+    "co trainer",
+)
+
+
+def _strip_staff_prefix(text: str) -> str:
+    lowered = text.lower()
+    for prefix in _STAFF_PREFIXES:
+        if lowered.startswith(prefix):
+            return text[len(prefix) :].lstrip(" .:-")
+    return text
+
+
+def _clean_player_name_segment(text: str) -> str:
+    tokens = text.split()
+    cleaned = [
+        token
+        for token in tokens
+        if not (len(token) == 1 and token.isalpha() and token.isupper())
+    ]
+    adjusted: List[str] = []
+    for token in cleaned:
+        if token.startswith("L") and len(token) > 1 and token[1:].isupper():
+            adjusted.append(token[1:])
+        else:
+            adjusted.append(token)
+    return " ".join(adjusted) if adjusted else text.strip()
+
+
 def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerStats]:
     cleaned = line.replace("\u00a0", " ").strip()
     if not cleaned:
         return None
     if cleaned.lower().startswith(("trainer", "team", "coaches")):
         return None
+    cleaned = _strip_staff_prefix(cleaned)
     jersey_match = re.match(r"^\s*(\d{1,3})", cleaned)
     jersey_number: Optional[int]
     name_segment: str
@@ -2754,6 +2790,7 @@ def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerS
     name_segment = rest[: first_value.start()].strip(" .:-")
     if not name_segment:
         return None
+    name_segment = _clean_player_name_segment(name_segment)
     player_name = pretty_name(name_segment)
     numeric_tokens = [match.group(0) for match in value_matches]
     metrics_count = 13
@@ -2993,6 +3030,35 @@ def _parse_team_player_lines(
     return players
 
 
+def _collect_candidate_player_lines(
+    lines: Sequence[str], *, start: int, end: int
+) -> List[str]:
+    collected: List[str] = []
+    limit = min(end, len(lines))
+    for idx in range(start, limit):
+        raw_line = lines[idx]
+        stripped = raw_line.strip()
+        if not stripped:
+            if collected:
+                break
+            continue
+        lowered = stripped.lower()
+        if lowered.startswith("libero"):
+            continue
+        if _is_player_totals_marker(stripped):
+            break
+        if lowered.startswith("satz"):
+            if collected:
+                break
+            continue
+        if not any(char.isalpha() for char in stripped):
+            if collected:
+                break
+            continue
+        collected.append(raw_line)
+    return collected
+
+
 def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     names: List[str] = []
     team_pattern = re.compile(r"(?:Spielbericht\s+)?(.+?)\s+\d+\s*$")
@@ -3098,13 +3164,20 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
             if marker_index < len(team_names)
             else f"Team {marker_index + 1}"
         )
-        player_lines: List[str] = []
-        start_index = header_entries[-1][0] + 1 if header_entries else 0
-        for idx in range(start_index, marker):
-            raw_line = lines[idx].strip()
-            if not raw_line or raw_line.lower().startswith("libero"):
-                continue
-            player_lines.append(lines[idx])
+        player_lines = _collect_candidate_player_lines(
+            lines, start=header_entries[-1][0] + 1 if header_entries else 0, end=marker
+        )
+        next_marker = (
+            markers[marker_index + 1] if marker_index + 1 < len(markers) else len(lines)
+        )
+        trailing_lines = _collect_candidate_player_lines(
+            lines, start=marker + 1, end=next_marker
+        )
+        if player_lines:
+            if trailing_lines:
+                player_lines.extend(trailing_lines)
+        else:
+            player_lines = trailing_lines
         players = _parse_team_player_lines(player_lines, team_name)
         summaries.append(
             MatchStatsTotals(
@@ -3211,14 +3284,16 @@ def fetch_match_stats_totals(
             match_idx = index_lookup.get(normalized_team)
             if match_idx is not None:
                 matched_indices.add(match_idx)
-                _, _, metrics, players = manual_entries[match_idx]
+                _, _, manual_metrics, manual_players = manual_entries[match_idx]
+                metrics = entry.metrics or manual_metrics
+                players = entry.players or manual_players
                 updated.append(
                     MatchStatsTotals(
                         team_name=entry.team_name,
                         header_lines=entry.header_lines,
                         totals_line=entry.totals_line,
                         metrics=metrics,
-                        players=players or entry.players,
+                        players=players,
                     )
                 )
             else:

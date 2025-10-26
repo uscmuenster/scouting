@@ -1,8 +1,16 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
+from scripts import report as report_module
 from scripts.report import (
+    MatchPlayerStats,
+    MatchStatsMetrics,
+    MatchStatsTotals,
     _parse_player_stats_line,
+    _parse_stats_totals_pdf,
     _parse_team_player_lines,
+    fetch_match_stats_totals,
 )
 
 
@@ -137,3 +145,130 @@ def test_split_player_line_candidates_handles_prefixed_role_markers() -> None:
     assert schaefer.jersey_number == 2
     assert schaefer.total_points == 0
     assert schaefer.metrics.serves_attempts == 0
+
+
+def test_parse_stats_totals_pdf_handles_players_after_totals_marker(monkeypatch) -> None:
+    lines = [
+        "Team B 2",
+        "Satz Punkte Aufschlag Annahme Angriff Bk",
+        "Spieler insgesamt",
+        "Trainer",
+        "Kotrainer 1LMolenaar Pippa   .   .  -2   .   . .  30   2  27% ( 13%)   .   .   . .  . .",
+        " 2LSchaefer Lara-Marie   .   .   .   .   . .   .   .   .   .   .   .   . .  . .",
+        " 3 Spöler Esther 55555**  10   6 +7  19   2 1   1   . 100%   .  17   .   1 7 41% 2",
+        " 75 33+23105 1914 88 15 30% ( 15%)132 10  852 39%9",
+    ]
+    text = "\n".join(lines)
+
+    class DummyPage:
+        def extract_text(self) -> str:
+            return text
+
+    class DummyReader:
+        def __init__(self, _data: object) -> None:
+            self.pages = [DummyPage()]
+
+    monkeypatch.setattr(report_module, "PdfReader", DummyReader)
+
+    summaries = _parse_stats_totals_pdf(b"dummy")
+    assert len(summaries) == 1
+
+    summary = summaries[0]
+    names = {player.player_name for player in summary.players}
+    assert "Molenaar Pippa" in names
+
+    molenaar = next(
+        player for player in summary.players if player.player_name == "Molenaar Pippa"
+    )
+    assert molenaar.metrics.serves_attempts == 0
+
+
+def test_fetch_match_stats_totals_prefers_parsed_player_metrics(monkeypatch, tmp_path) -> None:
+    stats_url = "https://example.com/sample.pdf"
+
+    parsed_metrics = MatchStatsMetrics(
+        serves_attempts=0,
+        serves_errors=0,
+        serves_points=0,
+        receptions_attempts=30,
+        receptions_errors=2,
+        receptions_positive_pct="27%",
+        receptions_perfect_pct="13%",
+        attacks_attempts=0,
+        attacks_errors=0,
+        attacks_blocked=0,
+        attacks_points=0,
+        attacks_success_pct="0%",
+        blocks_points=0,
+        receptions_positive=8,
+        receptions_perfect=4,
+    )
+
+    parsed_player = MatchPlayerStats(
+        team_name="USC Münster",
+        player_name="MOLENAAR Pippa",
+        jersey_number=1,
+        metrics=parsed_metrics,
+        total_points=0,
+        break_points=0,
+        plus_minus=2,
+    )
+
+    parsed_summary = MatchStatsTotals(
+        team_name="USC Münster",
+        header_lines=(),
+        totals_line="",
+        metrics=parsed_metrics,
+        players=(parsed_player,),
+    )
+
+    manual_metrics = replace(parsed_metrics, serves_attempts=1)
+    manual_player = MatchPlayerStats(
+        team_name="USC Münster",
+        player_name="MOLENAAR Pippa",
+        jersey_number=1,
+        metrics=manual_metrics,
+        total_points=0,
+        break_points=0,
+        plus_minus=2,
+    )
+
+    manual_entries = {
+        stats_url: [
+            (
+                ("usc munster",),
+                "USC Münster",
+                manual_metrics,
+                (manual_player,),
+            )
+        ]
+    }
+
+    monkeypatch.setattr(report_module, "_STATS_TOTALS_CACHE", {})
+    monkeypatch.setattr(report_module, "_MANUAL_STATS_TOTALS", None)
+    monkeypatch.setattr(
+        report_module,
+        "_load_manual_stats_totals",
+        lambda: manual_entries,
+    )
+
+    cache_path = tmp_path / "cache.pdf"
+    cache_path.write_bytes(b"dummy")
+
+    monkeypatch.setattr(
+        report_module,
+        "resolve_stats_pdf_cache_path",
+        lambda _url: cache_path,
+    )
+    monkeypatch.setattr(
+        report_module,
+        "_parse_stats_totals_pdf",
+        lambda _data: (parsed_summary,),
+    )
+
+    summaries = fetch_match_stats_totals(stats_url)
+    assert len(summaries) == 1
+
+    summary = summaries[0]
+    assert summary.players[0].metrics.serves_attempts == 0
+    assert summary.players[0].player_name == "MOLENAAR Pippa"

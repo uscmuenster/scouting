@@ -39,9 +39,9 @@ def test_build_stats_overview_offline(monkeypatch, tmp_path) -> None:
     players_by_name = {player["name"]: player for player in payload["players"]}
     ford_matches = players_by_name["FORD Brianna"]["matches"]
     ford_schwerin = next(entry for entry in ford_matches if entry["stats_url"] == schwerin_url)
-    assert ford_schwerin["metrics"]["attacks_points"] == 17
-    assert ford_schwerin["metrics"]["serves_points"] == 4
-    assert ford_schwerin["total_points"] == 24
+    assert ford_schwerin["metrics"]["attacks_points"] == 14
+    assert ford_schwerin["metrics"]["serves_points"] == 5
+    assert ford_schwerin["total_points"] == 19
 
 
 def test_build_stats_overview_for_other_team(monkeypatch, tmp_path) -> None:
@@ -59,7 +59,7 @@ def test_build_stats_overview_for_other_team(monkeypatch, tmp_path) -> None:
     assert output_path.exists()
     assert payload["team"] == "SSC Palmberg Schwerin"
     assert payload["match_count"] == 1
-    assert payload["player_count"] == 0
+    assert payload["player_count"] == 14
 
     match = payload["matches"][0]
     assert match["opponent"] == "USC Münster"
@@ -127,17 +127,17 @@ def test_build_stats_overview_for_hamburg_includes_players(monkeypatch, tmp_path
     assert payload["player_count"] > 0
 
     players_by_name = {player["name"]: player for player in payload["players"]}
-    assert "FROBEL Svea" in players_by_name
+    assert "Frobel Svea" in players_by_name
 
     frobel_matches = {
-        entry["stats_url"]: entry for entry in players_by_name["FROBEL Svea"]["matches"]
+        entry["stats_url"]: entry for entry in players_by_name["Frobel Svea"]["matches"]
     }
 
     assert schwerin_url in frobel_matches
     assert stuttgart_url in frobel_matches
 
-    assert frobel_matches[schwerin_url]["metrics"]["attacks_points"] == 6
-    assert frobel_matches[stuttgart_url]["metrics"]["attacks_points"] == 7
+    assert frobel_matches[schwerin_url]["metrics"]["attacks_points"] == 9
+    assert frobel_matches[stuttgart_url]["metrics"]["attacks_points"] == 10
 
 
 def test_build_league_stats_overview(monkeypatch, tmp_path) -> None:
