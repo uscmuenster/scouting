@@ -146,14 +146,6 @@ class AggregatedMetrics:
         return asdict(self)
 
 
-def _normalized_team_identifier(name: str) -> str:
-    normalized = normalize_name(name)
-    canonical = TEAM_CANONICAL_LOOKUP.get(normalized)
-    if canonical:
-        normalized = normalize_name(canonical)
-    return normalized
-
-
 def _ensure_path(path: Optional[Path | str]) -> Optional[Path]:
     if path is None or isinstance(path, Path):
         return path
@@ -283,7 +275,8 @@ def collect_team_match_stats(
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
 ) -> List[USCMatchStatsEntry]:
     lookup = stats_lookup or collect_match_stats_totals(matches)
-    focus_identifier = _normalized_team_identifier(focus_team)
+    focus_label = _resolve_focus_team_label(focus_team)
+    focus_normalized = normalize_name(focus_label)
     entries: List[USCMatchStatsEntry] = []
     for match in matches:
         if not match.is_finished or not match.stats_url:
@@ -293,7 +286,7 @@ def collect_team_match_stats(
             continue
         focus_summary: Optional[MatchStatsTotals] = None
         for summary in summaries:
-            if _normalized_team_identifier(summary.team_name) == focus_identifier:
+            if normalize_name(summary.team_name) == focus_normalized:
                 focus_summary = summary
                 break
         if focus_summary is None:
@@ -301,7 +294,7 @@ def collect_team_match_stats(
         metrics = resolve_match_stats_metrics(focus_summary)
         if metrics is None:
             continue
-        is_home = _normalized_team_identifier(match.home_team) == focus_identifier
+        is_home = normalize_name(match.home_team) == focus_normalized
         opponent_raw = match.away_team if is_home else match.home_team
         opponent_pretty = pretty_name(opponent_raw)
         opponent_short = get_team_short_label(opponent_pretty)
@@ -326,7 +319,8 @@ def collect_team_player_stats(
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
 ) -> List[USCPlayerMatchEntry]:
     lookup = stats_lookup or collect_match_stats_totals(matches)
-    focus_identifier = _normalized_team_identifier(focus_team)
+    focus_label = _resolve_focus_team_label(focus_team)
+    focus_normalized = normalize_name(focus_label)
     entries: List[USCPlayerMatchEntry] = []
     for match in matches:
         if not match.is_finished or not match.stats_url:
@@ -336,12 +330,12 @@ def collect_team_player_stats(
             continue
         focus_summary: Optional[MatchStatsTotals] = None
         for summary in summaries:
-            if _normalized_team_identifier(summary.team_name) == focus_identifier:
+            if normalize_name(summary.team_name) == focus_normalized:
                 focus_summary = summary
                 break
         if focus_summary is None:
             continue
-        is_home = _normalized_team_identifier(match.home_team) == focus_identifier
+        is_home = normalize_name(match.home_team) == focus_normalized
         opponent_raw = match.away_team if is_home else match.home_team
         opponent = pretty_name(opponent_raw)
         opponent_short = get_team_short_label(opponent)
@@ -446,12 +440,12 @@ def _build_stats_payload(
     focus_label = _resolve_focus_team_label(focus_team)
     usc_entries = collect_team_match_stats(
         matches,
-        focus_team=focus_label,
+        focus_team=focus_team,
         stats_lookup=stats_lookup,
     )
     player_entries = collect_team_player_stats(
         matches,
-        focus_team=focus_label,
+        focus_team=focus_team,
         stats_lookup=stats_lookup,
     )
     metrics_list = [entry.metrics for entry in usc_entries]
