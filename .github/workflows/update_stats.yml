@@ -1,0 +1,43 @@
+name: 🏐 Extract PDF Stats
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "15 5 * * *"  # täglich um 05:15 Uhr
+
+permissions:
+  contents: write
+
+jobs:
+  extract-pdfs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧩 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: 📦 Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pdfminer.six pytesseract pdf2image pillow
+
+      - name: 🧰 Install OCR system tools
+        continue-on-error: true
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils tesseract-ocr tesseract-ocr-deu
+
+      - name: ⚙️ Extract text from PDF reports
+        run: python stats.py
+
+      - name: 🪶 Commit and push extracted texts
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update extracted PDF texts"
+          file_pattern: "docs/data/stats_texts/*.txt"
+          branch: main
