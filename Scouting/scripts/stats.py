@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """
 Extrahiert Text aus allen PDF-Spielberichten in docs/data/stats_pdfs/.
-Funktioniert lokal und auf GitHub Actions.
+Funktioniert lokal und in GitHub Actions.
 Verwendet pdfminer (direkter Text) oder OCR (Tesseract + Poppler) als Fallback.
 """
 
 from __future__ import annotations
-import sys
 from pathlib import Path
 import logging
 
 # ------------------------------------------------------------
-# 🧩 Robuste PDF-Textextraktion (integriert)
+# 🧩 Robuste PDF-Textextraktion
 # ------------------------------------------------------------
 try:
     from pdfminer.high_level import extract_text as pdfminer_extract
@@ -56,10 +55,11 @@ def extract_text_auto(pdf_path: str | Path, lang: str = "deu") -> str:
 
 
 # ------------------------------------------------------------
-# 🚀 Hauptlogik – Ordner verarbeiten
+# 🚀 Hauptlogik – PDFs in docs/data/stats_pdfs verarbeiten
 # ------------------------------------------------------------
 def main() -> None:
-    root = Path(__file__).resolve().parents[1]  # → "Scouting/"
+    # zwei Ebenen hoch: /home/runner/work/scouting/scouting/
+    root = Path(__file__).resolve().parents[2]
     pdf_dir = root / "docs" / "data" / "stats_pdfs"
     output_dir = root / "docs" / "data" / "stats_texts"
 
