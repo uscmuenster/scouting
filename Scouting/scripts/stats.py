@@ -12,6 +12,7 @@ import requests
 
 from .report import (
     DEFAULT_SCHEDULE_URL,
+    RosterMember,
     Match,
     MatchResult,
     MatchPlayerStats,
@@ -21,6 +22,7 @@ from .report import (
     TEAM_CANONICAL_LOOKUP,
     USC_CANONICAL_NAME,
     MANUAL_SCHEDULE_PATH,
+    collect_team_roster,
     collect_match_stats_totals,
     enrich_matches,
     fetch_schedule,
@@ -40,7 +42,12 @@ STATS_OUTPUT_PATH = DEFAULT_OUTPUT_PATH
 HAMBURG_CANONICAL_NAME = "ETV Hamburger Volksbank Volleys"
 HAMBURG_OUTPUT_PATH = Path("docs/data/hamburg_stats_overview.json")
 
+AACHEN_CANONICAL_NAME = "Ladies in Black Aachen"
+AACHEN_OUTPUT_PATH = Path("docs/data/aachen_stats_overview.json")
+
 LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
+
+DEFAULT_ROSTER_DIR = Path("docs/data/rosters")
 
 
 @dataclass(frozen=True)
@@ -466,12 +473,32 @@ def _prepare_matches_and_lookup(
     return matches, stats_lookup
 
 
+def _normalize_roster_member_name(member: RosterMember) -> str:
+    return normalize_name(pretty_name(member.name))
+
+
+def _load_focus_roster(
+    focus_team: str,
+    *,
+    roster_directory: Optional[Path] = None,
+) -> Tuple[RosterMember, ...]:
+    directory = _ensure_path(roster_directory) or DEFAULT_ROSTER_DIR
+    try:
+        roster = collect_team_roster(focus_team, directory)
+    except requests.RequestException:
+        return ()
+    except (OSError, ValueError):
+        return ()
+    return tuple(roster)
+
+
 def _build_stats_payload(
     matches: Sequence[Match],
     *,
     focus_team: str,
     stats_lookup: Mapping[str, Sequence[MatchStatsTotals]],
     generated_at: Optional[datetime] = None,
+    focus_roster: Optional[Sequence[RosterMember]] = None,
 ) -> Dict[str, object]:
     focus_label = _resolve_focus_team_label(focus_team)
     usc_entries = collect_team_match_stats(
@@ -493,6 +520,30 @@ def _build_stats_payload(
         normalized_player = normalize_name(entry.player_name)
         player_groups.setdefault(normalized_player, []).append(entry)
         player_name_variants.setdefault(normalized_player, []).append(entry.player_name)
+
+    allowed_players: Optional[Set[str]] = None
+    if focus_roster:
+        roster_names = {
+            _normalize_roster_member_name(member)
+            for member in focus_roster
+            if not member.is_official and member.name
+        }
+        roster_names.discard("")
+        if roster_names:
+            allowed_players = roster_names
+
+    if allowed_players:
+        filtered_groups = {
+            key: value
+            for key, value in player_groups.items()
+            if key in allowed_players
+        }
+        if filtered_groups:
+            player_groups = filtered_groups
+            player_name_variants = {
+                key: player_name_variants[key]
+                for key in filtered_groups
+            }
 
     players_payload: List[Dict[str, object]] = []
     for normalized_player, entries_list in player_groups.items():
@@ -561,8 +612,10 @@ def build_stats_overview(
     output_path: Optional[Path] = None,
     focus_team: str = USC_CANONICAL_NAME,
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
+    roster_directory: Optional[Path | str] = None,
 ) -> Dict[str, object]:
     output_path = _ensure_path(output_path)
+    roster_directory = _ensure_path(roster_directory)
 
     matches, stats_lookup = _prepare_matches_and_lookup(
         matches,
@@ -576,6 +629,10 @@ def build_stats_overview(
         matches,
         focus_team=focus_team,
         stats_lookup=stats_lookup,
+        focus_roster=_load_focus_roster(
+            focus_team,
+            roster_directory=roster_directory,
+        ),
     )
 
     if output_path is None:
@@ -618,8 +675,21 @@ def build_league_stats_overview(
     output_path: Optional[Path] = None,
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
     team_names: Optional[Sequence[str]] = None,
+    roster_directory: Optional[Path | str] = None,
 ) -> Dict[str, object]:
     output_path = _ensure_path(output_path)
+    roster_directory = _ensure_path(roster_directory)
+
+    roster_cache: Dict[str, Tuple[RosterMember, ...]] = {}
+
+    def _get_roster(team_name: str) -> Tuple[RosterMember, ...]:
+        key = normalize_name(team_name)
+        if key not in roster_cache:
+            roster_cache[key] = _load_focus_roster(
+                team_name,
+                roster_directory=roster_directory,
+            )
+        return roster_cache[key]
 
     matches, stats_lookup = _prepare_matches_and_lookup(
         matches,
@@ -638,6 +708,7 @@ def build_league_stats_overview(
             focus_team=team_name,
             stats_lookup=stats_lookup,
             generated_at=generated_at,
+            focus_roster=_get_roster(team_name),
         )
         for team_name in league_team_names
     ]
@@ -694,6 +765,8 @@ __all__ = [
     "AggregatedMetrics",
     "DEFAULT_OUTPUT_PATH",
     "STATS_OUTPUT_PATH",
+    "AACHEN_CANONICAL_NAME",
+    "AACHEN_OUTPUT_PATH",
     "HAMBURG_CANONICAL_NAME",
     "HAMBURG_OUTPUT_PATH",
     "LEAGUE_STATS_OUTPUT_PATH",

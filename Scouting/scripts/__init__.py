@@ -36,6 +36,8 @@ from .report import (
 from .stats import (
     AggregatedMetrics,
     DEFAULT_OUTPUT_PATH as STATS_OUTPUT_PATH,
+    AACHEN_CANONICAL_NAME,
+    AACHEN_OUTPUT_PATH,
     HAMBURG_CANONICAL_NAME,
     HAMBURG_OUTPUT_PATH,
     LEAGUE_STATS_OUTPUT_PATH,
@@ -79,6 +81,8 @@ __all__ = [
     "STATS_PDF_CACHE_DIR",
     "AggregatedMetrics",
     "STATS_OUTPUT_PATH",
+    "AACHEN_CANONICAL_NAME",
+    "AACHEN_OUTPUT_PATH",
     "HAMBURG_CANONICAL_NAME",
     "HAMBURG_OUTPUT_PATH",
     "LEAGUE_STATS_OUTPUT_PATH",

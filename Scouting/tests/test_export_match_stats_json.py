@@ -38,24 +38,52 @@ def test_export_match_stats_offline(monkeypatch, tmp_path) -> None:
     assert stuttgart["player_count"] == len(stuttgart["players"]) > 0
 
     stuttgart_players = {player["name"]: player for player in stuttgart["players"]}
-    assert "STAUTZ Antonia" in stuttgart_players
-    stautz = stuttgart_players["STAUTZ Antonia"]
-    assert stautz["metrics"]["attacks_points"] == 11
-    assert stautz["metrics"]["serves_attempts"] == 17
-    assert stautz["metrics"]["receptions_positive"] == 7
+    assert "Stautz Antonia" in stuttgart_players
+    stautz = stuttgart_players["Stautz Antonia"]
+    assert stautz["metrics"]["attacks_points"] == 2
+    assert stautz["metrics"]["serves_attempts"] == 10
+    assert stautz["metrics"]["receptions_positive"] == 6
 
-    varela = stuttgart_players["VARELA Lucia"]
-    assert varela["metrics"]["receptions_attempts"] == 18
-    assert varela["metrics"]["receptions_perfect"] == 6
-    assert varela["plus_minus"] == 6
+    varela = stuttgart_players["Varela Lucia"]
+    assert varela["metrics"]["receptions_attempts"] == 0
+    assert varela["metrics"]["receptions_perfect"] == 0
+    assert varela["plus_minus"] == 8
 
     hamburg = teams["ETV Hamburger Volksbank Volleys"]
     assert hamburg["reception"]["attempts"] == 67
     assert hamburg["attack"]["points"] == 28
-    assert hamburg["player_count"] == len(hamburg["players"]) == 9
+    assert hamburg["player_count"] == len(hamburg["players"]) == 14
 
     players = {player["name"]: player for player in hamburg["players"]}
-    assert "MEISER Jana-Marie" in players
-    meiser = players["MEISER Jana-Marie"]
-    assert meiser["metrics"]["receptions_attempts"] == 23
+    assert "Meiser Jana-Marie" in players
+    meiser = players["Meiser Jana-Marie"]
+    assert meiser["metrics"]["receptions_attempts"] == 21
     assert meiser["metrics"]["receptions_errors"] == 3
+
+
+def test_export_match_stats_uses_player_fallback(monkeypatch, tmp_path) -> None:
+    def offline_http_get(*args, **kwargs):
+        raise requests.RequestException("offline")
+
+    monkeypatch.setattr(report, "_http_get", offline_http_get)
+
+    stats_url = "https://www.volleyball-bundesliga.de/uploads/70911979-1c77-4379-a3c6-2307f6da95f7"
+    output_path = tmp_path / "aachen_vs_wiesbaden.json"
+
+    payload = export_match_stats(stats_url, output_path=output_path)
+
+    assert output_path.exists()
+    assert payload["stats_url"] == stats_url
+
+    teams = {entry["team"]: entry for entry in payload["teams"]}
+    assert "Ladies in Black Aachen" in teams
+    assert "VC Wiesbaden" in teams
+
+    aachen = teams["Ladies in Black Aachen"]
+    assert aachen["serve"]["attempts"] == 108
+    assert aachen["attack"]["points"] == 61
+    assert aachen["block"]["points"] == 11
+
+    wiesbaden = teams["VC Wiesbaden"]
+    assert wiesbaden["serve"]["attempts"] == 109
+    assert wiesbaden["attack"]["points"] == 57

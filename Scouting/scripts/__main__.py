@@ -15,6 +15,8 @@ from .report import (
     load_schedule_from_file,
 )
 from .stats import (
+    AACHEN_CANONICAL_NAME,
+    AACHEN_OUTPUT_PATH,
     HAMBURG_CANONICAL_NAME,
     HAMBURG_OUTPUT_PATH,
     LEAGUE_STATS_OUTPUT_PATH,
@@ -114,6 +116,16 @@ def main() -> int:
         stats_lookup=stats_lookup,
     )
 
+    aachen_stats_payload = build_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=AACHEN_OUTPUT_PATH,
+        focus_team=AACHEN_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
+    )
+
     print(
         "USC scouting overview updated:",
         f"{stats_payload['match_count']} matches processed -> {args.data_output}",
@@ -122,6 +134,11 @@ def main() -> int:
     print(
         "Hamburg scouting overview updated:",
         f"{hamburg_stats_payload['match_count']} matches processed -> {HAMBURG_OUTPUT_PATH}",
+    )
+
+    print(
+        "Aachen scouting overview updated:",
+        f"{aachen_stats_payload['match_count']} matches processed -> {AACHEN_OUTPUT_PATH}",
     )
 
     league_payload = build_league_stats_overview(
@@ -145,6 +162,7 @@ def main() -> int:
         generated_at=datetime.now(tz=BERLIN_TZ),
         usc_scouting=stats_payload,
         hamburg_scouting=hamburg_stats_payload,
+        aachen_scouting=aachen_stats_payload,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
