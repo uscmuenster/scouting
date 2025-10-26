@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -492,13 +493,48 @@ def _build_stats_payload(
 
     player_groups: Dict[str, List[USCPlayerMatchEntry]] = {}
     player_name_variants: Dict[str, List[str]] = {}
+    player_jersey_numbers: Dict[str, List[int]] = {}
+    jersey_to_key: Dict[int, str] = {}
+    name_to_key: Dict[str, str] = {}
+    unknown_counter = 0
+
+    def resolve_player_key(normalized_name: str, jersey: Optional[int]) -> str:
+        nonlocal unknown_counter
+        if jersey is not None:
+            existing_for_jersey = jersey_to_key.get(jersey)
+            if existing_for_jersey:
+                if normalized_name:
+                    name_to_key.setdefault(normalized_name, existing_for_jersey)
+                return existing_for_jersey
+        if normalized_name:
+            existing_for_name = name_to_key.get(normalized_name)
+            if existing_for_name:
+                if jersey is not None:
+                    jersey_to_key.setdefault(jersey, existing_for_name)
+                return existing_for_name
+        if normalized_name:
+            key = normalized_name
+        elif jersey is not None:
+            key = f"#{jersey}"
+        else:
+            key = f"unknown-{unknown_counter}"
+            unknown_counter += 1
+        if normalized_name:
+            name_to_key.setdefault(normalized_name, key)
+        if jersey is not None:
+            jersey_to_key.setdefault(jersey, key)
+        return key
+
     for entry in player_entries:
         normalized_player = normalize_name(entry.player_name)
-        player_groups.setdefault(normalized_player, []).append(entry)
-        player_name_variants.setdefault(normalized_player, []).append(entry.player_name)
+        player_key = resolve_player_key(normalized_player, entry.jersey_number)
+        player_groups.setdefault(player_key, []).append(entry)
+        player_name_variants.setdefault(player_key, []).append(entry.player_name)
+        if entry.jersey_number is not None:
+            player_jersey_numbers.setdefault(player_key, []).append(entry.jersey_number)
 
     players_payload: List[Dict[str, object]] = []
-    for normalized_player, entries_list in player_groups.items():
+    for player_key, entries_list in player_groups.items():
         entries_list.sort(key=lambda item: item.match.kickoff)
         player_metrics = [item.metrics for item in entries_list]
         player_totals = summarize_metrics(player_metrics)
@@ -511,8 +547,13 @@ def _build_stats_payload(
         plus_minus_values = [
             item.plus_minus for item in entries_list if item.plus_minus is not None
         ]
-        jersey_number = entries_list[0].jersey_number
-        name_variants = player_name_variants.get(normalized_player, [])
+        jersey_candidates = player_jersey_numbers.get(player_key, [])
+        jersey_number: Optional[int] = None
+        if jersey_candidates:
+            jersey_number = Counter(jersey_candidates).most_common(1)[0][0]
+        if jersey_number is None:
+            jersey_number = entries_list[0].jersey_number
+        name_variants = player_name_variants.get(player_key, [])
         display_name = _select_player_display_name(name_variants)
         players_payload.append(
             {
