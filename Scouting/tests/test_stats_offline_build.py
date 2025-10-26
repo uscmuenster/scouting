@@ -219,6 +219,149 @@ def test_build_stats_overview_for_aachen_includes_players(monkeypatch, tmp_path)
     assert wiesbaden_url in jebens_matches
     assert stuttgart_url in jebens_matches
 
+
+def test_build_stats_payload_filters_players_with_roster(monkeypatch) -> None:
+    match = report.Match(
+        kickoff=datetime(2025, 10, 1, 18, 0, tzinfo=timezone.utc),
+        home_team="Focus Team",
+        away_team="Opponent Team",
+        host="Focus Team",
+        location="Arena",
+        result=report.MatchResult(
+            score="3:0",
+            total_points="75:50",
+            sets=("25:18", "25:16", "25:16"),
+        ),
+        match_number="3001",
+        match_id="999",
+        info_url=None,
+        stats_url="https://example.com/stats.pdf",
+        scoresheet_url=None,
+        attendance=None,
+    )
+
+    match_metrics = report.MatchStatsMetrics(
+        serves_attempts=60,
+        serves_errors=5,
+        serves_points=8,
+        receptions_attempts=40,
+        receptions_errors=6,
+        receptions_positive_pct="45%",
+        receptions_perfect_pct="18%",
+        attacks_attempts=120,
+        attacks_errors=12,
+        attacks_blocked=6,
+        attacks_points=52,
+        attacks_success_pct="43%",
+        blocks_points=11,
+        receptions_positive=18,
+        receptions_perfect=7,
+    )
+
+    match_entry = stats_module.USCMatchStatsEntry(
+        match=match,
+        opponent="Opponent Team",
+        opponent_short="Opponent",
+        is_home=True,
+        metrics=match_metrics,
+    )
+
+    focus_metrics = report.MatchStatsMetrics(
+        serves_attempts=20,
+        serves_errors=2,
+        serves_points=4,
+        receptions_attempts=10,
+        receptions_errors=1,
+        receptions_positive_pct="60%",
+        receptions_perfect_pct="30%",
+        attacks_attempts=30,
+        attacks_errors=3,
+        attacks_blocked=1,
+        attacks_points=15,
+        attacks_success_pct="50%",
+        blocks_points=2,
+        receptions_positive=6,
+        receptions_perfect=3,
+    )
+
+    stray_metrics = report.MatchStatsMetrics(
+        serves_attempts=15,
+        serves_errors=1,
+        serves_points=3,
+        receptions_attempts=5,
+        receptions_errors=2,
+        receptions_positive_pct="20%",
+        receptions_perfect_pct="10%",
+        attacks_attempts=18,
+        attacks_errors=5,
+        attacks_blocked=2,
+        attacks_points=6,
+        attacks_success_pct="33%",
+        blocks_points=1,
+        receptions_positive=1,
+        receptions_perfect=0,
+    )
+
+    focus_entry = stats_module.USCPlayerMatchEntry(
+        player_name="Focus Player",
+        jersey_number=7,
+        match=match,
+        opponent="Opponent Team",
+        opponent_short="Opponent",
+        is_home=True,
+        metrics=focus_metrics,
+        total_points=19,
+        break_points=5,
+        plus_minus=12,
+    )
+
+    stray_entry = stats_module.USCPlayerMatchEntry(
+        player_name="Opponent Player",
+        jersey_number=11,
+        match=match,
+        opponent="Opponent Team",
+        opponent_short="Opponent",
+        is_home=True,
+        metrics=stray_metrics,
+        total_points=9,
+        break_points=2,
+        plus_minus=1,
+    )
+
+    monkeypatch.setattr(
+        stats_module,
+        "collect_team_match_stats",
+        lambda *args, **kwargs: [match_entry],
+    )
+    monkeypatch.setattr(
+        stats_module,
+        "collect_team_player_stats",
+        lambda *args, **kwargs: [focus_entry, stray_entry],
+    )
+
+    roster_member = report.RosterMember(
+        number_label="7",
+        number_value=7,
+        name="Focus Player",
+        role="",
+        is_official=False,
+        height=None,
+        birthdate_label=None,
+        nationality=None,
+    )
+
+    payload = stats_module._build_stats_payload(
+        matches=[match],
+        focus_team="Focus Team",
+        stats_lookup={},
+        focus_roster=(roster_member,),
+        generated_at=datetime(2025, 10, 2, 12, 0, tzinfo=timezone.utc),
+    )
+
+    player_names = {player["name"] for player in payload["players"]}
+    assert player_names == {"Focus Player"}
+
+
 def test_build_league_stats_overview(monkeypatch, tmp_path) -> None:
     def offline_http_get(*args, **kwargs):
         raise requests.RequestException("offline")
