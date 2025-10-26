@@ -40,6 +40,9 @@ STATS_OUTPUT_PATH = DEFAULT_OUTPUT_PATH
 HAMBURG_CANONICAL_NAME = "ETV Hamburger Volksbank Volleys"
 HAMBURG_OUTPUT_PATH = Path("docs/data/hamburg_stats_overview.json")
 
+AACHEN_CANONICAL_NAME = "Ladies in Black Aachen"
+AACHEN_OUTPUT_PATH = Path("docs/data/aachen_stats_overview.json")
+
 LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
 
 
@@ -694,6 +697,8 @@ __all__ = [
     "AggregatedMetrics",
     "DEFAULT_OUTPUT_PATH",
     "STATS_OUTPUT_PATH",
+    "AACHEN_CANONICAL_NAME",
+    "AACHEN_OUTPUT_PATH",
     "HAMBURG_CANONICAL_NAME",
     "HAMBURG_OUTPUT_PATH",
     "LEAGUE_STATS_OUTPUT_PATH",
