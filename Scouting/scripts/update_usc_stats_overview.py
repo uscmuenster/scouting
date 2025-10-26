@@ -59,6 +59,13 @@ def build_parser() -> argparse.ArgumentParser:
             "Zielpfad für die Liga-JSON-Datei mit allen Teams (Standard: docs/data/league_stats_overview.json)."
         ),
     )
+    parser.add_argument(
+        "--focus-team",
+        default=None,
+        help=(
+            "Optionaler Teamname, für den die Haupt-JSON generiert wird (Standard: USC Münster)."
+        ),
+    )
     return parser
 
 
@@ -70,10 +77,13 @@ def main() -> int:
         LEAGUE_STATS_OUTPUT_PATH,
         STATS_OUTPUT_PATH,
     )
+    from scripts.report import USC_CANONICAL_NAME
     from scripts.stats import build_league_stats_overview, build_stats_overview
 
     parser = build_parser()
     args = parser.parse_args()
+
+    focus_team = args.focus_team or USC_CANONICAL_NAME
 
     usc_output_path = args.output or STATS_OUTPUT_PATH
     hamburg_output_path = args.hamburg_output or HAMBURG_OUTPUT_PATH
@@ -87,10 +97,14 @@ def main() -> int:
     if args.schedule_page_url:
         build_kwargs["schedule_page_url"] = args.schedule_page_url
 
-    usc_payload = build_stats_overview(output_path=usc_output_path, **build_kwargs)
+    usc_payload = build_stats_overview(
+        output_path=usc_output_path,
+        focus_team=focus_team,
+        **build_kwargs,
+    )
 
     print(
-        "Scouting-Übersicht aktualisiert:",
+        f"Scouting-Übersicht ({usc_payload['team']}) aktualisiert:",
         f"{usc_payload['match_count']} Spiele verarbeitet",
         f"-> {usc_output_path}",
     )
