@@ -6,7 +6,7 @@ import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 import requests
 
@@ -26,6 +26,7 @@ from .report import (
     fetch_schedule,
     fetch_schedule_match_metadata,
     get_team_short_label,
+    is_usc,
     load_schedule_from_file,
     normalize_name,
     pretty_name,
@@ -144,14 +145,6 @@ class AggregatedMetrics:
 
     def to_dict(self) -> Dict[str, object]:
         return asdict(self)
-
-
-def _normalized_team_identifier(name: str) -> str:
-    normalized = normalize_name(name)
-    canonical = TEAM_CANONICAL_LOOKUP.get(normalized)
-    if canonical:
-        normalized = normalize_name(canonical)
-    return normalized
 
 
 def _ensure_path(path: Optional[Path | str]) -> Optional[Path]:
@@ -283,7 +276,9 @@ def collect_team_match_stats(
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
 ) -> List[USCMatchStatsEntry]:
     lookup = stats_lookup or collect_match_stats_totals(matches)
-    focus_identifier = _normalized_team_identifier(focus_team)
+    focus_label = _resolve_focus_team_label(focus_team)
+    focus_normalized = normalize_name(focus_label)
+    focus_aliases = _build_focus_aliases(focus_team, focus_label, focus_normalized)
     entries: List[USCMatchStatsEntry] = []
     for match in matches:
         if not match.is_finished or not match.stats_url:
@@ -293,7 +288,12 @@ def collect_team_match_stats(
             continue
         focus_summary: Optional[MatchStatsTotals] = None
         for summary in summaries:
-            if _normalized_team_identifier(summary.team_name) == focus_identifier:
+            if _matches_focus_team(
+                summary.team_name,
+                focus_label=focus_label,
+                focus_normalized=focus_normalized,
+                focus_aliases=focus_aliases,
+            ):
                 focus_summary = summary
                 break
         if focus_summary is None:
@@ -301,7 +301,12 @@ def collect_team_match_stats(
         metrics = resolve_match_stats_metrics(focus_summary)
         if metrics is None:
             continue
-        is_home = _normalized_team_identifier(match.home_team) == focus_identifier
+        is_home = _matches_focus_team(
+            match.home_team,
+            focus_label=focus_label,
+            focus_normalized=focus_normalized,
+            focus_aliases=focus_aliases,
+        )
         opponent_raw = match.away_team if is_home else match.home_team
         opponent_pretty = pretty_name(opponent_raw)
         opponent_short = get_team_short_label(opponent_pretty)
@@ -326,7 +331,9 @@ def collect_team_player_stats(
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]] = None,
 ) -> List[USCPlayerMatchEntry]:
     lookup = stats_lookup or collect_match_stats_totals(matches)
-    focus_identifier = _normalized_team_identifier(focus_team)
+    focus_label = _resolve_focus_team_label(focus_team)
+    focus_normalized = normalize_name(focus_label)
+    focus_aliases = _build_focus_aliases(focus_team, focus_label, focus_normalized)
     entries: List[USCPlayerMatchEntry] = []
     for match in matches:
         if not match.is_finished or not match.stats_url:
@@ -336,12 +343,22 @@ def collect_team_player_stats(
             continue
         focus_summary: Optional[MatchStatsTotals] = None
         for summary in summaries:
-            if _normalized_team_identifier(summary.team_name) == focus_identifier:
+            if _matches_focus_team(
+                summary.team_name,
+                focus_label=focus_label,
+                focus_normalized=focus_normalized,
+                focus_aliases=focus_aliases,
+            ):
                 focus_summary = summary
                 break
         if focus_summary is None:
             continue
-        is_home = _normalized_team_identifier(match.home_team) == focus_identifier
+        is_home = _matches_focus_team(
+            match.home_team,
+            focus_label=focus_label,
+            focus_normalized=focus_normalized,
+            focus_aliases=focus_aliases,
+        )
         opponent_raw = match.away_team if is_home else match.home_team
         opponent = pretty_name(opponent_raw)
         opponent_short = get_team_short_label(opponent)
@@ -446,12 +463,12 @@ def _build_stats_payload(
     focus_label = _resolve_focus_team_label(focus_team)
     usc_entries = collect_team_match_stats(
         matches,
-        focus_team=focus_label,
+        focus_team=focus_team,
         stats_lookup=stats_lookup,
     )
     player_entries = collect_team_player_stats(
         matches,
-        focus_team=focus_label,
+        focus_team=focus_team,
         stats_lookup=stats_lookup,
     )
     metrics_list = [entry.metrics for entry in usc_entries]
@@ -619,6 +636,40 @@ def build_league_stats_overview(
     output_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     return payload
+
+
+def _build_focus_aliases(
+    focus_team: str, focus_label: str, focus_normalized: str
+) -> Set[str]:
+    aliases: Set[str] = set()
+    if focus_team:
+        aliases.add(normalize_name(focus_team))
+    aliases.add(focus_normalized)
+    for alias_normalized, canonical in TEAM_CANONICAL_LOOKUP.items():
+        if normalize_name(canonical) == focus_normalized:
+            aliases.add(alias_normalized)
+    return {alias for alias in aliases if alias}
+
+
+def _matches_focus_team(
+    name: str,
+    *,
+    focus_label: str,
+    focus_normalized: str,
+    focus_aliases: Set[str],
+) -> bool:
+    normalized = normalize_name(name)
+    if normalized in focus_aliases:
+        return True
+    canonical = TEAM_CANONICAL_LOOKUP.get(normalized)
+    if canonical and normalize_name(canonical) == focus_normalized:
+        return True
+    for alias in focus_aliases:
+        if alias in normalized:
+            return True
+    if focus_label == USC_CANONICAL_NAME and is_usc(name):
+        return True
+    return False
 
 
 __all__ = [
