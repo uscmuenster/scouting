@@ -1,10 +1,10 @@
 {
-  "generated": "2025-10-26T08:33:51.736888+00:00",
+  "generated": "2025-10-26T08:39:58.912138+00:00",
   "team": "USC Münster",
   "match_count": 2,
   "matches": [
     {
-      "match_number": "2005",
+      "match_number": "2001",
       "match_id": "777479976",
       "kickoff": "2025-10-12T16:00:00+02:00",
       "is_home": true,
@@ -14,9 +14,20 @@
       "location": "Sporthalle Berg Fidel (48153 Münster)",
       "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true",
       "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
-      "scoresheet_url": null,
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/e58c59f9-6b0f-4d2b-b725-6205fd7aaf65/2001",
       "attendance": "2124",
-      "mvps": [],
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Jordan, Emilia",
+          "team": "USC Münster"
+        },
+        {
+          "medal": "Silber",
+          "name": "Kirchhoff, Mia",
+          "team": "SSC Palmberg Schwerin"
+        }
+      ],
       "result": {
         "score": "3:2",
         "total_points": "106:106",
@@ -60,7 +71,18 @@
       "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
       "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/ab4891bf-921b-4fe1-8aaa-97f2b9acb6d9/2011",
       "attendance": "433",
-      "mvps": [],
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Neuhaus, Frauke",
+          "team": "Binder Blaubären TSV Flacht"
+        },
+        {
+          "medal": "Gold",
+          "name": "Ford, Brianna",
+          "team": "USC Münster"
+        }
+      ],
       "result": {
         "score": "3:0",
         "total_points": "75:49",
@@ -117,7 +139,7 @@
         {
           "player": "Molenaar Pippa",
           "jersey_number": 1,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -230,7 +252,7 @@
         {
           "player": "Schaefer Lara-Marie",
           "jersey_number": 2,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -343,7 +365,7 @@
         {
           "player": "Spöler Esther",
           "jersey_number": 3,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -456,7 +478,7 @@
         {
           "player": "Malm Cecilia",
           "jersey_number": 5,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -569,7 +591,7 @@
         {
           "player": "Kömmling Elena",
           "jersey_number": 7,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -751,7 +773,7 @@
         {
           "player": "Liu Yina",
           "jersey_number": 8,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -822,7 +844,7 @@
         {
           "player": "Jordan Emilia",
           "jersey_number": 9,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -935,7 +957,7 @@
         {
           "player": "Strothoff Amelie",
           "jersey_number": 10,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1048,7 +1070,7 @@
         {
           "player": "Heil Franziska",
           "jersey_number": 11,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1161,7 +1183,7 @@
         {
           "player": "Waelkens Anke",
           "jersey_number": 12,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1274,7 +1296,7 @@
         {
           "player": "Ford Brianna",
           "jersey_number": 14,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1387,7 +1409,7 @@
         {
           "player": "Schultze Lena",
           "jersey_number": 16,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1500,7 +1522,7 @@
         {
           "player": "Martin Isabel",
           "jersey_number": 17,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1640,7 +1662,7 @@
         {
           "player": "Seybering Diane",
           "jersey_number": 18,
-          "match_number": "2005",
+          "match_number": "2001",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
