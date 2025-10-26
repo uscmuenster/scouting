@@ -2,8 +2,11 @@
 """
 Extrahiert Text aus allen PDF-Spielberichten in docs/data/stats_pdfs/
 mithilfe von PyPDF2.PdfReader.
-Bereinigt den Text: behält nur Buchstaben, Zahlen, Punkte, Prozentzeichen,
-runde Klammern und Leerzeichen.
+
+Bereinigt den Text:
+- behält Buchstaben, Zahlen, Punkte, Prozentzeichen, runde Klammern und Leerzeichen
+- entfernt überflüssige Leerzeichen
+- fügt auseinandergerissene Buchstaben (z. B. 'S p i e l') wieder zu Wörtern zusammen
 """
 
 from __future__ import annotations
@@ -18,17 +21,24 @@ from PyPDF2 import PdfReader
 # ------------------------------------------------------------
 def clean_text(raw_text: str) -> str:
     """
-    Entfernt alle Sonderzeichen außer:
-    - Buchstaben (inkl. Umlaute)
-    - Zahlen
-    - Punkt (.)
-    - Prozentzeichen (%)
-    - Runde Klammern ()
-    - Leerzeichen
+    Bereinigt Text aus PDF:
+    - behält Buchstaben, Zahlen, Punkte, Prozentzeichen, runde Klammern und Leerzeichen
+    - entfernt überflüssige Leerzeichen zwischen Buchstaben
     """
+    # Nur erlaubte Zeichen
     cleaned = re.sub(r"[^A-Za-zÄÖÜäöüß0-9().% ]+", " ", raw_text)
-    cleaned = re.sub(r"\s+", " ", cleaned)
+
+    # PDFs mit einzeln gesetzten Buchstaben wie 'S p i e l' korrigieren
+    # Ersetzt Leerzeichen zwischen einzelnen Buchstaben
+    # Beispiel: 'S p i e l' -> 'Spiel'
+    cleaned = re.sub(r"(?:(?<=\b[A-Za-zÄÖÜäöüß])\s(?=[A-Za-zÄÖÜäöüß]\b))", "", cleaned)
+
+    # Doppelte Leerzeichen reduzieren
+    cleaned = re.sub(r"\s{2,}", " ", cleaned)
+
+    # Zeilenumbrüche vereinheitlichen
     cleaned = re.sub(r"\s*\n\s*", "\n", cleaned)
+
     return cleaned.strip()
 
 
