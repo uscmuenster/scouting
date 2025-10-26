@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
 Extrahiert Text aus allen PDF-Spielberichten in docs/data/stats_pdfs/.
-Funktioniert lokal und auf GitHub Actions.
+Funktioniert lokal und in GitHub Actions.
 Verwendet pdfminer (direkter Text) oder optimiertes OCR (Tesseract + Poppler).
-Anschließend werden nur Buchstaben, Zahlen, Punkte und runde Klammern behalten.
+Bereinigt den Text: behält nur Buchstaben, Zahlen, Punkte, Prozentzeichen,
+runde Klammern und Leerzeichen.
 """
 
 from __future__ import annotations
@@ -33,31 +34,28 @@ except ImportError:
 # ------------------------------------------------------------
 def _preprocess_image(img: Image.Image) -> Image.Image:
     """Verbessert Kontrast und Lesbarkeit für OCR."""
-    img = img.convert("L")  # Graustufen
-    img = ImageOps.autocontrast(img)
-    img = ImageOps.invert(img)  # Dunkle Schrift auf hellem Grund
-    img = img.filter(ImageFilter.SHARPEN)
+    img = img.convert("L")                            # Graustufen
+    img = ImageOps.autocontrast(img)                  # Kontrast optimieren
+    img = img.point(lambda x: 0 if x < 180 else 255)  # harte Schwelle: Linien weg
+    img = img.filter(ImageFilter.MedianFilter(size=3))# Rauschen glätten
+    img = img.filter(ImageFilter.SHARPEN)             # leicht schärfen
     return img
 
 
 # ------------------------------------------------------------
-# 🧹 Textbereinigung: nur Zahlen, Buchstaben, Punkte, Klammern, Leerzeichen
+# 🧹 Textbereinigung: nur Buchstaben, Zahlen, ., %, (), Leerzeichen
 # ------------------------------------------------------------
 def clean_text(raw_text: str) -> str:
-    # Nur erlaubte Zeichen behalten
-    cleaned = re.sub(r"[^A-Za-zÄÖÜäöüß0-9()%. ]+", " ", raw_text)
-    # Mehrfache Leerzeichen reduzieren
+    cleaned = re.sub(r"[^A-Za-zÄÖÜäöüß0-9().% ]+", " ", raw_text)
     cleaned = re.sub(r"\s+", " ", cleaned)
-    # Zeilenumbrüche vereinheitlichen
     cleaned = re.sub(r"\s*\n\s*", "\n", cleaned)
     return cleaned.strip()
 
 
 # ------------------------------------------------------------
-# 🧠 Intelligente Textextraktion (Text oder OCR)
+# 🧠 Intelligente Textextraktion (pdfminer → OCR)
 # ------------------------------------------------------------
 def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
-    """Liest Text aus PDF automatisch (pdfminer oder OCR) und bereinigt ihn."""
     pdf_path = Path(pdf_path)
     text = ""
 
@@ -76,7 +74,13 @@ def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
         try:
             print(f"📄 {pdf_path.name}: OCR-Fallback aktiviert (optimiert)")
             pages = convert_from_path(pdf_path, dpi=300)
-            custom_config = r"--oem 3 --psm 6 -c preserve_interword_spaces=1"
+
+            custom_config = (
+                r"--oem 3 --psm 4 "
+                r"-c preserve_interword_spaces=1 "
+                r"-c tessedit_char_whitelist="
+                r"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzÄÖÜäöüß0123456789.()% "
+            )
 
             text_parts = []
             for i, page in enumerate(pages, start=1):
@@ -97,7 +101,7 @@ def extract_text_auto(pdf_path: str | Path, lang: str = "deu+eng") -> str:
 # 🚀 Hauptlogik – verarbeitet alle PDFs
 # ------------------------------------------------------------
 def main() -> None:
-    # zwei Ebenen hoch (Scouting/scripts → root)
+    # zwei Ebenen hoch (Scouting/scripts → Repo-Root)
     root = Path(__file__).resolve().parents[2]
     pdf_dir = root / "docs" / "data" / "stats_pdfs"
     output_dir = root / "docs" / "data" / "stats_texts"
