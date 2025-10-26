@@ -1,9 +1,9 @@
-name: 🏐 Extract PDF Stats (pdfplumber)
+name: 🏐 Extract PDF Stats (PyPDF2)
 
 on:
   workflow_dispatch:
   schedule:
-    - cron: "15 5 * * *"  # täglich um 05:15 Uhr
+    - cron: "15 5 * * *"
 
 permissions:
   contents: write
@@ -24,11 +24,11 @@ jobs:
       - name: 📦 Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pdfplumber
+          pip install PyPDF2
 
       - name: ⚙️ Extract text from PDF reports
         working-directory: Scouting
-        run: python scripts/stats.py
+        run: python scripts/pdf-extract-neu.py
 
       - name: 🪶 Commit and push extracted texts
         uses: stefanzweifel/git-auto-commit-action@v5
