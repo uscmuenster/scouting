@@ -152,7 +152,7 @@
           "break_points": 0,
           "plus_minus": 0,
           "metrics": {
-            "serves_attempts": 1,
+            "serves_attempts": 0,
             "serves_errors": 0,
             "serves_points": 0,
             "receptions_attempts": 0,
@@ -394,7 +394,7 @@
           "break_points": 0,
           "plus_minus": 2,
           "metrics": {
-            "serves_attempts": 1,
+            "serves_attempts": 0,
             "serves_errors": 0,
             "serves_points": 0,
             "receptions_attempts": 32,

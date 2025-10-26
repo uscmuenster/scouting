@@ -15,3 +15,9 @@ def test_build_parser_exposes_skip_html_flag():
     assert args.skip_html is True
     assert isinstance(args.output, __main__.Path)
     assert isinstance(args.data_output, __main__.Path)
+
+
+def test_build_parser_supports_skip_schedule_download_flag():
+    parser = __main__.build_parser()
+    args = parser.parse_args(["--skip-schedule-download"])
+    assert args.skip_schedule_download is True

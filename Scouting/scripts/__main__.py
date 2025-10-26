@@ -47,6 +47,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Local cache file for the downloaded schedule CSV.",
     )
     parser.add_argument(
+        "--skip-schedule-download",
+        action="store_true",
+        help=(
+            "Reuse an existing schedule CSV without downloading it again. "
+            "If the file is missing, a download is attempted regardless."
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT_PATH,
@@ -72,8 +80,15 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
 
-    download_schedule(args.schedule_path, url=args.schedule_url)
-    matches = load_schedule_from_file(args.schedule_path)
+    schedule_path = args.schedule_path
+    should_download = True
+    if args.skip_schedule_download and schedule_path and schedule_path.exists():
+        should_download = False
+
+    if should_download:
+        download_schedule(schedule_path, url=args.schedule_url)
+
+    matches = load_schedule_from_file(schedule_path)
     metadata = fetch_schedule_match_metadata(args.schedule_page_url)
     detail_cache: dict[str, dict[str, object]] = {}
     enriched_matches = enrich_matches(matches, metadata, detail_cache)

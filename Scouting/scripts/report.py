@@ -2869,6 +2869,11 @@ def _split_player_line_candidates(text: str) -> List[str]:
     )
     matches = list(_PLAYER_SEGMENT_SPLIT_PATTERN.finditer(normalized))
     if len(matches) <= 1:
+        identifier_match = re.search(r"\b(\d{1,3})\b", normalized)
+        if identifier_match:
+            normalized = normalized[identifier_match.start() :].strip()
+        else:
+            return []
         return [normalized]
     segments: List[str] = []
     banned_tokens = {
@@ -2894,6 +2899,12 @@ def _split_player_line_candidates(text: str) -> List[str]:
         end = matches[index + 1].start() if index + 1 < len(matches) else len(normalized)
         segment = normalized[start:end].strip()
         if not segment:
+            continue
+        identifier_match = re.search(r"\b(\d{1,3})\b", segment)
+        if identifier_match:
+            if identifier_match.start() > 0:
+                segment = segment[identifier_match.start() :].strip()
+        else:
             continue
         tokens = segment.split()
         if len(tokens) < 2:
@@ -2996,6 +3007,9 @@ def _parse_team_player_lines(
             pending = None
             continue
         if stripped.lower().startswith("libero"):
+            pending = None
+            continue
+        if lowered.startswith("trainer") or lowered.startswith("kotrainer"):
             pending = None
             continue
 
