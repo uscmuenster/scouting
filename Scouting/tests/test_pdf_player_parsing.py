@@ -109,3 +109,31 @@ def test_parse_compact_stats_handles_split_negative_tokens() -> None:
     assert parsed.plus_minus == -5
     assert parsed.metrics.receptions_attempts == 30
     assert parsed.metrics.attacks_points == 9
+
+
+def test_split_player_line_candidates_handles_prefixed_role_markers() -> None:
+    raw_line = (
+        "Kotrainer 1LMolenaar Pippa   .   .  -2   .   . .  30   2  27% ( 13%)   .   .   . .  . . "
+        "2LSchaefer Lara-Marie   .   .   .   .   . .   .   .   .   .   .   .   . .  . ."
+    )
+
+    players = _parse_team_player_lines([raw_line], "USC Münster")
+    assert len(players) == 2
+
+    molenaar, schaefer = players
+
+    assert molenaar.player_name == "Molenaar Pippa"
+    assert molenaar.jersey_number == 1
+    assert molenaar.total_points == 0
+    assert molenaar.break_points == 0
+    assert molenaar.plus_minus == -2
+    assert molenaar.metrics.serves_attempts == 0
+    assert molenaar.metrics.receptions_attempts == 30
+    assert molenaar.metrics.receptions_errors == 2
+    assert molenaar.metrics.receptions_positive_pct == "27%"
+    assert molenaar.metrics.receptions_perfect_pct == "13%"
+
+    assert schaefer.player_name == "Schaefer Lara-Marie"
+    assert schaefer.jersey_number == 2
+    assert schaefer.total_points == 0
+    assert schaefer.metrics.serves_attempts == 0
