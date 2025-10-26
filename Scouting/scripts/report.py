@@ -2484,6 +2484,113 @@ def _parse_match_stats_metrics(line: str) -> Optional[MatchStatsMetrics]:
         return None
 
 
+def _format_ratio_percentage(numerator: int, denominator: int) -> str:
+    if denominator <= 0:
+        return "0%"
+    value = round(numerator * 100 / denominator)
+    return f"{value}%"
+
+
+def _build_metrics_from_players(
+    players: Sequence[MatchPlayerStats],
+) -> Optional[MatchStatsMetrics]:
+    if not players:
+        return None
+
+    serves_attempts = 0
+    serves_errors = 0
+    serves_points = 0
+    receptions_attempts = 0
+    receptions_errors = 0
+    receptions_positive = 0
+    receptions_perfect = 0
+    attacks_attempts = 0
+    attacks_errors = 0
+    attacks_blocked = 0
+    attacks_points = 0
+    blocks_points = 0
+
+    for player in players:
+        metrics = player.metrics
+        serves_attempts += metrics.serves_attempts
+        serves_errors += metrics.serves_errors
+        serves_points += metrics.serves_points
+        receptions_attempts += metrics.receptions_attempts
+        receptions_errors += metrics.receptions_errors
+        receptions_positive += getattr(metrics, "receptions_positive", 0)
+        receptions_perfect += getattr(metrics, "receptions_perfect", 0)
+        attacks_attempts += metrics.attacks_attempts
+        attacks_errors += metrics.attacks_errors
+        attacks_blocked += metrics.attacks_blocked
+        attacks_points += metrics.attacks_points
+        blocks_points += metrics.blocks_points
+
+    reception_positive_pct = _format_ratio_percentage(
+        receptions_positive, receptions_attempts
+    )
+    reception_perfect_pct = _format_ratio_percentage(
+        receptions_perfect, receptions_attempts
+    )
+    attack_success_pct = _format_ratio_percentage(attacks_points, attacks_attempts)
+
+    return MatchStatsMetrics(
+        serves_attempts=serves_attempts,
+        serves_errors=serves_errors,
+        serves_points=serves_points,
+        receptions_attempts=receptions_attempts,
+        receptions_errors=receptions_errors,
+        receptions_positive_pct=reception_positive_pct,
+        receptions_perfect_pct=reception_perfect_pct,
+        attacks_attempts=attacks_attempts,
+        attacks_errors=attacks_errors,
+        attacks_blocked=attacks_blocked,
+        attacks_points=attacks_points,
+        attacks_success_pct=attack_success_pct,
+        blocks_points=blocks_points,
+        receptions_positive=receptions_positive,
+        receptions_perfect=receptions_perfect,
+    )
+
+
+def _percentage_value(value: str) -> Optional[float]:
+    match = re.search(r"(\d+(?:[.,]\d+)?)", value or "")
+    if not match:
+        return None
+    try:
+        return float(match.group(1).replace(",", "."))
+    except ValueError:
+        return None
+
+
+def _should_replace_parsed_metrics(
+    parsed: MatchStatsMetrics,
+    aggregated: MatchStatsMetrics,
+) -> bool:
+    significant_fields = (
+        "serves_attempts",
+        "serves_points",
+        "receptions_attempts",
+        "receptions_errors",
+        "attacks_attempts",
+        "attacks_points",
+        "blocks_points",
+    )
+    for field in significant_fields:
+        parsed_value = getattr(parsed, field)
+        aggregated_value = getattr(aggregated, field)
+        if aggregated_value > 0 and parsed_value == 0:
+            return True
+    for attr in (
+        "receptions_positive_pct",
+        "receptions_perfect_pct",
+        "attacks_success_pct",
+    ):
+        pct_value = _percentage_value(getattr(parsed, attr))
+        if pct_value is not None and pct_value > 100:
+            return True
+    return False
+
+
 def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsMetrics]:
     """Return structured statistics for a ``MatchStatsTotals`` entry.
 
@@ -2495,9 +2602,17 @@ def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsM
 
     if entry.metrics is not None:
         return entry.metrics
-    if not entry.totals_line:
-        return None
-    return _parse_match_stats_metrics(entry.totals_line)
+    aggregated_metrics = _build_metrics_from_players(entry.players)
+    parsed_metrics = None
+    if entry.totals_line:
+        parsed_metrics = _parse_match_stats_metrics(entry.totals_line)
+    if parsed_metrics is not None:
+        if aggregated_metrics is not None and _should_replace_parsed_metrics(
+            parsed_metrics, aggregated_metrics
+        ):
+            return aggregated_metrics
+        return parsed_metrics
+    return aggregated_metrics
 
 
 _PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
@@ -4745,6 +4860,7 @@ def build_html_report(
     mvp_rankings=None,
     usc_scouting: Optional[Mapping[str, Any]] = None,
     hamburg_scouting: Optional[Mapping[str, Any]] = None,
+    aachen_scouting: Optional[Mapping[str, Any]] = None,
 ) -> str:
     """Generate a lightweight scouting landing page for USC Münster."""
 
@@ -4778,19 +4894,33 @@ def build_html_report(
         "usc": usc_scouting,
     }
 
-    if hamburg_scouting is not None:
-        hamburg_team_label = "ETV Hamburger Volksbank Volleys"
-        team_value = hamburg_scouting.get("team") if isinstance(hamburg_scouting, Mapping) else None
+    def _append_team_config(
+        key: str,
+        default_label: str,
+        path: str,
+        payload: Optional[Mapping[str, Any]],
+    ) -> None:
+        if payload is None:
+            return
+        team_label = default_label
+        team_value = payload.get("team") if isinstance(payload, Mapping) else None
         if isinstance(team_value, str) and team_value.strip():
-            hamburg_team_label = team_value.strip()
-        team_configs.append(
-            {
-                "key": "hamburg",
-                "label": hamburg_team_label,
-                "path": "data/hamburg_stats_overview.json",
-            }
-        )
-        preloaded_overviews["hamburg"] = hamburg_scouting
+            team_label = team_value.strip()
+        team_configs.append({"key": key, "label": team_label, "path": path})
+        preloaded_overviews[key] = payload
+
+    _append_team_config(
+        "hamburg",
+        "ETV Hamburger Volksbank Volleys",
+        "data/hamburg_stats_overview.json",
+        hamburg_scouting,
+    )
+    _append_team_config(
+        "aachen",
+        "Ladies in Black Aachen",
+        "data/aachen_stats_overview.json",
+        aachen_scouting,
+    )
 
     default_team_label = team_configs[0]["label"] if team_configs else "Team"
     team_selector_options = "".join(
