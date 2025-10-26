@@ -52,6 +52,14 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--aachen-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Aachen-JSON-Datei (Standard: docs/data/aachen_stats_overview.json)."
+        ),
+    )
+    parser.add_argument(
         "--league-output",
         type=Path,
         default=None,
@@ -72,6 +80,8 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     _add_package_root_to_path()
     from scripts import (
+        AACHEN_CANONICAL_NAME,
+        AACHEN_OUTPUT_PATH,
         HAMBURG_CANONICAL_NAME,
         HAMBURG_OUTPUT_PATH,
         LEAGUE_STATS_OUTPUT_PATH,
@@ -87,6 +97,7 @@ def main() -> int:
 
     usc_output_path = args.output or STATS_OUTPUT_PATH
     hamburg_output_path = args.hamburg_output or HAMBURG_OUTPUT_PATH
+    aachen_output_path = args.aachen_output or AACHEN_OUTPUT_PATH
     league_output_path = args.league_output or LEAGUE_STATS_OUTPUT_PATH
 
     build_kwargs = {
@@ -119,6 +130,18 @@ def main() -> int:
         "Hamburg-Scouting-Übersicht aktualisiert:",
         f"{hamburg_payload['match_count']} Spiele verarbeitet",
         f"-> {hamburg_output_path}",
+    )
+
+    aachen_payload = build_stats_overview(
+        output_path=aachen_output_path,
+        focus_team=AACHEN_CANONICAL_NAME,
+        **build_kwargs,
+    )
+
+    print(
+        "Aachen-Scouting-Übersicht aktualisiert:",
+        f"{aachen_payload['match_count']} Spiele verarbeitet",
+        f"-> {aachen_output_path}",
     )
 
     league_payload = build_league_stats_overview(

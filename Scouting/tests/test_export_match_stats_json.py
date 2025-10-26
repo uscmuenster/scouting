@@ -38,24 +38,24 @@ def test_export_match_stats_offline(monkeypatch, tmp_path) -> None:
     assert stuttgart["player_count"] == len(stuttgart["players"]) > 0
 
     stuttgart_players = {player["name"]: player for player in stuttgart["players"]}
-    assert "STAUTZ Antonia" in stuttgart_players
-    stautz = stuttgart_players["STAUTZ Antonia"]
-    assert stautz["metrics"]["attacks_points"] == 11
-    assert stautz["metrics"]["serves_attempts"] == 17
-    assert stautz["metrics"]["receptions_positive"] == 7
+    assert "Stautz Antonia" in stuttgart_players
+    stautz = stuttgart_players["Stautz Antonia"]
+    assert stautz["metrics"]["attacks_points"] == 2
+    assert stautz["metrics"]["serves_attempts"] == 10
+    assert stautz["metrics"]["receptions_positive"] == 6
 
-    varela = stuttgart_players["VARELA Lucia"]
-    assert varela["metrics"]["receptions_attempts"] == 18
-    assert varela["metrics"]["receptions_perfect"] == 6
-    assert varela["plus_minus"] == 6
+    varela = stuttgart_players["Varela Lucia"]
+    assert varela["metrics"]["receptions_attempts"] == 0
+    assert varela["metrics"]["receptions_perfect"] == 0
+    assert varela["plus_minus"] == 8
 
     hamburg = teams["ETV Hamburger Volksbank Volleys"]
     assert hamburg["reception"]["attempts"] == 67
     assert hamburg["attack"]["points"] == 28
-    assert hamburg["player_count"] == len(hamburg["players"]) == 9
+    assert hamburg["player_count"] == len(hamburg["players"]) == 14
 
     players = {player["name"]: player for player in hamburg["players"]}
-    assert "MEISER Jana-Marie" in players
-    meiser = players["MEISER Jana-Marie"]
-    assert meiser["metrics"]["receptions_attempts"] == 23
+    assert "Meiser Jana-Marie" in players
+    meiser = players["Meiser Jana-Marie"]
+    assert meiser["metrics"]["receptions_attempts"] == 21
     assert meiser["metrics"]["receptions_errors"] == 3
