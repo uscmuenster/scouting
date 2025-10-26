@@ -58,6 +58,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=STATS_OUTPUT_PATH,
         help="Target JSON output for aggregated statistics (default: docs/data/usc_stats_overview.json).",
     )
+    parser.add_argument(
+        "--skip-html",
+        action="store_true",
+        help=(
+            "Skip generating the HTML report and manifest so only the JSON overviews are updated."
+        ),
+    )
     return parser
 
 
@@ -92,7 +99,17 @@ def main() -> int:
         stats_lookup=stats_lookup,
     )
 
-    build_league_stats_overview(
+    print(
+        "USC scouting overview updated:",
+        f"{stats_payload['match_count']} matches processed -> {args.data_output}",
+    )
+
+    print(
+        "Hamburg scouting overview updated:",
+        f"{hamburg_stats_payload['match_count']} matches processed -> {HAMBURG_OUTPUT_PATH}",
+    )
+
+    league_payload = build_league_stats_overview(
         matches=enriched_matches,
         schedule_csv_url=args.schedule_url,
         schedule_page_url=args.schedule_page_url,
@@ -100,6 +117,14 @@ def main() -> int:
         output_path=LEAGUE_STATS_OUTPUT_PATH,
         stats_lookup=stats_lookup,
     )
+
+    print(
+        "League scouting overview updated:",
+        f"{league_payload['team_count']} teams processed -> {LEAGUE_STATS_OUTPUT_PATH}",
+    )
+
+    if args.skip_html:
+        return 0
 
     html = build_html_report(
         generated_at=datetime.now(tz=BERLIN_TZ),
@@ -134,6 +159,8 @@ def main() -> int:
         json.dumps(manifest_payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+    print("HTML report generated:", args.output)
 
     return 0
 
