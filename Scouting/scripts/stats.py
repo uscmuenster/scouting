@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import csv
 import json
+from collections import Counter
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -21,7 +23,9 @@ from .report import (
     TEAM_CANONICAL_LOOKUP,
     USC_CANONICAL_NAME,
     MANUAL_SCHEDULE_PATH,
+    RosterMember,
     collect_match_stats_totals,
+    collect_team_roster,
     enrich_matches,
     fetch_schedule,
     fetch_schedule_match_metadata,
@@ -29,8 +33,10 @@ from .report import (
     is_usc,
     load_schedule_from_file,
     normalize_name,
+    parse_roster,
     pretty_name,
     resolve_match_stats_metrics,
+    slugify_team_name,
 )
 
 DEFAULT_OUTPUT_PATH = Path("docs/data/usc_stats_overview.json")
@@ -44,6 +50,8 @@ AACHEN_CANONICAL_NAME = "Ladies in Black Aachen"
 AACHEN_OUTPUT_PATH = Path("docs/data/aachen_stats_overview.json")
 
 LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
+
+DEFAULT_ROSTER_DIRECTORY = Path(__file__).resolve().parents[2] / "data" / "rosters"
 
 
 @dataclass(frozen=True)
@@ -448,6 +456,65 @@ def _load_enriched_matches(
     return enrich_matches(matches, metadata)
 
 
+def _read_cached_roster(
+    team_name: str, directory: Path
+) -> Optional[Tuple[RosterMember, ...]]:
+    if not directory.exists():
+        return None
+    slug = slugify_team_name(team_name)
+    if not slug:
+        return None
+    path = directory / f"{slug}.csv"
+    if not path.exists():
+        return None
+    try:
+        csv_text = path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+    try:
+        roster = parse_roster(csv_text)
+    except (csv.Error, ValueError):
+        return None
+    return tuple(roster)
+
+
+def _load_team_roster_members(
+    team_name: str,
+    *,
+    directory: Optional[Path] = None,
+) -> Tuple[RosterMember, ...]:
+    roster_dir = directory or DEFAULT_ROSTER_DIRECTORY
+    cached = _read_cached_roster(team_name, roster_dir)
+    if cached:
+        return cached
+    try:
+        roster = collect_team_roster(team_name, roster_dir)
+    except (requests.RequestException, OSError, ValueError):
+        return tuple()
+    except Exception:
+        return tuple()
+    return tuple(roster)
+
+
+def _build_roster_lookups(
+    team_name: str,
+    *,
+    directory: Optional[Path] = None,
+) -> Tuple[Dict[int, RosterMember], Dict[str, RosterMember]]:
+    roster_members = _load_team_roster_members(team_name, directory=directory)
+    by_number: Dict[int, RosterMember] = {}
+    by_name: Dict[str, RosterMember] = {}
+    for member in roster_members:
+        if member.is_official:
+            continue
+        if member.number_value is not None and member.number_value not in by_number:
+            by_number[member.number_value] = member
+        normalized = normalize_name(member.name)
+        if normalized and normalized not in by_name:
+            by_name[normalized] = member
+    return by_number, by_name
+
+
 def _prepare_matches_and_lookup(
     matches: Optional[Sequence[Match]],
     *,
@@ -487,18 +554,78 @@ def _build_stats_payload(
         focus_team=focus_team,
         stats_lookup=stats_lookup,
     )
+    roster_by_number, roster_by_name = _build_roster_lookups(focus_team)
     metrics_list = [entry.metrics for entry in usc_entries]
     totals = summarize_metrics(metrics_list)
 
     player_groups: Dict[str, List[USCPlayerMatchEntry]] = {}
     player_name_variants: Dict[str, List[str]] = {}
+    player_jersey_numbers: Dict[str, List[int]] = {}
+    jersey_to_key: Dict[int, str] = {}
+    name_to_key: Dict[str, str] = {}
+    player_roster_members: Dict[str, RosterMember] = {}
+    unknown_counter = 0
+
+    def resolve_player_key(normalized_name: str, jersey: Optional[int]) -> str:
+        nonlocal unknown_counter
+        if jersey is not None:
+            existing_for_jersey = jersey_to_key.get(jersey)
+            if existing_for_jersey:
+                if normalized_name:
+                    name_to_key.setdefault(normalized_name, existing_for_jersey)
+                return existing_for_jersey
+        if normalized_name:
+            existing_for_name = name_to_key.get(normalized_name)
+            if existing_for_name:
+                if jersey is not None:
+                    jersey_to_key.setdefault(jersey, existing_for_name)
+                return existing_for_name
+        if normalized_name:
+            key = normalized_name
+        elif jersey is not None:
+            key = f"#{jersey}"
+        else:
+            key = f"unknown-{unknown_counter}"
+            unknown_counter += 1
+        if normalized_name:
+            name_to_key.setdefault(normalized_name, key)
+        if jersey is not None:
+            jersey_to_key.setdefault(jersey, key)
+        return key
+
     for entry in player_entries:
         normalized_player = normalize_name(entry.player_name)
-        player_groups.setdefault(normalized_player, []).append(entry)
-        player_name_variants.setdefault(normalized_player, []).append(entry.player_name)
+        roster_member: Optional[RosterMember] = None
+        roster_number: Optional[int] = None
+        if normalized_player:
+            roster_member = roster_by_name.get(normalized_player)
+            if roster_member and roster_member.number_value is not None:
+                roster_number = roster_member.number_value
+        effective_jersey = entry.jersey_number
+        if effective_jersey is None and roster_number is not None:
+            effective_jersey = roster_number
+        if effective_jersey is not None and roster_member is None:
+            roster_member = roster_by_number.get(effective_jersey)
+            if roster_member and roster_member.number_value is not None:
+                roster_number = roster_member.number_value
+        player_key = resolve_player_key(normalized_player, effective_jersey)
+        player_groups.setdefault(player_key, []).append(entry)
+        player_name_variants.setdefault(player_key, []).append(entry.player_name)
+        if roster_member:
+            normalized_roster_name = normalize_name(roster_member.name)
+            if normalized_roster_name:
+                name_to_key.setdefault(normalized_roster_name, player_key)
+            player_name_variants[player_key].append(roster_member.name)
+            player_roster_members.setdefault(player_key, roster_member)
+        if entry.jersey_number is not None:
+            player_jersey_numbers.setdefault(player_key, []).append(entry.jersey_number)
+        if roster_number is not None:
+            jersey_list = player_jersey_numbers.setdefault(player_key, [])
+            if roster_number not in jersey_list:
+                jersey_list.append(roster_number)
 
     players_payload: List[Dict[str, object]] = []
-    for normalized_player, entries_list in player_groups.items():
+    for player_key, entries_list in player_groups.items():
         entries_list.sort(key=lambda item: item.match.kickoff)
         player_metrics = [item.metrics for item in entries_list]
         player_totals = summarize_metrics(player_metrics)
@@ -511,9 +638,20 @@ def _build_stats_payload(
         plus_minus_values = [
             item.plus_minus for item in entries_list if item.plus_minus is not None
         ]
-        jersey_number = entries_list[0].jersey_number
-        name_variants = player_name_variants.get(normalized_player, [])
-        display_name = _select_player_display_name(name_variants)
+        jersey_candidates = player_jersey_numbers.get(player_key, [])
+        jersey_number: Optional[int] = None
+        if jersey_candidates:
+            jersey_number = Counter(jersey_candidates).most_common(1)[0][0]
+        if jersey_number is None:
+            jersey_number = entries_list[0].jersey_number
+        name_variants = player_name_variants.get(player_key, [])
+        roster_member = player_roster_members.get(player_key)
+        if roster_member and roster_member.name:
+            display_name = roster_member.name
+            if jersey_number is None:
+                jersey_number = roster_member.number_value
+        else:
+            display_name = _select_player_display_name(name_variants)
         players_payload.append(
             {
                 "name": display_name,
