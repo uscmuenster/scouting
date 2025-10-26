@@ -68,6 +68,9 @@ def _ensure_metrics(summary, report_module):
     metrics = summary.metrics
     if metrics is not None:
         return metrics
+    resolved = report_module.resolve_match_stats_metrics(summary)
+    if resolved is not None:
+        return resolved
     return report_module.MatchStatsMetrics(
         serves_attempts=0,
         serves_errors=0,

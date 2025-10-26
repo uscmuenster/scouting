@@ -59,3 +59,31 @@ def test_export_match_stats_offline(monkeypatch, tmp_path) -> None:
     meiser = players["Meiser Jana-Marie"]
     assert meiser["metrics"]["receptions_attempts"] == 21
     assert meiser["metrics"]["receptions_errors"] == 3
+
+
+def test_export_match_stats_uses_player_fallback(monkeypatch, tmp_path) -> None:
+    def offline_http_get(*args, **kwargs):
+        raise requests.RequestException("offline")
+
+    monkeypatch.setattr(report, "_http_get", offline_http_get)
+
+    stats_url = "https://www.volleyball-bundesliga.de/uploads/70911979-1c77-4379-a3c6-2307f6da95f7"
+    output_path = tmp_path / "aachen_vs_wiesbaden.json"
+
+    payload = export_match_stats(stats_url, output_path=output_path)
+
+    assert output_path.exists()
+    assert payload["stats_url"] == stats_url
+
+    teams = {entry["team"]: entry for entry in payload["teams"]}
+    assert "Ladies in Black Aachen" in teams
+    assert "VC Wiesbaden" in teams
+
+    aachen = teams["Ladies in Black Aachen"]
+    assert aachen["serve"]["attempts"] == 108
+    assert aachen["attack"]["points"] == 61
+    assert aachen["block"]["points"] == 11
+
+    wiesbaden = teams["VC Wiesbaden"]
+    assert wiesbaden["serve"]["attempts"] == 109
+    assert wiesbaden["attack"]["points"] == 57
