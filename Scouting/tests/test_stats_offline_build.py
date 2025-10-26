@@ -140,6 +140,85 @@ def test_build_stats_overview_for_hamburg_includes_players(monkeypatch, tmp_path
     assert frobel_matches[stuttgart_url]["metrics"]["attacks_points"] == 10
 
 
+def test_build_stats_overview_for_aachen_includes_players(monkeypatch, tmp_path) -> None:
+    def offline_http_get(*args, **kwargs):
+        raise requests.RequestException("offline")
+
+    monkeypatch.setattr(report, "_http_get", offline_http_get)
+
+    output_path = tmp_path / "aachen.json"
+    wiesbaden_url = "https://www.volleyball-bundesliga.de/uploads/70911979-1c77-4379-a3c6-2307f6da95f7"
+    stuttgart_url = "https://www.volleyball-bundesliga.de/uploads/87ce921b-7c97-4bd1-8784-72e187d41fa7"
+
+    matches = [
+        report.Match(
+            kickoff=datetime(2025, 10, 24, 18, 0, tzinfo=timezone.utc),
+            home_team="Ladies in Black Aachen",
+            away_team="VC Wiesbaden",
+            host="Ladies in Black Aachen",
+            location="Neuer Tivoli (52070 Aachen)",
+            result=report.MatchResult(
+                score="3:2",
+                total_points="108:109",
+                sets=(),
+            ),
+            match_number="2004",
+            match_id="777479987",
+            info_url=None,
+            stats_url=wiesbaden_url,
+            scoresheet_url=None,
+            attendance=None,
+        ),
+        report.Match(
+            kickoff=datetime(2025, 10, 29, 19, 0, tzinfo=timezone.utc),
+            home_team="Allianz MTV Stuttgart",
+            away_team="Ladies in Black Aachen",
+            host="Allianz MTV Stuttgart",
+            location="SCHARRena (70174 Stuttgart)",
+            result=report.MatchResult(
+                score="3:0",
+                total_points="75:44",
+                sets=(),
+            ),
+            match_number="2007",
+            match_id="777479988",
+            info_url=None,
+            stats_url=stuttgart_url,
+            scoresheet_url=None,
+            attendance=None,
+        ),
+    ]
+
+    payload = stats_module.build_stats_overview(
+        matches=matches,
+        output_path=output_path,
+        focus_team=stats_module.AACHEN_CANONICAL_NAME,
+    )
+
+    assert output_path.exists()
+    assert payload["team"] == stats_module.AACHEN_CANONICAL_NAME
+    assert payload["match_count"] == 2
+    assert payload["player_count"] > 0
+
+    matches_by_url = {entry["stats_url"]: entry for entry in payload["matches"]}
+    assert matches_by_url[wiesbaden_url]["metrics"]["serves_attempts"] == 108
+    assert matches_by_url[wiesbaden_url]["metrics"]["attacks_points"] == 61
+    assert matches_by_url[stuttgart_url]["metrics"]["serves_attempts"] == 49
+    assert matches_by_url[stuttgart_url]["metrics"]["attacks_points"] == 24
+
+    totals = payload["totals"]
+    assert totals["serves_attempts"] == 157
+    assert totals["attacks_points"] == 85
+    assert totals["blocks_points"] == 13
+
+    players_by_name = {player["name"]: player for player in payload["players"]}
+    assert "Jebens Celine" in players_by_name
+    jebens_matches = {
+        entry["stats_url"]: entry for entry in players_by_name["Jebens Celine"]["matches"]
+    }
+    assert wiesbaden_url in jebens_matches
+    assert stuttgart_url in jebens_matches
+
 def test_build_league_stats_overview(monkeypatch, tmp_path) -> None:
     def offline_http_get(*args, **kwargs):
         raise requests.RequestException("offline")
