@@ -153,6 +153,19 @@ def _ensure_path(path: Optional[Path | str]) -> Optional[Path]:
     return Path(path)
 
 
+def _player_name_priority(name: str) -> Tuple[int, int, int, str]:
+    uppercase_count = sum(1 for char in name if char.isupper())
+    lowercase_count = sum(1 for char in name if char.islower())
+    return (uppercase_count, -lowercase_count, -len(name), name)
+
+
+def _select_player_display_name(variants: Sequence[str]) -> str:
+    unique_variants = [variant for variant in dict.fromkeys(variants) if variant]
+    if not unique_variants:
+        return ""
+    return max(unique_variants, key=_player_name_priority)
+
+
 def _resolve_focus_team_label(team_name: str) -> str:
     canonical = TEAM_CANONICAL_LOOKUP.get(normalize_name(team_name))
     if canonical:
@@ -475,11 +488,14 @@ def _build_stats_payload(
     totals = summarize_metrics(metrics_list)
 
     player_groups: Dict[str, List[USCPlayerMatchEntry]] = {}
+    player_name_variants: Dict[str, List[str]] = {}
     for entry in player_entries:
-        player_groups.setdefault(entry.player_name, []).append(entry)
+        normalized_player = normalize_name(entry.player_name)
+        player_groups.setdefault(normalized_player, []).append(entry)
+        player_name_variants.setdefault(normalized_player, []).append(entry.player_name)
 
     players_payload: List[Dict[str, object]] = []
-    for player_name, entries_list in player_groups.items():
+    for normalized_player, entries_list in player_groups.items():
         entries_list.sort(key=lambda item: item.match.kickoff)
         player_metrics = [item.metrics for item in entries_list]
         player_totals = summarize_metrics(player_metrics)
@@ -493,9 +509,11 @@ def _build_stats_payload(
             item.plus_minus for item in entries_list if item.plus_minus is not None
         ]
         jersey_number = entries_list[0].jersey_number
+        name_variants = player_name_variants.get(normalized_player, [])
+        display_name = _select_player_display_name(name_variants)
         players_payload.append(
             {
-                "name": player_name,
+                "name": display_name,
                 "jersey_number": jersey_number,
                 "match_count": len(entries_list),
                 "matches": [item.to_dict() for item in entries_list],

@@ -47,6 +47,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Local cache file for the downloaded schedule CSV.",
     )
     parser.add_argument(
+        "--skip-schedule-download",
+        action="store_true",
+        help=(
+            "Reuse an existing schedule CSV without downloading it again. "
+            "If the file is missing, a download is attempted regardless."
+        ),
+    )
+    parser.add_argument(
         "--output",
         type=Path,
         default=DEFAULT_OUTPUT_PATH,
@@ -58,6 +66,13 @@ def build_parser() -> argparse.ArgumentParser:
         default=STATS_OUTPUT_PATH,
         help="Target JSON output for aggregated statistics (default: docs/data/usc_stats_overview.json).",
     )
+    parser.add_argument(
+        "--skip-html",
+        action="store_true",
+        help=(
+            "Skip generating the HTML report and manifest so only the JSON overviews are updated."
+        ),
+    )
     return parser
 
 
@@ -65,8 +80,15 @@ def main() -> int:
     parser = build_parser()
     args = parser.parse_args()
 
-    download_schedule(args.schedule_path, url=args.schedule_url)
-    matches = load_schedule_from_file(args.schedule_path)
+    schedule_path = args.schedule_path
+    should_download = True
+    if args.skip_schedule_download and schedule_path and schedule_path.exists():
+        should_download = False
+
+    if should_download:
+        download_schedule(schedule_path, url=args.schedule_url)
+
+    matches = load_schedule_from_file(schedule_path)
     metadata = fetch_schedule_match_metadata(args.schedule_page_url)
     detail_cache: dict[str, dict[str, object]] = {}
     enriched_matches = enrich_matches(matches, metadata, detail_cache)
@@ -92,7 +114,17 @@ def main() -> int:
         stats_lookup=stats_lookup,
     )
 
-    build_league_stats_overview(
+    print(
+        "USC scouting overview updated:",
+        f"{stats_payload['match_count']} matches processed -> {args.data_output}",
+    )
+
+    print(
+        "Hamburg scouting overview updated:",
+        f"{hamburg_stats_payload['match_count']} matches processed -> {HAMBURG_OUTPUT_PATH}",
+    )
+
+    league_payload = build_league_stats_overview(
         matches=enriched_matches,
         schedule_csv_url=args.schedule_url,
         schedule_page_url=args.schedule_page_url,
@@ -100,6 +132,14 @@ def main() -> int:
         output_path=LEAGUE_STATS_OUTPUT_PATH,
         stats_lookup=stats_lookup,
     )
+
+    print(
+        "League scouting overview updated:",
+        f"{league_payload['team_count']} teams processed -> {LEAGUE_STATS_OUTPUT_PATH}",
+    )
+
+    if args.skip_html:
+        return 0
 
     html = build_html_report(
         generated_at=datetime.now(tz=BERLIN_TZ),
@@ -134,6 +174,8 @@ def main() -> int:
         json.dumps(manifest_payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+    print("HTML report generated:", args.output)
 
     return 0
 
