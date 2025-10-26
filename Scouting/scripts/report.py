@@ -2504,6 +2504,9 @@ _PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
 _COMPACT_VALUE_PATTERN = re.compile(r"^(?:[+\-\u2212]?\d+(?:[.,]\d+)?%?|\.)$")
 _COMPACT_SIGN_FOLLOW_PATTERN = re.compile(r"^\d+(?:[.,]\d+)?%?$")
 _PLAYER_ROW_START_PATTERN = re.compile(r"^\s*\d{1,3}\s+(?=[^\d\s])")
+_PLAYER_SEGMENT_SPLIT_PATTERN = re.compile(
+    r"(?<!\S)(\d{1,3})(?=\s*[A-ZÄÖÜÀ-ÖØ-Ý])"
+)
 _PLAYER_IDENTIFIER_PATTERN = re.compile(r"^\s*(\d{1,3})\b")
 _PLAYER_ROLE_KEYWORDS = {
     "außenangreifer",
@@ -2815,6 +2818,65 @@ def _parse_player_stats_line(line: str, team_name: str) -> Optional[MatchPlayerS
     )
 
 
+def _split_player_line_candidates(text: str) -> List[str]:
+    if not text:
+        return []
+    stripped = text.strip()
+    if not stripped:
+        return []
+    normalized = re.sub(r"(?<=\d)(?=[A-ZÄÖÜÀ-ÖØ-Ý])", " ", stripped)
+    normalized = re.sub(
+        r"(?:(?<=^)|(?<=\s))([A-ZÄÖÜÀ-ÖØ-Ý])([A-ZÄÖÜÀ-ÖØ-Ý][a-zäöüà-öø-ÿ])",
+        r"\1 \2",
+        normalized,
+    )
+    matches = list(_PLAYER_SEGMENT_SPLIT_PATTERN.finditer(normalized))
+    if len(matches) <= 1:
+        return [normalized]
+    segments: List[str] = []
+    banned_tokens = {
+        "satz",
+        "spiel",
+        "spielbericht",
+        "ges",
+        "punkte",
+        "aufschlag",
+        "annahme",
+        "angriff",
+        "bk",
+        "team",
+        "libero",
+        "nr",
+        "coach",
+        "trainer",
+        "bpdir",
+        "pro",
+    }
+    for index, match in enumerate(matches):
+        start = match.start()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(normalized)
+        segment = normalized[start:end].strip()
+        if not segment:
+            continue
+        tokens = segment.split()
+        if len(tokens) < 2:
+            continue
+        name_token: Optional[str] = None
+        for token in tokens[1:]:
+            if not any(char.isalpha() for char in token):
+                continue
+            if any(char.islower() for char in token):
+                name_token = token
+                break
+        if name_token is None:
+            continue
+        normalized_first = name_token.lower().strip(".:,")
+        if any(normalized_first.startswith(token) for token in banned_tokens):
+            continue
+        segments.append(segment)
+    return segments
+
+
 def _parse_team_player_lines(
     lines: Sequence[str], team_name: str
 ) -> List[MatchPlayerStats]:
@@ -2829,6 +2891,15 @@ def _parse_team_player_lines(
 
     players: List[MatchPlayerStats] = []
     pending: Optional[str] = None
+    expanded_lines: List[str] = []
+
+    for raw_line in lines:
+        for segment in _split_player_line_candidates(raw_line):
+            if segment and segment.strip():
+                expanded_lines.append(segment)
+
+    if not expanded_lines:
+        expanded_lines = [line for line in lines if line and line.strip()]
 
     def try_parse(text: str) -> Optional[MatchPlayerStats]:
         normalized = re.sub(r"\s+", " ", text.strip())
@@ -2868,7 +2939,7 @@ def _parse_team_player_lines(
             players.append(zero_candidate)
         pending = None
 
-    for raw_line in lines:
+    for raw_line in expanded_lines:
         stripped = raw_line.strip()
         if not stripped:
             continue
