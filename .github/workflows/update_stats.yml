@@ -40,5 +40,5 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore: update extracted PDF texts"
-          file_pattern: "Scouting/docs/data/stats_texts/*.txt"
+          file_pattern: "docs/data/stats_texts/*.txt"
           branch: main
