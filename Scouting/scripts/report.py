@@ -2617,7 +2617,7 @@ def resolve_match_stats_metrics(entry: MatchStatsTotals) -> Optional[MatchStatsM
 
 
 _PLAYER_VALUE_PATTERN = re.compile(r"-?\d{1,4}(?:[.,]\d+)?%?|-")
-_COMPACT_VALUE_PATTERN = re.compile(r"^(?:[+\-\u2212]?\d+(?:[.,]\d+)?%?|\.)$")
+_COMPACT_VALUE_PATTERN = re.compile(r"^(?:[+\-\u2212]?\d+(?:[.,]\d*)?%?|\.)$")
 _COMPACT_SIGN_FOLLOW_PATTERN = re.compile(r"^\d+(?:[.,]\d+)?%?$")
 _PLAYER_ROW_START_PATTERN = re.compile(r"^\s*\d{1,3}\s+(?=[^\d\s])")
 _PLAYER_SEGMENT_SPLIT_PATTERN = re.compile(
@@ -2681,6 +2681,8 @@ def _extract_modern_compact_prefix_values(
     normalized = _normalize_modern_compact_text(text)
     for match in _MODERN_COMPACT_PREFIX_PATTERN.finditer(normalized):
         if match.end() < len(normalized) and normalized[match.end()] == "%":
+            continue
+        if match.end() < len(normalized) and normalized[match.end()] in {"+", "-", "\u2212"}:
             continue
         digits = "".join(ch for ch in match.group(0) if ch.isdigit())
         if not digits:
@@ -2836,6 +2838,9 @@ def _tokenize_compact_stats_text(text: str) -> List[str]:
     sanitized = sanitized.replace("·", " ")
     sanitized = sanitized.replace("\u2212", "-")
     sanitized = re.sub(r"[()]+", " ", sanitized)
+    sanitized = re.sub(r"(?<=\d)[+](?=\d)", " +", sanitized)
+    sanitized = re.sub(r"(?<=\d)-(?!\s)(?=\d)", " -", sanitized)
+    sanitized = re.sub(r"(?<=\d)\.(?=\s)", " .", sanitized)
     sanitized = re.sub(r"%(?=\d)", "% ", sanitized)
     parts = [part for part in sanitized.split() if part and part != "*"]
     if not parts:
@@ -2922,26 +2927,53 @@ def _parse_compact_player_stats(
 ) -> Optional[MatchPlayerStats]:
     parts = _tokenize_compact_stats_text(rest)
     modern_match = None
+    value_tokens: List[str]
+    metrics: MatchStatsMetrics
+    using_modern = False
     modern_prefix_present = _extract_modern_compact_prefix_values(rest) is not None
     if modern_prefix_present or _looks_like_modern_compact_format(parts):
         modern_match = re.search(_MODERN_COMPACT_PREFIX_PATTERN, rest)
-        value_tokens = _build_modern_compact_tokens(rest)
-        metrics = _build_metrics_from_compact_tokens(value_tokens)
-        if modern_match:
-            name_segment = rest[: modern_match.start()].strip(" .:-")
+        modern_tokens = _build_modern_compact_tokens(rest)
+        modern_metrics = _build_metrics_from_compact_tokens(modern_tokens)
+        if not (
+            modern_metrics.serves_attempts == 0
+            and modern_metrics.receptions_attempts == 0
+        ):
+            value_tokens = modern_tokens
+            metrics = modern_metrics
+            using_modern = True
+            if modern_match:
+                name_segment = rest[: modern_match.start()].strip(" .:-")
+            else:
+                name_tokens: List[str] = []
+                for token in parts:
+                    if _COMPACT_VALUE_PATTERN.match(token):
+                        break
+                    name_tokens.append(token)
+                name_segment = " ".join(name_tokens).strip(" .:-")
         else:
-            name_tokens: List[str] = []
-            for token in parts:
-                if _COMPACT_VALUE_PATTERN.match(token):
-                    break
-                name_tokens.append(token)
-            name_segment = " ".join(name_tokens).strip(" .:-")
-        total_points = break_points = plus_minus = None
-    else:
+            modern_match = None
+
+    if not using_modern:
         extracted = _extract_compact_value_tokens(parts)
         if not extracted:
             return None
         value_tokens, consumed_count = extracted
+        if value_tokens and _MODERN_COMPACT_PREFIX_PATTERN.fullmatch(value_tokens[0]):
+            value_tokens = value_tokens[1:] + ["."]
+        if (
+            len(value_tokens) >= 15
+            and re.fullmatch(r"\d{2,3}", value_tokens[12] or "")
+            and value_tokens[13] and value_tokens[13].endswith("%")
+        ):
+            combined = value_tokens[12]
+            value_tokens = (
+                value_tokens[:12]
+                + [combined[0], combined[1:]]
+                + value_tokens[13:]
+            )
+            if len(value_tokens) > 16:
+                value_tokens = value_tokens[:16]
         metrics = _build_metrics_from_compact_tokens(value_tokens)
         prefix_length = len(parts) - consumed_count
         name_tokens = parts[:prefix_length]
@@ -2953,6 +2985,7 @@ def _parse_compact_player_stats(
             name_segment = pre_str[: cutoff.start()].strip(" .:-")
         else:
             name_segment = pre_str.strip(" .:-")
+        modern_match = None
     if not name_segment:
         return None
     cleaned_parts = [
@@ -3378,6 +3411,74 @@ def _collect_candidate_player_lines(
     return collected
 
 
+def _split_pdf_stats_lines(text: str) -> List[str]:
+    """Split raw stats text into logical lines even if the PDF omits newlines."""
+
+    sanitized = text.replace("\r\n", "\n").replace("\r", "\n")
+    if "\n" not in sanitized:
+        # Insert artificial line breaks before structural markers that separate
+        # the team headers, totals rows and set summaries. Older "Vote" PDFs for
+        # example render the entire page on a single line which confused the
+        # downstream parser.
+        sanitized = re.sub(
+            r"(?i)(players?\s+(?:total|gesamt))",
+            r"\n\1",
+            sanitized,
+        )
+        sanitized = re.sub(r"(?i)(satz\s+\d)", r"\n\1", sanitized)
+        sanitized = re.sub(r"(?i)(set\s+\d)", r"\n\1", sanitized)
+    return sanitized.splitlines()
+
+
+def _select_totals_line(candidates: Sequence[str]) -> str:
+    """Pick the totals line from the collected candidates for a team."""
+
+    normalized_candidates = [
+        _normalize_stats_totals_line(entry)
+        for entry in candidates
+        if entry.strip()
+    ]
+    if not normalized_candidates:
+        return ""
+
+    best_candidate: Optional[str] = None
+    best_score = -1
+    for window in range(1, len(normalized_candidates) + 1):
+        for start in range(len(normalized_candidates) - window + 1):
+            combined = " ".join(
+                normalized_candidates[start : start + window]
+            ).strip()
+            if not combined:
+                continue
+            if re.search(r"[A-Za-zÄÖÜäöüß]", combined):
+                continue
+            parsed = _parse_match_stats_metrics(combined)
+            if parsed is not None:
+                score = (
+                    parsed.serves_attempts
+                    + parsed.receptions_attempts
+                    + parsed.attacks_attempts
+                    + parsed.blocks_points
+                )
+                if score > best_score:
+                    best_score = score
+                    best_candidate = combined
+
+    if best_candidate is not None:
+        parsed = _parse_match_stats_metrics(best_candidate)
+        if parsed is None:
+            return ""
+        if (
+            parsed.serves_errors > parsed.serves_attempts
+            or parsed.receptions_errors > parsed.receptions_attempts
+            or parsed.attacks_errors > parsed.attacks_attempts
+        ):
+            return ""
+        return best_candidate
+
+    return " ".join(normalized_candidates)
+
+
 def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     names: List[str] = []
     team_pattern = re.compile(r"(?:Spielbericht\s+|Match report\s+)?(.+?)\s+\d+\s*$", re.IGNORECASE)
@@ -3428,7 +3529,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
         return ()
     raw_text = reader.pages[0].extract_text() or ""
     cleaned = raw_text.replace("\x00", "")
-    lines = cleaned.splitlines()
+    lines = _split_pdf_stats_lines(cleaned)
     if not lines:
         return ()
     markers = [idx for idx, line in enumerate(lines) if _is_player_totals_marker(line)]
@@ -3477,8 +3578,7 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
             if entry not in points_lines
         ]
         ordered_totals = points_lines + other_lines if points_lines else totals_candidates
-        totals_line = " ".join(ordered_totals)
-        normalized_totals = _normalize_stats_totals_line(totals_line)
+        normalized_totals = _select_totals_line(ordered_totals)
         team_name = (
             team_names[marker_index]
             if marker_index < len(team_names)
@@ -3498,6 +3598,12 @@ def _parse_stats_totals_pdf(data: bytes) -> Tuple[MatchStatsTotals, ...]:
                 player_lines.extend(trailing_lines)
         else:
             player_lines = trailing_lines
+        if not player_lines:
+            fallback_lines = [
+                entry for entry in totals_candidates if re.search(r"[A-Za-zÄÖÜäöüß]", entry)
+            ]
+            if fallback_lines:
+                player_lines = fallback_lines
         players = _parse_team_player_lines(player_lines, team_name)
         summaries.append(
             MatchStatsTotals(

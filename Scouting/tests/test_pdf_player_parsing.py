@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from pathlib import Path
 
 from scripts import report as report_module
 from scripts.report import (
@@ -13,6 +14,11 @@ from scripts.report import (
     _build_modern_compact_tokens,
     fetch_match_stats_totals,
 )
+
+
+def _load_stats_pdf(stats_id: str) -> bytes:
+    pdf_path = Path(__file__).resolve().parents[2] / "docs" / "data" / "stats_pdfs" / f"{stats_id}.pdf"
+    return pdf_path.read_bytes()
 
 
 def test_parse_player_stats_line_single_line() -> None:
@@ -120,6 +126,19 @@ def test_parse_compact_stats_handles_split_negative_tokens() -> None:
     assert parsed.metrics.attacks_points == 9
 
 
+def test_parse_compact_stats_ignores_vote_prefix_false_positive() -> None:
+    line = (
+        "10 Akimoto Miku 2 4 2 6 5 5.9 22 5 +12 14 5 . 26 1 31% ( 15%) 38 1 3 20 53% 2"
+    )
+    parsed = _parse_player_stats_line(line, "Dresdner SC")
+    assert parsed is not None
+    assert parsed.metrics.serves_attempts == 14
+    assert parsed.metrics.receptions_attempts == 26
+    assert parsed.metrics.receptions_errors == 1
+    assert parsed.metrics.receptions_positive_pct == "31%"
+    assert parsed.metrics.receptions_perfect_pct == "15%"
+
+
 def test_split_player_line_candidates_handles_prefixed_role_markers() -> None:
     raw_line = (
         "Kotrainer 1LMolenaar Pippa   .   .  -2   .   . .  30   2  27% ( 13%)   .   .   . .  . . "
@@ -162,6 +181,32 @@ def test_extract_modern_compact_percentages_trims_prefix_digits() -> None:
     positive, perfect = report_module._extract_modern_compact_percentages(text)
     assert positive == "24%"
     assert perfect == "7%"
+
+
+def test_parse_stats_totals_pdf_decodes_vote_layout_players() -> None:
+    payload = _parse_stats_totals_pdf(
+        _load_stats_pdf("bb0ac91d-a7d0-44d1-8972-651aca6b905a")
+    )
+    dresden = next(summary for summary in payload if summary.team_name == "Dresdner SC")
+    akimoto = next(player for player in dresden.players if player.player_name == "Akimoto Miku")
+    assert akimoto.metrics.serves_attempts == 14
+    assert akimoto.metrics.serves_errors == 5
+    assert akimoto.metrics.serves_points == 0
+    assert akimoto.metrics.receptions_attempts == 26
+    assert akimoto.metrics.receptions_errors == 1
+
+
+def test_parse_stats_totals_pdf_handles_second_vote_layout_match() -> None:
+    payload = _parse_stats_totals_pdf(
+        _load_stats_pdf("63c0493b-c5fe-4314-8308-926de923c0fe")
+    )
+    dresden = next(summary for summary in payload if summary.team_name == "Dresdner SC")
+    akimoto = next(player for player in dresden.players if player.player_name == "Akimoto Miku")
+    assert akimoto.metrics.serves_attempts == 16
+    assert akimoto.metrics.serves_errors == 3
+    assert akimoto.metrics.serves_points == 4
+    assert akimoto.metrics.receptions_attempts == 20
+    assert akimoto.metrics.receptions_errors == 2
 
 
 def test_build_modern_compact_tokens_decodes_split_prefix_digits() -> None:
