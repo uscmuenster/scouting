@@ -6,13 +6,15 @@ import csv
 import json
 from collections import Counter
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
+import re
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Set, Tuple
 
 import requests
 
 from .report import (
+    BERLIN_TZ,
     DEFAULT_SCHEDULE_URL,
     RosterMember,
     Match,
@@ -30,6 +32,7 @@ from .report import (
     enrich_matches,
     fetch_schedule,
     fetch_schedule_match_metadata,
+    fetch_match_stats_totals,
     get_team_short_label,
     is_usc,
     load_schedule_from_file,
@@ -59,6 +62,8 @@ DRESDEN_OUTPUT_PATH = Path("docs/data/dresden_stats_overview.json")
 LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
 
 DEFAULT_ROSTER_DIR = Path("docs/data/rosters")
+STATS_TEXT_CACHE_DIR = Path("docs/data/stats_texts")
+STATS_PDF_INDEX_PATH = Path("docs/data/stats_pdfs/index.json")
 
 
 @dataclass(frozen=True)
@@ -169,6 +174,160 @@ def _ensure_path(path: Optional[Path | str]) -> Optional[Path]:
     if path is None or isinstance(path, Path):
         return path
     return Path(path)
+
+
+def _load_cached_stats_index() -> Dict[str, str]:
+    if not STATS_PDF_INDEX_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(STATS_PDF_INDEX_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    if not isinstance(payload, Mapping):
+        return {}
+    index: Dict[str, str] = {}
+    for raw_key, raw_value in payload.items():
+        key = str(raw_key).strip()
+        if not key:
+            continue
+        if isinstance(raw_value, str) and raw_value:
+            index[key] = raw_value
+    return index
+
+
+def _load_cached_stats_text(stats_id: str) -> Optional[str]:
+    if not stats_id:
+        return None
+    path = STATS_TEXT_CACHE_DIR / f"{stats_id}.txt"
+    if not path.exists():
+        return None
+    try:
+        return path.read_text(encoding="utf-8")
+    except OSError:
+        return None
+
+
+def _normalize_digit_spacing(text: str) -> str:
+    return re.sub(r"(?<=\d)\s+(?=\d)", "", text)
+
+
+def _extract_cached_match_datetime(
+    collapsed_text: str, match_number: str
+) -> datetime:
+    search_space = collapsed_text
+    for keyword in ("spieldatumbeginn", "matchdatestart", "matchdatetime"):
+        idx = search_space.lower().find(keyword)
+        if idx == -1:
+            continue
+        segment = search_space[idx : idx + 160]
+        segment = re.sub(r"\s+", "", segment)
+        match = re.search(
+            r"(\d{4})(\d{2})(\d{2})(\d{4})(\d{2})[.:](\d{2})(?:[.:](\d{2}))?",
+            segment,
+        )
+        if match:
+            _, day, month, year, hour, minute, second = match.groups()
+            try:
+                second_value = int(second) if second is not None else 0
+                return datetime(
+                    int(year),
+                    int(month),
+                    int(day),
+                    int(hour),
+                    int(minute),
+                    second_value,
+                    tzinfo=BERLIN_TZ,
+                )
+            except ValueError:
+                continue
+    fallback_day = 0
+    if match_number and match_number.isdigit():
+        fallback_day = int(match_number)
+    return datetime(1970, 1, 1, tzinfo=BERLIN_TZ) + timedelta(days=fallback_day)
+
+
+def _parse_cached_stats_metadata(
+    match_number: str, stats_id: str, home_team: str, away_team: str
+) -> Optional[Dict[str, object]]:
+    raw_text = _load_cached_stats_text(stats_id)
+    if not raw_text:
+        return None
+    collapsed = _normalize_digit_spacing(raw_text)
+    lines = collapsed.splitlines()
+    head_segment = " ".join(lines[:5])
+    lowered = head_segment.lower()
+    for marker in ("spieldatum", "matchdate", "matchdatetime"):
+        marker_index = lowered.find(marker)
+        if marker_index != -1:
+            head_segment = head_segment[:marker_index]
+            break
+    score_segment = re.sub(r"(\d)\s*[:\-]\s*(\d)", r"\1 \2", head_segment)
+    pattern = re.compile(
+        rf"{re.escape(home_team)}\D*(\d+)\D+{re.escape(away_team)}\D*(\d+)",
+        re.IGNORECASE,
+    )
+    score_match = pattern.search(score_segment)
+    if not score_match:
+        return None
+    try:
+        home_score = int(score_match.group(1))
+        away_score = int(score_match.group(2))
+    except ValueError:
+        return None
+    kickoff = _extract_cached_match_datetime(collapsed, match_number)
+    return {
+        "home_score": home_score,
+        "away_score": away_score,
+        "kickoff": kickoff,
+    }
+
+
+def _load_cached_stats_matches(existing_matches: Sequence[Match]) -> List[Match]:
+    cached_index = _load_cached_stats_index()
+    if not cached_index:
+        return []
+    seen_numbers = {
+        match.match_number for match in existing_matches if match.match_number
+    }
+    seen_urls = {
+        match.stats_url for match in existing_matches if match.stats_url
+    }
+    fallback_matches: List[Match] = []
+    for match_number, filename in cached_index.items():
+        stats_id = Path(filename).stem
+        stats_url = f"https://www.volleyball-bundesliga.de/uploads/{stats_id}"
+        if match_number in seen_numbers or stats_url in seen_urls:
+            continue
+        summaries = fetch_match_stats_totals(stats_url)
+        if len(summaries) < 2:
+            continue
+        home_summary, away_summary = summaries[:2]
+        metadata = _parse_cached_stats_metadata(
+            match_number, stats_id, home_summary.team_name, away_summary.team_name
+        )
+        if metadata is None:
+            continue
+        kickoff = metadata.get("kickoff")
+        if not isinstance(kickoff, datetime):
+            kickoff = _extract_cached_match_datetime("", match_number)
+        result = MatchResult(
+            score=f"{metadata['home_score']}:{metadata['away_score']}",
+            total_points=None,
+            sets=(),
+        )
+        fallback_matches.append(
+            Match(
+                kickoff=kickoff,
+                home_team=home_summary.team_name,
+                away_team=away_summary.team_name,
+                host=home_summary.team_name,
+                location="",
+                result=result,
+                match_number=match_number,
+                stats_url=stats_url,
+            )
+        )
+    return fallback_matches
 
 
 def _player_name_priority(name: str) -> Tuple[int, int, int, str]:
@@ -531,16 +690,22 @@ def _prepare_matches_and_lookup(
     stats_lookup: Optional[Mapping[str, Sequence[MatchStatsTotals]]],
 ) -> Tuple[Sequence[Match], Mapping[str, Sequence[MatchStatsTotals]]]:
     if matches is None:
-        matches = _load_enriched_matches(
+        loaded_matches: Sequence[Match] = _load_enriched_matches(
             schedule_csv_url=schedule_csv_url,
             schedule_page_url=schedule_page_url,
             schedule_path=schedule_path,
         )
+    else:
+        loaded_matches = list(matches)
+
+    fallback_matches = _load_cached_stats_matches(loaded_matches)
+    if fallback_matches:
+        loaded_matches = list(loaded_matches) + fallback_matches
 
     if stats_lookup is None:
-        stats_lookup = collect_match_stats_totals(matches)
+        stats_lookup = collect_match_stats_totals(loaded_matches)
 
-    return matches, stats_lookup
+    return loaded_matches, stats_lookup
 
 
 def _normalize_roster_member_name(member: RosterMember) -> str:
