@@ -10,6 +10,7 @@ from scripts.report import (
     _parse_player_stats_line,
     _parse_stats_totals_pdf,
     _parse_team_player_lines,
+    _build_modern_compact_tokens,
     fetch_match_stats_totals,
 )
 
@@ -161,6 +162,32 @@ def test_extract_modern_compact_percentages_trims_prefix_digits() -> None:
     positive, perfect = report_module._extract_modern_compact_percentages(text)
     assert positive == "24%"
     assert perfect == "7%"
+
+
+def test_build_modern_compact_tokens_decodes_split_prefix_digits() -> None:
+    snippet = (
+        "Levinska Marta Kamelija 4 6 4 5 4 5 . 5 1 5 5 3 1 2 3 . . . . . 3 7 5 4 1 4"
+        " 3 8 % 1 7 3 2 1 3"
+    )
+    tokens = _build_modern_compact_tokens(snippet)
+    assert tokens[3] == "46"
+    assert tokens[4] == "4"
+    assert tokens[5] == "5"
+    assert tokens[6] == "45"
+    assert tokens[7] == "5"
+
+
+def test_build_modern_compact_tokens_uses_longest_prefix_slice() -> None:
+    snippet = (
+        "Levinska Marta Kamelija 4 4 5 6 . 3 1 2 5 1 2 1 3 . 1 . . . . 2 2 . . 1 1"
+        " 5 0 % . 5 8 3 2 4 2 7 3 9 9"
+    )
+    tokens = _build_modern_compact_tokens(snippet)
+    assert tokens[3] == "44"
+    assert tokens[4] == "5"
+    assert tokens[5] == "6"
+    assert tokens[6] == "31"
+    assert tokens[7] == "25"
 
 
 def test_parse_stats_totals_pdf_handles_players_after_totals_marker(monkeypatch) -> None:

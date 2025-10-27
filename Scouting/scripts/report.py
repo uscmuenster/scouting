@@ -2666,6 +2666,32 @@ _ZERO_COMPACT_SUFFIX = " " + " ".join(_ZERO_COMPACT_VALUE_TOKENS)
 _MODERN_COMPACT_PREFIX_PATTERN = re.compile(r"\d{4,}\.\d+")
 
 
+def _extract_modern_compact_prefix_values(
+    text: str,
+) -> Optional[Tuple[int, int, int, int, int]]:
+    """Return serve and reception counts encoded in modern compact stat rows.
+
+    The modern compact layout renders the leading serve/reception attempts as a
+    single decimal token where digits may be split by spaces during PDF text
+    extraction.  We therefore normalise the text before attempting to decode the
+    prefix and pick the longest valid digit sequence to avoid truncating the
+    reception counts when additional digits follow the decimal separator.
+    """
+
+    normalized = _normalize_modern_compact_text(text)
+    for match in _MODERN_COMPACT_PREFIX_PATTERN.finditer(normalized):
+        if match.end() < len(normalized) and normalized[match.end()] == "%":
+            continue
+        digits = "".join(ch for ch in match.group(0) if ch.isdigit())
+        if not digits:
+            continue
+        for end in range(len(digits), 4, -1):
+            decoded = _decode_modern_compact_prefix(digits[:end])
+            if decoded:
+                return decoded
+    return None
+
+
 def _normalize_modern_compact_text(text: str) -> str:
     """Collapse whitespace and control characters in modern compact stats text."""
 
@@ -2760,12 +2786,9 @@ def _extract_modern_compact_attack(text: str) -> Tuple[str, str, str, str, str, 
 
 
 def _build_modern_compact_tokens(text: str) -> List[str]:
-    serves_attempts = serves_errors = serves_points = receptions_attempts = receptions_errors = "0"
-    prefix = None
-    for token in _tokenize_compact_stats_text(text):
-        if _MODERN_COMPACT_PREFIX_PATTERN.match(token):
-            prefix = _decode_modern_compact_prefix(token)
-            break
+    serves_attempts = serves_errors = serves_points = "0"
+    receptions_attempts = receptions_errors = "0"
+    prefix = _extract_modern_compact_prefix_values(text)
     if prefix:
         (
             serves_attempts,
@@ -2899,13 +2922,20 @@ def _parse_compact_player_stats(
 ) -> Optional[MatchPlayerStats]:
     parts = _tokenize_compact_stats_text(rest)
     modern_match = None
-    if _looks_like_modern_compact_format(parts):
+    modern_prefix_present = _extract_modern_compact_prefix_values(rest) is not None
+    if modern_prefix_present or _looks_like_modern_compact_format(parts):
         modern_match = re.search(_MODERN_COMPACT_PREFIX_PATTERN, rest)
         value_tokens = _build_modern_compact_tokens(rest)
         metrics = _build_metrics_from_compact_tokens(value_tokens)
-        name_segment = (
-            rest[: modern_match.start()].strip(" .:-") if modern_match else ""
-        )
+        if modern_match:
+            name_segment = rest[: modern_match.start()].strip(" .:-")
+        else:
+            name_tokens: List[str] = []
+            for token in parts:
+                if _COMPACT_VALUE_PATTERN.match(token):
+                    break
+                name_tokens.append(token)
+            name_segment = " ".join(name_tokens).strip(" .:-")
         total_points = break_points = plus_minus = None
     else:
         extracted = _extract_compact_value_tokens(parts)
