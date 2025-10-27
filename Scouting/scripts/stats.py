@@ -430,32 +430,73 @@ def _weighted_percentage(
     return f"{round(weighted_average)}%"
 
 
+def _percentage_from_counts(successes: int, attempts: int) -> Optional[str]:
+    if attempts <= 0:
+        return None
+    percentage = round(successes * 100 / attempts)
+    return f"{percentage}%"
+
+
+def _select_percentage_value(
+    counts_value: Optional[str], fallback_value: Optional[str]
+) -> Optional[str]:
+    if counts_value is None:
+        return fallback_value
+    if counts_value == "0%" and fallback_value not in {None, "0%"}:
+        return fallback_value
+    return counts_value
+
+
 def summarize_metrics(entries: Sequence[MatchStatsMetrics]) -> Optional[AggregatedMetrics]:
     if not entries:
         return None
 
+    serves_attempts = sum(item.serves_attempts for item in entries)
+    serves_errors = sum(item.serves_errors for item in entries)
+    serves_points = sum(item.serves_points for item in entries)
+    receptions_attempts = sum(item.receptions_attempts for item in entries)
+    receptions_errors = sum(item.receptions_errors for item in entries)
+    receptions_positive = sum(
+        getattr(item, "receptions_positive", 0) for item in entries
+    )
+    receptions_perfect = sum(
+        getattr(item, "receptions_perfect", 0) for item in entries
+    )
+    attacks_attempts = sum(item.attacks_attempts for item in entries)
+    attacks_errors = sum(item.attacks_errors for item in entries)
+    attacks_blocked = sum(item.attacks_blocked for item in entries)
+    attacks_points = sum(item.attacks_points for item in entries)
+    blocks_points = sum(item.blocks_points for item in entries)
+
+    receptions_positive_pct = _select_percentage_value(
+        _percentage_from_counts(receptions_positive, receptions_attempts),
+        _weighted_percentage(entries, "receptions_attempts", "receptions_positive_pct"),
+    )
+    receptions_perfect_pct = _select_percentage_value(
+        _percentage_from_counts(receptions_perfect, receptions_attempts),
+        _weighted_percentage(entries, "receptions_attempts", "receptions_perfect_pct"),
+    )
+    attacks_success_pct = _select_percentage_value(
+        _percentage_from_counts(attacks_points, attacks_attempts),
+        _weighted_percentage(entries, "attacks_attempts", "attacks_success_pct"),
+    )
+
     return AggregatedMetrics(
-        serves_attempts=sum(item.serves_attempts for item in entries),
-        serves_errors=sum(item.serves_errors for item in entries),
-        serves_points=sum(item.serves_points for item in entries),
-        receptions_attempts=sum(item.receptions_attempts for item in entries),
-        receptions_errors=sum(item.receptions_errors for item in entries),
-        receptions_positive=sum(getattr(item, "receptions_positive", 0) for item in entries),
-        receptions_perfect=sum(getattr(item, "receptions_perfect", 0) for item in entries),
-        receptions_positive_pct=_weighted_percentage(
-            entries, "receptions_attempts", "receptions_positive_pct"
-        ),
-        receptions_perfect_pct=_weighted_percentage(
-            entries, "receptions_attempts", "receptions_perfect_pct"
-        ),
-        attacks_attempts=sum(item.attacks_attempts for item in entries),
-        attacks_errors=sum(item.attacks_errors for item in entries),
-        attacks_blocked=sum(item.attacks_blocked for item in entries),
-        attacks_points=sum(item.attacks_points for item in entries),
-        attacks_success_pct=_weighted_percentage(
-            entries, "attacks_attempts", "attacks_success_pct"
-        ),
-        blocks_points=sum(item.blocks_points for item in entries),
+        serves_attempts=serves_attempts,
+        serves_errors=serves_errors,
+        serves_points=serves_points,
+        receptions_attempts=receptions_attempts,
+        receptions_errors=receptions_errors,
+        receptions_positive=receptions_positive,
+        receptions_perfect=receptions_perfect,
+        receptions_positive_pct=receptions_positive_pct,
+        receptions_perfect_pct=receptions_perfect_pct,
+        attacks_attempts=attacks_attempts,
+        attacks_errors=attacks_errors,
+        attacks_blocked=attacks_blocked,
+        attacks_points=attacks_points,
+        attacks_success_pct=attacks_success_pct,
+        blocks_points=blocks_points,
     )
 
 
