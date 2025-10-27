@@ -60,6 +60,22 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--schwerin-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Schwerin-JSON-Datei (Standard: docs/data/schwerin_stats_overview.json)."
+        ),
+    )
+    parser.add_argument(
+        "--dresden-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Dresden-JSON-Datei (Standard: docs/data/dresden_stats_overview.json)."
+        ),
+    )
+    parser.add_argument(
         "--league-output",
         type=Path,
         default=None,
@@ -82,9 +98,13 @@ def main() -> int:
     from scripts import (
         AACHEN_CANONICAL_NAME,
         AACHEN_OUTPUT_PATH,
+        DRESDEN_CANONICAL_NAME,
+        DRESDEN_OUTPUT_PATH,
         HAMBURG_CANONICAL_NAME,
         HAMBURG_OUTPUT_PATH,
         LEAGUE_STATS_OUTPUT_PATH,
+        SCHWERIN_CANONICAL_NAME,
+        SCHWERIN_OUTPUT_PATH,
         STATS_OUTPUT_PATH,
     )
     from scripts.report import USC_CANONICAL_NAME
@@ -98,6 +118,8 @@ def main() -> int:
     usc_output_path = args.output or STATS_OUTPUT_PATH
     hamburg_output_path = args.hamburg_output or HAMBURG_OUTPUT_PATH
     aachen_output_path = args.aachen_output or AACHEN_OUTPUT_PATH
+    schwerin_output_path = args.schwerin_output or SCHWERIN_OUTPUT_PATH
+    dresden_output_path = args.dresden_output or DRESDEN_OUTPUT_PATH
     league_output_path = args.league_output or LEAGUE_STATS_OUTPUT_PATH
 
     build_kwargs = {
@@ -142,6 +164,30 @@ def main() -> int:
         "Aachen-Scouting-Übersicht aktualisiert:",
         f"{aachen_payload['match_count']} Spiele verarbeitet",
         f"-> {aachen_output_path}",
+    )
+
+    schwerin_payload = build_stats_overview(
+        output_path=schwerin_output_path,
+        focus_team=SCHWERIN_CANONICAL_NAME,
+        **build_kwargs,
+    )
+
+    print(
+        "Schwerin-Scouting-Übersicht aktualisiert:",
+        f"{schwerin_payload['match_count']} Spiele verarbeitet",
+        f"-> {schwerin_output_path}",
+    )
+
+    dresden_payload = build_stats_overview(
+        output_path=dresden_output_path,
+        focus_team=DRESDEN_CANONICAL_NAME,
+        **build_kwargs,
+    )
+
+    print(
+        "Dresden-Scouting-Übersicht aktualisiert:",
+        f"{dresden_payload['match_count']} Spiele verarbeitet",
+        f"-> {dresden_output_path}",
     )
 
     league_payload = build_league_stats_overview(

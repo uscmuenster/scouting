@@ -50,6 +50,12 @@ HAMBURG_OUTPUT_PATH = Path("docs/data/hamburg_stats_overview.json")
 AACHEN_CANONICAL_NAME = "Ladies in Black Aachen"
 AACHEN_OUTPUT_PATH = Path("docs/data/aachen_stats_overview.json")
 
+SCHWERIN_CANONICAL_NAME = "SSC Palmberg Schwerin"
+SCHWERIN_OUTPUT_PATH = Path("docs/data/schwerin_stats_overview.json")
+
+DRESDEN_CANONICAL_NAME = "Dresdner SC"
+DRESDEN_OUTPUT_PATH = Path("docs/data/dresden_stats_overview.json")
+
 LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
 
 DEFAULT_ROSTER_DIR = Path("docs/data/rosters")
@@ -927,9 +933,13 @@ __all__ = [
     "STATS_OUTPUT_PATH",
     "AACHEN_CANONICAL_NAME",
     "AACHEN_OUTPUT_PATH",
+    "DRESDEN_CANONICAL_NAME",
+    "DRESDEN_OUTPUT_PATH",
     "HAMBURG_CANONICAL_NAME",
     "HAMBURG_OUTPUT_PATH",
     "LEAGUE_STATS_OUTPUT_PATH",
+    "SCHWERIN_CANONICAL_NAME",
+    "SCHWERIN_OUTPUT_PATH",
     "USCMatchStatsEntry",
     "USCPlayerMatchEntry",
     "build_stats_overview",
