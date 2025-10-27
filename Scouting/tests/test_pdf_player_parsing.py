@@ -120,6 +120,19 @@ def test_parse_compact_stats_handles_split_negative_tokens() -> None:
     assert parsed.metrics.attacks_points == 9
 
 
+def test_parse_compact_stats_ignores_vote_prefix_false_positive() -> None:
+    line = (
+        "10 Akimoto Miku 2 4 2 6 5 5.9 22 5 +12 14 5 . 26 1 31% ( 15%) 38 1 3 20 53% 2"
+    )
+    parsed = _parse_player_stats_line(line, "Dresdner SC")
+    assert parsed is not None
+    assert parsed.metrics.serves_attempts == 14
+    assert parsed.metrics.receptions_attempts == 26
+    assert parsed.metrics.receptions_errors == 1
+    assert parsed.metrics.receptions_positive_pct == "31%"
+    assert parsed.metrics.receptions_perfect_pct == "15%"
+
+
 def test_split_player_line_candidates_handles_prefixed_role_markers() -> None:
     raw_line = (
         "Kotrainer 1LMolenaar Pippa   .   .  -2   .   . .  30   2  27% ( 13%)   .   .   . .  . . "
