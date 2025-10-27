@@ -17,9 +17,13 @@ from .report import (
 from .stats import (
     AACHEN_CANONICAL_NAME,
     AACHEN_OUTPUT_PATH,
+    DRESDEN_CANONICAL_NAME,
+    DRESDEN_OUTPUT_PATH,
     HAMBURG_CANONICAL_NAME,
     HAMBURG_OUTPUT_PATH,
     LEAGUE_STATS_OUTPUT_PATH,
+    SCHWERIN_CANONICAL_NAME,
+    SCHWERIN_OUTPUT_PATH,
     STATS_OUTPUT_PATH,
     build_league_stats_overview,
     build_stats_overview,
@@ -126,6 +130,26 @@ def main() -> int:
         stats_lookup=stats_lookup,
     )
 
+    schwerin_stats_payload = build_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=SCHWERIN_OUTPUT_PATH,
+        focus_team=SCHWERIN_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
+    )
+
+    dresden_stats_payload = build_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=DRESDEN_OUTPUT_PATH,
+        focus_team=DRESDEN_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
+    )
+
     print(
         "USC scouting overview updated:",
         f"{stats_payload['match_count']} matches processed -> {args.data_output}",
@@ -139,6 +163,16 @@ def main() -> int:
     print(
         "Aachen scouting overview updated:",
         f"{aachen_stats_payload['match_count']} matches processed -> {AACHEN_OUTPUT_PATH}",
+    )
+
+    print(
+        "Schwerin scouting overview updated:",
+        f"{schwerin_stats_payload['match_count']} matches processed -> {SCHWERIN_OUTPUT_PATH}",
+    )
+
+    print(
+        "Dresden scouting overview updated:",
+        f"{dresden_stats_payload['match_count']} matches processed -> {DRESDEN_OUTPUT_PATH}",
     )
 
     league_payload = build_league_stats_overview(
@@ -163,6 +197,8 @@ def main() -> int:
         usc_scouting=stats_payload,
         hamburg_scouting=hamburg_stats_payload,
         aachen_scouting=aachen_stats_payload,
+        schwerin_scouting=schwerin_stats_payload,
+        dresden_scouting=dresden_stats_payload,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
