@@ -645,7 +645,7 @@ def _build_stats_payload(
             if roster_number not in jersey_list:
                 jersey_list.append(roster_number)
 
-    allowed_players: Optional[Set[str]] = None
+    allowed_keys: Optional[Set[str]] = None
     if focus_roster:
         roster_names = {
             _normalize_roster_member_name(member)
@@ -654,19 +654,44 @@ def _build_stats_payload(
         }
         roster_names.discard("")
         if roster_names:
-            allowed_players = roster_names
+            allowed_keys = set()
+            allowed_keys.update(player_roster_members.keys())
 
-    if allowed_players:
+            for key, entries in player_groups.items():
+                if key in allowed_keys:
+                    continue
+
+                if key in roster_names:
+                    allowed_keys.add(key)
+                    continue
+
+                for entry in entries:
+                    normalized_entry = normalize_name(entry.player_name)
+                    if normalized_entry in roster_names:
+                        allowed_keys.add(key)
+                        break
+
+    if allowed_keys:
         filtered_groups = {
             key: value
             for key, value in player_groups.items()
-            if key in allowed_players
+            if key in allowed_keys
         }
         if filtered_groups:
             player_groups = filtered_groups
             player_name_variants = {
                 key: player_name_variants[key]
                 for key in filtered_groups
+            }
+            player_jersey_numbers = {
+                key: player_jersey_numbers[key]
+                for key in filtered_groups
+                if key in player_jersey_numbers
+            }
+            player_roster_members = {
+                key: player_roster_members[key]
+                for key in filtered_groups
+                if key in player_roster_members
             }
 
     players_payload: List[Dict[str, object]] = []
