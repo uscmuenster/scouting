@@ -1,10 +1,10 @@
 {
-  "generated": "2025-10-26T21:45:24.757447+00:00",
+  "generated": "2025-10-27T05:39:06.068528+00:00",
   "team": "USC Münster",
   "match_count": 2,
   "matches": [
     {
-      "match_number": "2001",
+      "match_number": "2005",
       "match_id": "777479976",
       "kickoff": "2025-10-12T16:00:00+02:00",
       "is_home": true,
@@ -14,20 +14,9 @@
       "location": "Sporthalle Berg Fidel (48153 Münster)",
       "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true",
       "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
-      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/e58c59f9-6b0f-4d2b-b725-6205fd7aaf65/2001",
+      "scoresheet_url": null,
       "attendance": "2124",
-      "mvps": [
-        {
-          "medal": "Gold",
-          "name": "Jordan, Emilia",
-          "team": "USC Münster"
-        },
-        {
-          "medal": "Silber",
-          "name": "Kirchhoff, Mia",
-          "team": "SSC Palmberg Schwerin"
-        }
-      ],
+      "mvps": [],
       "result": {
         "score": "3:2",
         "total_points": "106:106",
@@ -71,18 +60,7 @@
       "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
       "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/ab4891bf-921b-4fe1-8aaa-97f2b9acb6d9/2011",
       "attendance": "433",
-      "mvps": [
-        {
-          "medal": "Silber",
-          "name": "Neuhaus, Frauke",
-          "team": "Binder Blaubären TSV Flacht"
-        },
-        {
-          "medal": "Gold",
-          "name": "Ford, Brianna",
-          "team": "USC Münster"
-        }
-      ],
+      "mvps": [],
       "result": {
         "score": "3:0",
         "total_points": "75:49",
@@ -129,7 +107,7 @@
     "attacks_success_pct": "43%",
     "blocks_points": 16
   },
-  "player_count": 16,
+  "player_count": 14,
   "players": [
     {
       "name": "MOLENAAR Pippa",
@@ -139,7 +117,7 @@
         {
           "player": "Molenaar Pippa",
           "jersey_number": 1,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -252,7 +230,7 @@
         {
           "player": "Schaefer Lara-Marie",
           "jersey_number": 2,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -365,7 +343,7 @@
         {
           "player": "Spöler Esther",
           "jersey_number": 3,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -478,7 +456,7 @@
         {
           "player": "Malm Cecilia",
           "jersey_number": 5,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -591,7 +569,7 @@
         {
           "player": "Kömmling Elena",
           "jersey_number": 7,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -699,8 +677,52 @@
     {
       "name": "IU Yina",
       "jersey_number": 8,
-      "match_count": 1,
+      "match_count": 2,
       "matches": [
+        {
+          "player": "Liu Yina",
+          "jersey_number": 8,
+          "match_number": "2005",
+          "match_id": "777479976",
+          "kickoff": "2025-10-12T16:00:00+02:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
+          "result": {
+            "score": "3:2",
+            "total_points": "106:106",
+            "sets": [
+              "20:25",
+              "25:22",
+              "21:25",
+              "25:21",
+              "15:13"
+            ],
+            "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
         {
           "player": "IU Yina",
           "jersey_number": 8,
@@ -766,77 +788,6 @@
       "plus_minus_total": 0
     },
     {
-      "name": "Liu Yina",
-      "jersey_number": 8,
-      "match_count": 1,
-      "matches": [
-        {
-          "player": "Liu Yina",
-          "jersey_number": 8,
-          "match_number": "2001",
-          "match_id": "777479976",
-          "kickoff": "2025-10-12T16:00:00+02:00",
-          "is_home": true,
-          "opponent": "SSC Palmberg Schwerin",
-          "opponent_short": "Schwerin",
-          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479976&hideHistoryBackButton=true",
-          "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
-          "result": {
-            "score": "3:2",
-            "total_points": "106:106",
-            "sets": [
-              "20:25",
-              "25:22",
-              "21:25",
-              "25:21",
-              "15:13"
-            ],
-            "summary": "3:2 / 106:106 (20:25 25:22 21:25 25:21 15:13)"
-          },
-          "metrics": {
-            "serves_attempts": 0,
-            "serves_errors": 0,
-            "serves_points": 0,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 0,
-            "attacks_errors": 0,
-            "attacks_blocked": 0,
-            "attacks_points": 0,
-            "attacks_success_pct": "0%",
-            "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
-          },
-          "total_points": 0,
-          "break_points": 0,
-          "plus_minus": 0
-        }
-      ],
-      "totals": {
-        "serves_attempts": 0,
-        "serves_errors": 0,
-        "serves_points": 0,
-        "receptions_attempts": 0,
-        "receptions_errors": 0,
-        "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
-        "attacks_attempts": 0,
-        "attacks_errors": 0,
-        "attacks_blocked": 0,
-        "attacks_points": 0,
-        "attacks_success_pct": null,
-        "blocks_points": 0
-      },
-      "total_points": 0,
-      "break_points_total": 0,
-      "plus_minus_total": 0
-    },
-    {
       "name": "JORDAN Emilia",
       "jersey_number": 9,
       "match_count": 2,
@@ -844,7 +795,7 @@
         {
           "player": "Jordan Emilia",
           "jersey_number": 9,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -957,7 +908,7 @@
         {
           "player": "Strothoff Amelie",
           "jersey_number": 10,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1070,7 +1021,7 @@
         {
           "player": "Heil Franziska",
           "jersey_number": 11,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1183,7 +1134,7 @@
         {
           "player": "Waelkens Anke",
           "jersey_number": 12,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1296,7 +1247,7 @@
         {
           "player": "Ford Brianna",
           "jersey_number": 14,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1409,7 +1360,7 @@
         {
           "player": "Schultze Lena",
           "jersey_number": 16,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1515,14 +1466,14 @@
       "plus_minus_total": 0
     },
     {
-      "name": "Martin Isabel",
+      "name": "MARTIN Isabel Rebecca",
       "jersey_number": 17,
-      "match_count": 1,
+      "match_count": 2,
       "matches": [
         {
           "player": "Martin Isabel",
           "jersey_number": 17,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
@@ -1562,34 +1513,7 @@
           "total_points": 14,
           "break_points": 5,
           "plus_minus": 4
-        }
-      ],
-      "totals": {
-        "serves_attempts": 15,
-        "serves_errors": 2,
-        "serves_points": 2,
-        "receptions_attempts": 21,
-        "receptions_errors": 4,
-        "receptions_positive": 9,
-        "receptions_perfect": 6,
-        "receptions_positive_pct": "43%",
-        "receptions_perfect_pct": "29%",
-        "attacks_attempts": 31,
-        "attacks_errors": 4,
-        "attacks_blocked": 0,
-        "attacks_points": 11,
-        "attacks_success_pct": "35%",
-        "blocks_points": 1
-      },
-      "total_points": 14,
-      "break_points_total": 5,
-      "plus_minus_total": 4
-    },
-    {
-      "name": "MARTIN Isabel Rebecca",
-      "jersey_number": 17,
-      "match_count": 1,
-      "matches": [
+        },
         {
           "player": "MARTIN Isabel Rebecca",
           "jersey_number": 17,
@@ -1634,25 +1558,25 @@
         }
       ],
       "totals": {
-        "serves_attempts": 9,
-        "serves_errors": 2,
-        "serves_points": 0,
-        "receptions_attempts": 6,
-        "receptions_errors": 0,
-        "receptions_positive": 2,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": "33%",
-        "receptions_perfect_pct": "0%",
-        "attacks_attempts": 16,
-        "attacks_errors": 1,
+        "serves_attempts": 24,
+        "serves_errors": 4,
+        "serves_points": 2,
+        "receptions_attempts": 27,
+        "receptions_errors": 4,
+        "receptions_positive": 11,
+        "receptions_perfect": 6,
+        "receptions_positive_pct": "41%",
+        "receptions_perfect_pct": "23%",
+        "attacks_attempts": 47,
+        "attacks_errors": 5,
         "attacks_blocked": 3,
-        "attacks_points": 7,
-        "attacks_success_pct": "44%",
-        "blocks_points": 1
+        "attacks_points": 18,
+        "attacks_success_pct": "38%",
+        "blocks_points": 2
       },
-      "total_points": 8,
-      "break_points_total": 6,
-      "plus_minus_total": 2
+      "total_points": 22,
+      "break_points_total": 11,
+      "plus_minus_total": 6
     },
     {
       "name": "SEYBERING Diane",
@@ -1662,7 +1586,7 @@
         {
           "player": "Seybering Diane",
           "jersey_number": 18,
-          "match_number": "2001",
+          "match_number": "2005",
           "match_id": "777479976",
           "kickoff": "2025-10-12T16:00:00+02:00",
           "is_home": true,
