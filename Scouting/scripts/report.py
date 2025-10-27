@@ -2342,9 +2342,10 @@ def _normalize_stats_totals_line(line: str) -> str:
     stripped = re.sub(r"\(\s*", "(", stripped)
     stripped = re.sub(r"\s*\)", ")", stripped)
     stripped = re.sub(r"\s+", " ", stripped)
-    stripped = re.sub(r"(\d+\+\d{1,2})(\d+)", r"\1 \2", stripped)
+    stripped = re.sub(r"(\d+\+\d{1,2})(\d{2,})", r"\1 \2", stripped)
     stripped = stripped.replace("%(", "% (")
     stripped = re.sub(r"%(?=\d)", "% ", stripped)
+    stripped = re.sub(r"\)(?=\d)", ") ", stripped)
     return stripped
 
 
@@ -2667,6 +2668,7 @@ def _tokenize_compact_stats_text(text: str) -> List[str]:
     sanitized = sanitized.replace("·", " ")
     sanitized = sanitized.replace("\u2212", "-")
     sanitized = re.sub(r"[()]+", " ", sanitized)
+    sanitized = re.sub(r"%(?=\d)", "% ", sanitized)
     parts = [part for part in sanitized.split() if part and part != "*"]
     if not parts:
         return []
@@ -3190,7 +3192,7 @@ def _collect_candidate_player_lines(
 
 def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
     names: List[str] = []
-    team_pattern = re.compile(r"(?:Spielbericht\s+)?(.+?)\s+\d+\s*$")
+    team_pattern = re.compile(r"(?:Spielbericht\s+|Match report\s+)?(.+?)\s+\d+\s*$", re.IGNORECASE)
     for line in lines:
         stripped = line.strip()
         if not stripped:
@@ -3199,6 +3201,7 @@ def _extract_stats_team_names(lines: Sequence[str]) -> List[str]:
         if not match:
             continue
         candidate = match.group(1).strip()
+        candidate = re.sub(r"^(?:Spielbericht|Match report)\s+", "", candidate, flags=re.IGNORECASE)
         if not candidate or candidate.lower() == "spielbericht":
             continue
         names.append(candidate)
