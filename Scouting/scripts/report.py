@@ -2682,6 +2682,8 @@ def _extract_modern_compact_prefix_values(
     for match in _MODERN_COMPACT_PREFIX_PATTERN.finditer(normalized):
         if match.end() < len(normalized) and normalized[match.end()] == "%":
             continue
+        if match.end() < len(normalized) and normalized[match.end()] in {"+", "-", "\u2212"}:
+            continue
         digits = "".join(ch for ch in match.group(0) if ch.isdigit())
         if not digits:
             continue
