@@ -147,6 +147,22 @@ def test_split_player_line_candidates_handles_prefixed_role_markers() -> None:
     assert schaefer.metrics.serves_attempts == 0
 
 
+def test_extract_modern_compact_percentages_handles_spacing() -> None:
+    text = "Kuipers Jette 5 5 6 6 1 2 7 1 1 1 1 1 1 1 6 . 3 1 % ( 6 % ) 1 5 . . 6 4 0 % 5 1 0"
+    positive, perfect = report_module._extract_modern_compact_percentages(text)
+    assert positive == "31%"
+    assert perfect == "6%"
+
+
+def test_extract_modern_compact_percentages_trims_prefix_digits() -> None:
+    text = (
+        "Levinska Marta Kamelija ... 5 8 3 2 4 2 7 3 9 9 4 1 2 2 4 % ( 7 % ) 7 6 2"
+    )
+    positive, perfect = report_module._extract_modern_compact_percentages(text)
+    assert positive == "24%"
+    assert perfect == "7%"
+
+
 def test_parse_stats_totals_pdf_handles_players_after_totals_marker(monkeypatch) -> None:
     lines = [
         "Team B 2",
