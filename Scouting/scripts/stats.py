@@ -484,7 +484,7 @@ def _load_team_roster_members(
     *,
     directory: Optional[Path] = None,
 ) -> Tuple[RosterMember, ...]:
-    roster_dir = directory or DEFAULT_ROSTER_DIRECTORY
+    roster_dir = directory or DEFAULT_ROSTER_DIR
     cached = _read_cached_roster(team_name, roster_dir)
     if cached:
         return cached
