@@ -2663,6 +2663,174 @@ _ZERO_COMPACT_VALUE_TOKENS: Tuple[str, ...] = (
 _ZERO_COMPACT_SUFFIX = " " + " ".join(_ZERO_COMPACT_VALUE_TOKENS)
 
 
+_MODERN_COMPACT_PREFIX_PATTERN = re.compile(r"\d{4,}\.\d+")
+
+
+def _extract_modern_compact_prefix_values(
+    text: str,
+) -> Optional[Tuple[int, int, int, int, int]]:
+    """Return serve and reception counts encoded in modern compact stat rows.
+
+    The modern compact layout renders the leading serve/reception attempts as a
+    single decimal token where digits may be split by spaces during PDF text
+    extraction.  We therefore normalise the text before attempting to decode the
+    prefix and pick the longest valid digit sequence to avoid truncating the
+    reception counts when additional digits follow the decimal separator.
+    """
+
+    normalized = _normalize_modern_compact_text(text)
+    for match in _MODERN_COMPACT_PREFIX_PATTERN.finditer(normalized):
+        if match.end() < len(normalized) and normalized[match.end()] == "%":
+            continue
+        digits = "".join(ch for ch in match.group(0) if ch.isdigit())
+        if not digits:
+            continue
+        for end in range(len(digits), 4, -1):
+            decoded = _decode_modern_compact_prefix(digits[:end])
+            if decoded:
+                return decoded
+    return None
+
+
+def _normalize_modern_compact_text(text: str) -> str:
+    """Collapse whitespace and control characters in modern compact stats text."""
+
+    collapsed = re.sub(r"[\s\u0000-\u001f]+", "", text)
+    return collapsed.replace("·", "")
+
+
+def _normalize_modern_compact_percentage_token(token: str) -> str:
+    digits = re.sub(r"\D", "", token)
+    if not digits:
+        return "0%"
+    for length in range(min(3, len(digits)), 0, -1):
+        candidate = int(digits[-length:])
+        if candidate <= 100:
+            return f"{candidate}%"
+    return "0%"
+
+
+def _decode_modern_compact_prefix(token: str) -> Optional[Tuple[int, int, int, int, int]]:
+    digits = "".join(ch for ch in token if ch.isdigit())
+    if not digits:
+        return None
+    ranges = (
+        (0, 80),
+        (0, 40),
+        (0, 40),
+        (0, 200),
+        (0, 80),
+    )
+    results: List[Tuple[int, int, int, int, int]] = []
+
+    def backtrack(pos: int, idx: int, current: List[int]) -> None:
+        if pos == len(ranges):
+            if idx == len(digits):
+                serves_attempts, serves_errors, serves_points, receptions_attempts, receptions_errors = current
+                if (
+                    serves_errors <= serves_attempts
+                    and serves_points <= serves_attempts
+                    and receptions_errors <= receptions_attempts
+                ):
+                    results.append(tuple(current))
+            return
+        min_value, max_value = ranges[pos]
+        for length in (1, 2, 3):
+            segment = digits[idx : idx + length]
+            if len(segment) < length:
+                continue
+            value = int(segment)
+            if not (min_value <= value <= max_value):
+                continue
+            current.append(value)
+            backtrack(pos + 1, idx + length, current)
+            current.pop()
+
+    backtrack(0, 0, [])
+    if not results:
+        return None
+    results.sort(key=lambda values: (values[1], values[4], values[0]))
+    return results[0]
+
+
+def _extract_modern_compact_percentages(text: str) -> Tuple[str, str]:
+    normalized = _normalize_modern_compact_text(text)
+    match = re.search(r"(\d+)%\((\d+)%\)", normalized)
+    if match:
+        positive = _normalize_modern_compact_percentage_token(match.group(1))
+        perfect = _normalize_modern_compact_percentage_token(match.group(2))
+        return positive, perfect
+    percentage_tokens = re.findall(r"(\d+%)", normalized)
+    if len(percentage_tokens) >= 2:
+        return percentage_tokens[0], percentage_tokens[1]
+    if percentage_tokens:
+        return percentage_tokens[0], "0%"
+    return "0%", "0%"
+
+
+def _extract_modern_compact_attack(text: str) -> Tuple[str, str, str, str, str, str, str]:
+    match = re.search(r"(\d{1,3})\s+(\d{1,3})\s+(\d{3})\s+(\d{1,3}%)", text)
+    if not match:
+        return "0", "0", "0", "0", "0%", "0", text
+    attempts = match.group(1)
+    errors = match.group(2)
+    combo = match.group(3)
+    success = match.group(4)
+    blocked = combo[0]
+    points = combo[1:]
+    trailing = text[match.end() :]
+    block_match = re.search(r"\b(\d{1,2})\b", trailing)
+    block_points = block_match.group(1) if block_match else "0"
+    cleaned = text[: match.start()] + text[match.end() :]
+    return attempts, errors, blocked, points, success, block_points, cleaned
+
+
+def _build_modern_compact_tokens(text: str) -> List[str]:
+    serves_attempts = serves_errors = serves_points = "0"
+    receptions_attempts = receptions_errors = "0"
+    prefix = _extract_modern_compact_prefix_values(text)
+    if prefix:
+        (
+            serves_attempts,
+            serves_errors,
+            serves_points,
+            receptions_attempts,
+            receptions_errors,
+        ) = (str(value) for value in prefix)
+    (
+        attacks_attempts,
+        attacks_errors,
+        attacks_blocked,
+        attacks_points,
+        attacks_success,
+        blocks_points,
+        remainder,
+    ) = _extract_modern_compact_attack(text)
+    reception_positive, reception_perfect = _extract_modern_compact_percentages(remainder)
+    return [
+        "0",
+        "0",
+        "0",
+        serves_attempts,
+        serves_errors,
+        serves_points,
+        receptions_attempts,
+        receptions_errors,
+        reception_positive,
+        reception_perfect,
+        attacks_attempts,
+        attacks_errors,
+        attacks_blocked,
+        attacks_points,
+        attacks_success,
+        blocks_points,
+    ]
+
+
+def _looks_like_modern_compact_format(parts: Sequence[str]) -> bool:
+    return any(_MODERN_COMPACT_PREFIX_PATTERN.fullmatch(token) for token in parts)
+
+
 def _tokenize_compact_stats_text(text: str) -> List[str]:
     sanitized = text.replace("\u00a0", " ")
     sanitized = sanitized.replace("·", " ")
@@ -2753,21 +2921,38 @@ def _parse_compact_player_stats(
     rest: str, team_name: str, jersey_number: Optional[int]
 ) -> Optional[MatchPlayerStats]:
     parts = _tokenize_compact_stats_text(rest)
-    extracted = _extract_compact_value_tokens(parts)
-    if not extracted:
-        return None
-    value_tokens, consumed_count = extracted
-    metrics = _build_metrics_from_compact_tokens(value_tokens)
-    prefix_length = len(parts) - consumed_count
-    name_tokens = parts[:prefix_length]
-    if not name_tokens:
-        return None
-    pre_str = " ".join(name_tokens).strip()
-    cutoff = re.search(r"\s[.\d+-]", pre_str)
-    if cutoff:
-        name_segment = pre_str[: cutoff.start()].strip(" .:-")
+    modern_match = None
+    modern_prefix_present = _extract_modern_compact_prefix_values(rest) is not None
+    if modern_prefix_present or _looks_like_modern_compact_format(parts):
+        modern_match = re.search(_MODERN_COMPACT_PREFIX_PATTERN, rest)
+        value_tokens = _build_modern_compact_tokens(rest)
+        metrics = _build_metrics_from_compact_tokens(value_tokens)
+        if modern_match:
+            name_segment = rest[: modern_match.start()].strip(" .:-")
+        else:
+            name_tokens: List[str] = []
+            for token in parts:
+                if _COMPACT_VALUE_PATTERN.match(token):
+                    break
+                name_tokens.append(token)
+            name_segment = " ".join(name_tokens).strip(" .:-")
+        total_points = break_points = plus_minus = None
     else:
-        name_segment = pre_str.strip(" .:-")
+        extracted = _extract_compact_value_tokens(parts)
+        if not extracted:
+            return None
+        value_tokens, consumed_count = extracted
+        metrics = _build_metrics_from_compact_tokens(value_tokens)
+        prefix_length = len(parts) - consumed_count
+        name_tokens = parts[:prefix_length]
+        if not name_tokens:
+            return None
+        pre_str = " ".join(name_tokens).strip()
+        cutoff = re.search(r"\s[.\d+-]", pre_str)
+        if cutoff:
+            name_segment = pre_str[: cutoff.start()].strip(" .:-")
+        else:
+            name_segment = pre_str.strip(" .:-")
     if not name_segment:
         return None
     cleaned_parts = [
@@ -2779,9 +2964,12 @@ def _parse_compact_player_stats(
         name_segment = " ".join(cleaned_parts)
     name_segment = _clean_player_name_segment(name_segment)
     player_name = pretty_name(name_segment)
-    total_points = _parse_int_token(value_tokens[0])
-    break_points = _parse_int_token(value_tokens[1])
-    plus_minus = _parse_int_token(value_tokens[2])
+    if modern_match:
+        total_points = break_points = plus_minus = None
+    else:
+        total_points = _parse_int_token(value_tokens[0])
+        break_points = _parse_int_token(value_tokens[1])
+        plus_minus = _parse_int_token(value_tokens[2])
     return MatchPlayerStats(
         team_name=team_name,
         player_name=player_name,
