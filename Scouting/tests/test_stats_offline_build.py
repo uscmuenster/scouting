@@ -8,6 +8,52 @@ from scripts import stats as stats_module
 from scripts import report
 
 
+def test_summarize_metrics_prefers_counts_for_percentages() -> None:
+    entry_one = report.MatchStatsMetrics(
+        serves_attempts=5,
+        serves_errors=1,
+        serves_points=2,
+        receptions_attempts=10,
+        receptions_errors=2,
+        receptions_positive_pct="10%",
+        receptions_perfect_pct="5%",
+        attacks_attempts=20,
+        attacks_errors=4,
+        attacks_blocked=1,
+        attacks_points=11,
+        attacks_success_pct="30%",
+        blocks_points=2,
+        receptions_positive=7,
+        receptions_perfect=3,
+    )
+    entry_two = report.MatchStatsMetrics(
+        serves_attempts=4,
+        serves_errors=0,
+        serves_points=1,
+        receptions_attempts=10,
+        receptions_errors=1,
+        receptions_positive_pct="15%",
+        receptions_perfect_pct="8%",
+        attacks_attempts=15,
+        attacks_errors=3,
+        attacks_blocked=2,
+        attacks_points=9,
+        attacks_success_pct="25%",
+        blocks_points=1,
+        receptions_positive=5,
+        receptions_perfect=2,
+    )
+
+    aggregated = stats_module.summarize_metrics([entry_one, entry_two])
+    assert aggregated is not None
+    assert aggregated.receptions_positive == 12
+    assert aggregated.receptions_positive_pct == "60%"
+    assert aggregated.receptions_perfect == 5
+    assert aggregated.receptions_perfect_pct == "25%"
+    assert aggregated.attacks_points == 20
+    assert aggregated.attacks_success_pct == "57%"
+
+
 def test_build_stats_overview_offline(monkeypatch, tmp_path) -> None:
     def offline_http_get(*args, **kwargs):
         raise requests.RequestException("offline")
