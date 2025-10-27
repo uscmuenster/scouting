@@ -1,0 +1,77 @@
+name: Gesamtworkflow (Statistik & HTML Report)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'  # täglich um 04:00 Uhr UTC
+  workflow_run:
+    workflows: ["Update scouting statistics overviews"]  # Name des ersten Workflows
+    types:
+      - completed
+
+permissions:
+  contents: write   # erlaubt Push auf gh-pages
+
+concurrency:
+  group: html-report-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🧩 Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: ✅ Check sources compile
+        run: python -m compileall Scouting
+
+      - name: 🛠 Generate USC HTML report
+        env:
+          PYTHONPATH: Scouting
+        run: |
+          python -m scripts
+
+          # Cache-Busting: Commit-Hash und Zeitstempel in HTML einfügen
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          for f in docs/*.html; do
+            echo "<!-- Build $COMMIT_HASH $(date -u +"%Y-%m-%dT%H:%M:%SZ") -->" >> "$f"
+          done
+
+      - name: 🚀 Deploy to gh-pages branch
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+
+          mkdir -p /tmp/ghpages
+          cp -r docs/* /tmp/ghpages/
+
+          git fetch origin
+          git checkout --orphan gh-pages
+          git reset --hard
+          rm -rf *
+
+          cp -r /tmp/ghpages/* .
+          touch .nojekyll
+
+          git add -A
+          git commit -m "🚀 Deploy $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          git push -f origin gh-pages
+
+      - name: ✅ Confirm deploy success
+        run: |
+          echo "Deployment erfolgreich auf 'gh-pages' abgeschlossen."
+          echo "👉 https://${{ github.repository_owner }}.github.io/$(basename ${{ github.repository }})/"
