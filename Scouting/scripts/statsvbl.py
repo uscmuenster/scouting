@@ -76,6 +76,20 @@ class VBLLegResult:
         }
 
 
+@dataclass(frozen=True)
+class VBLMatchDataset:
+    """Configuration describing a set of matches to persist from the VBL portal."""
+
+    competition_id: str
+    phase_id: str
+    club_id: Optional[str] = None
+
+
+DEFAULT_VBL_DATASETS: Tuple[VBLMatchDataset, ...] = (
+    VBLMatchDataset(competition_id="185", phase_id="209", club_id="228"),
+)
+
+
 def _default_fetcher(url: str) -> str:
     response = requests.get(url, timeout=REQUEST_TIMEOUT)
     response.raise_for_status()
@@ -130,99 +144,217 @@ def parse_competition_matches_html(
         if candidate.find("a", href=re.compile(r"MatchStatistics\.aspx", re.IGNORECASE)):
             table = candidate
             break
-    if table is None:
-        raise ValueError("Could not locate the competition matches table in the provided HTML")
+    if table is not None:
+        header_cells = []
+        thead = table.find("thead")
+        if thead:
+            header_cells = thead.find_all("th")
+        if not header_cells:
+            header_row = table.find("tr")
+            if header_row:
+                header_cells = header_row.find_all("th")
+        header_labels = [_normalize_label(cell.get_text(" ", strip=True)) for cell in header_cells]
 
-    header_cells = []
-    thead = table.find("thead")
-    if thead:
-        header_cells = thead.find_all("th")
-    if not header_cells:
-        header_row = table.find("tr")
-        if header_row:
-            header_cells = header_row.find_all("th")
-    header_labels = [_normalize_label(cell.get_text(" ", strip=True)) for cell in header_cells]
+        def _find_index(keywords: Sequence[str]) -> Optional[int]:
+            for idx, label in enumerate(header_labels):
+                for keyword in keywords:
+                    if keyword in label:
+                        return idx
+            return None
 
-    def _find_index(keywords: Sequence[str]) -> Optional[int]:
-        for idx, label in enumerate(header_labels):
-            for keyword in keywords:
-                if keyword in label:
-                    return idx
-        return None
+        match_number_idx = _find_index(["nr", "no", "match"])
+        date_idx = _find_index(["datum", "date"])
+        time_idx = _find_index(["zeit", "time"])
+        home_idx = _find_index(["heim", "home", "team a"])
+        away_idx = _find_index(["gast", "away", "team b"])
+        result_idx = _find_index(["ergebnis", "result", "score"])
+        sets_idx = _find_index(["s\u00e4tze", "sets", "leg"])
 
-    match_number_idx = _find_index(["nr", "no", "match"])
-    date_idx = _find_index(["datum", "date"])
-    time_idx = _find_index(["zeit", "time"])
-    home_idx = _find_index(["heim", "home", "team a"])
-    away_idx = _find_index(["gast", "away", "team b"])
-    result_idx = _find_index(["ergebnis", "result", "score"])
-    sets_idx = _find_index(["s\u00e4tze", "sets", "leg"])
+        matches: List[VBLMatch] = []
+        seen_ids: set[str] = set()
+        for cells in _table_rows(table):
+            texts = [cell.get_text(" ", strip=True) for cell in cells]
+            if not any(texts):
+                continue
+
+            anchors = cells[0].find_all("a", href=True)
+            if len(anchors) <= 1:
+                anchors = [anchor for cell in cells for anchor in cell.find_all("a", href=True)]
+
+            match_id: Optional[str] = None
+            competition_id: Optional[str] = None
+            phase_id: Optional[str] = None
+            club_id: Optional[str] = None
+            leg_list_url: Optional[str] = None
+            info_url: Optional[str] = None
+
+            for anchor in anchors:
+                href = anchor.get("href") or ""
+                if not href:
+                    continue
+                full_url = urljoin(base_url, href)
+                parsed = urlparse(full_url)
+                params = parse_qs(parsed.query)
+                if "mID" in params and not match_id:
+                    match_id = params["mID"][0]
+                if "ID" in params and not competition_id:
+                    competition_id = params["ID"][0]
+                if "PID" in params and not phase_id:
+                    phase_id = params["PID"][0]
+                if "CID" in params and not club_id:
+                    club_id = params["CID"][0]
+                type_param = (params.get("type") or [""])[0].lower()
+                if "matchstatistics.aspx" in parsed.path.lower() and type_param == "leglist":
+                    if leg_list_url is None:
+                        leg_list_url = full_url
+                elif "matchstatistics.aspx" in parsed.path.lower():
+                    if info_url is None:
+                        info_url = full_url
+
+            if not match_id:
+                row_html = "".join(str(cell) for cell in cells)
+                fallback = re.search(r"mID=(\d+)", row_html)
+                if fallback:
+                    match_id = fallback.group(1)
+
+            if not match_id or match_id in seen_ids:
+                continue
+
+            seen_ids.add(match_id)
+
+            def _get_value(index: Optional[int]) -> Optional[str]:
+                if index is None or index >= len(cells):
+                    return None
+                value = cells[index].get_text(" ", strip=True)
+                return value or None
+
+            match_number = _get_value(match_number_idx)
+            date_label = _get_value(date_idx)
+            time_label = _get_value(time_idx)
+            home_team = _get_value(home_idx)
+            away_team = _get_value(away_idx)
+            result_text = _get_value(result_idx)
+            set_results = _get_value(sets_idx)
+
+            matches.append(
+                VBLMatch(
+                    match_id=match_id,
+                    competition_id=competition_id,
+                    phase_id=phase_id,
+                    club_id=club_id,
+                    match_number=match_number,
+                    date_label=date_label,
+                    time_label=time_label,
+                    home_team=home_team,
+                    away_team=away_team,
+                    result=result_text,
+                    set_results=set_results,
+                    leg_list_url=leg_list_url,
+                    info_url=info_url,
+                )
+            )
+
+        return matches
+
+    match_rows = soup.find_all("div", id=re.compile(r"MatchRow$", re.IGNORECASE))
+    if not match_rows:
+        raise ValueError(
+            "Could not locate the competition matches table in the provided HTML"
+        )
+
+    def _unique_texts(values: Iterable[str]) -> List[str]:
+        unique: List[str] = []
+        for value in values:
+            if value not in unique:
+                unique.append(value)
+        return unique
+
+    def _extract_datetime(value: str) -> Tuple[Optional[str], Optional[str]]:
+        match = re.search(r"(\d{1,2})[./](\d{1,2})[./](\d{4})", value)
+        date_label = None
+        if match:
+            day, month, year = match.groups()
+            date_label = f"{int(day):02d}.{int(month):02d}.{year}"
+        time_match = re.search(r"(\d{1,2}:\d{2})", value)
+        time_label = time_match.group(1) if time_match else None
+        return date_label, time_label
+
+    def _extract_urls(row: Tag) -> Tuple[Dict[str, Optional[str]], Dict[str, List[str]]]:
+        urls: Dict[str, Optional[str]] = {"leg_list_url": None, "info_url": None}
+        params: Optional[Dict[str, List[str]]] = None
+        for element in row.find_all(True):
+            onclick = element.get("onclick") or ""
+            match = re.search(r"MatchStatistics\.aspx\?([^'\";]+)", onclick, re.IGNORECASE)
+            if not match:
+                continue
+            href = match.group(0)
+            full_url = urljoin(base_url, href.replace("&amp;", "&"))
+            parsed = urlparse(full_url)
+            current_params = parse_qs(parsed.query)
+            if params is None:
+                params = current_params
+            match_type = (current_params.get("type") or [""])[0].lower()
+            if match_type == "leglist" and not urls["leg_list_url"]:
+                urls["leg_list_url"] = full_url
+            elif not urls["info_url"]:
+                urls["info_url"] = full_url
+        return urls, params or {}
 
     matches: List[VBLMatch] = []
     seen_ids: set[str] = set()
-    for cells in _table_rows(table):
-        texts = [cell.get_text(" ", strip=True) for cell in cells]
-        if not any(texts):
-            continue
-
-        anchors = cells[0].find_all("a", href=True)
-        if len(anchors) <= 1:
-            anchors = [anchor for cell in cells for anchor in cell.find_all("a", href=True)]
-
-        match_id: Optional[str] = None
-        competition_id: Optional[str] = None
-        phase_id: Optional[str] = None
-        club_id: Optional[str] = None
-        leg_list_url: Optional[str] = None
-        info_url: Optional[str] = None
-
-        for anchor in anchors:
-            href = anchor.get("href") or ""
-            if not href:
-                continue
-            full_url = urljoin(base_url, href)
-            parsed = urlparse(full_url)
-            params = parse_qs(parsed.query)
-            if "mID" in params and not match_id:
-                match_id = params["mID"][0]
-            if "ID" in params and not competition_id:
-                competition_id = params["ID"][0]
-            if "PID" in params and not phase_id:
-                phase_id = params["PID"][0]
-            if "CID" in params and not club_id:
-                club_id = params["CID"][0]
-            type_param = (params.get("type") or [""])[0].lower()
-            if "matchstatistics.aspx" in parsed.path.lower() and type_param == "leglist":
-                if leg_list_url is None:
-                    leg_list_url = full_url
-            elif "matchstatistics.aspx" in parsed.path.lower():
-                if info_url is None:
-                    info_url = full_url
-
-        if not match_id:
-            row_html = "".join(str(cell) for cell in cells)
-            fallback = re.search(r"mID=(\d+)", row_html)
-            if fallback:
-                match_id = fallback.group(1)
-
+    for row in match_rows:
+        urls, params = _extract_urls(row)
+        match_id = (params.get("mID") or [None])[0]
         if not match_id or match_id in seen_ids:
             continue
-
         seen_ids.add(match_id)
 
-        def _get_value(index: Optional[int]) -> Optional[str]:
-            if index is None or index >= len(cells):
-                return None
-            value = cells[index].get_text(" ", strip=True)
-            return value or None
+        competition_id = (params.get("ID") or [None])[0]
+        phase_id = (params.get("PID") or [None])[0]
+        club_id = (params.get("CID") or [None])[0]
 
-        match_number = _get_value(match_number_idx)
-        date_label = _get_value(date_idx)
-        time_label = _get_value(time_idx)
-        home_team = _get_value(home_idx)
-        away_team = _get_value(away_idx)
-        result_text = _get_value(result_idx)
-        set_results = _get_value(sets_idx)
+        italic_texts: List[str] = []
+        standard_texts: List[str] = []
+        fallback_texts: List[str] = []
+        for paragraph in row.find_all("p"):
+            classes = paragraph.get("class") or []
+            text = paragraph.get_text(" ", strip=True)
+            if not text:
+                continue
+            if "Calendar_p_TextRow" in classes and "Calendar_p_TextRow_Italic" in classes:
+                italic_texts.append(text)
+            elif "Calendar_p_TextRow" in classes:
+                standard_texts.append(text)
+            else:
+                fallback_texts.append(text)
+
+        italic_texts = _unique_texts(italic_texts)
+        standard_texts = _unique_texts(standard_texts)
+        fallback_texts = _unique_texts(fallback_texts)
+
+        date_label: Optional[str] = None
+        time_label: Optional[str] = None
+        for value in italic_texts:
+            date_candidate, time_candidate = _extract_datetime(value)
+            if date_candidate or time_candidate:
+                if date_candidate:
+                    date_label = date_candidate
+                if time_candidate:
+                    time_label = time_candidate
+                break
+        if date_label is None and time_label is None:
+            for value in fallback_texts:
+                date_candidate, time_candidate = _extract_datetime(value)
+                if date_candidate or time_candidate:
+                    if date_candidate:
+                        date_label = date_candidate
+                    if time_candidate:
+                        time_label = time_candidate
+                    break
+
+        home_team = standard_texts[0] if len(standard_texts) >= 1 else None
+        result_text = standard_texts[1] if len(standard_texts) >= 2 else None
+        away_team = standard_texts[2] if len(standard_texts) >= 3 else None
 
         matches.append(
             VBLMatch(
@@ -230,15 +362,15 @@ def parse_competition_matches_html(
                 competition_id=competition_id,
                 phase_id=phase_id,
                 club_id=club_id,
-                match_number=match_number,
+                match_number=None,
                 date_label=date_label,
                 time_label=time_label,
                 home_team=home_team,
                 away_team=away_team,
                 result=result_text,
-                set_results=set_results,
-                leg_list_url=leg_list_url,
-                info_url=info_url,
+                set_results=None,
+                leg_list_url=urls["leg_list_url"],
+                info_url=urls["info_url"],
             )
         )
 
@@ -596,6 +728,8 @@ __all__ = [
     "DEFAULT_VBL_OUTPUT_DIR",
     "VBLMatch",
     "VBLLegResult",
+    "VBLMatchDataset",
+    "DEFAULT_VBL_DATASETS",
     "build_vbl_output_path",
     "build_leg_list_url",
     "collect_vbl_match_leg_results",
