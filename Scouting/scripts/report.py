@@ -5028,38 +5028,41 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str:
+def _build_player_totals_table_html(
+    players: Sequence[Mapping[str, Any]],
+    team_overview: Optional[Mapping[str, Any]] = None,
+) -> str:
     valid_players = [player for player in players if isinstance(player, Mapping)]
     if not valid_players:
         return ""
 
-    columns: Sequence[tuple[str, Optional[str], bool]] = (
-        ("#", "Rückennummer", True),
-        ("Spielerin", None, False),
-        ("Sp.", "Spiele mit Statistikdaten", True),
-        ("Auf-Ges", "Aufschlag-Versuche", True),
-        ("Auf-Fhl", "Aufschlag-Fehler", True),
-        ("Auf-Pkt", "Aufschlag-Asse", True),
-        ("An-Ges", "Annahme-Versuche", True),
-        ("An-Fhl", "Annahme-Fehler", True),
-        ("An-Pos%", "Positive Annahmen", True),
-        ("An-Prf%", "Perfekte Annahmen", True),
-        ("Ag-Ges", "Angriffs-Versuche", True),
-        ("Ag-Fhl", "Angriffs-Fehler", True),
-        ("Ag-Blo", "Geblockte Angriffe", True),
-        ("Ag-Pkt", "Angriffspunkte", True),
-        ("Ag-%", "Angriffsquote", True),
-        ("Block", "Blockpunkte", True),
-        ("Pkt.", "Gesamtpunkte", True),
-        ("Breakpkt.", "Breakpunkte", True),
-        ("+/−", "Plus/Minus", True),
+    columns: Sequence[tuple[str, Optional[str], bool, Optional[str]]] = (
+        ("#", "Rückennummer", True, None),
+        ("Spielerin", None, False, None),
+        ("Sp.", "Spiele mit Statistikdaten", True, "match_count"),
+        ("Auf-Ges", "Aufschlag-Versuche", True, "serves_attempts"),
+        ("Auf-Fhl", "Aufschlag-Fehler", True, "serves_errors"),
+        ("Auf-Pkt", "Aufschlag-Asse", True, "serves_points"),
+        ("An-Ges", "Annahme-Versuche", True, "receptions_attempts"),
+        ("An-Fhl", "Annahme-Fehler", True, "receptions_errors"),
+        ("An-Pos%", "Positive Annahmen", True, "receptions_positive_pct"),
+        ("An-Prf%", "Perfekte Annahmen", True, "receptions_perfect_pct"),
+        ("Ag-Ges", "Angriffs-Versuche", True, "attacks_attempts"),
+        ("Ag-Fhl", "Angriffs-Fehler", True, "attacks_errors"),
+        ("Ag-Blo", "Geblockte Angriffe", True, "attacks_blocked"),
+        ("Ag-Pkt", "Angriffspunkte", True, "attacks_points"),
+        ("Ag-%", "Angriffsquote", True, "attacks_success_pct"),
+        ("Block", "Blockpunkte", True, "blocks_points"),
+        ("Pkt.", "Gesamtpunkte", True, "total_points"),
+        ("Breakpkt.", "Breakpunkte", True, "break_points_total"),
+        ("+/−", "Plus/Minus", True, "plus_minus_total"),
     )
 
     def _player_totals_numeric_class(index: int) -> str:
         return "numeric-center" if index >= 2 else "numeric"
 
     lines = ['<table class="stats-table">', '  <thead>', '    <tr>']
-    for index, (label, title, is_numeric) in enumerate(columns):
+    for index, (label, title, is_numeric, _) in enumerate(columns):
         title_attr = f' title="{escape(title)}"' if title else ""
         if is_numeric:
             class_name = _player_totals_numeric_class(index)
@@ -5122,8 +5125,201 @@ def _build_player_totals_table_html(players: Sequence[Mapping[str, Any]]) -> str
             lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.append("    </tr>")
 
+    totals_row = _summarize_team_totals(valid_players, columns, team_overview)
+    if totals_row:
+        lines.append('    <tr class="stats-table__total">')
+        lines.append('      <th scope="row" colspan="2">Summe</th>')
+        for column_index, (value, is_numeric) in enumerate(totals_row, start=2):
+            class_name = (
+                _player_totals_numeric_class(column_index) if is_numeric else ""
+            )
+            class_attr = f' class="{class_name}"' if class_name else ""
+            lines.append(f"      <td{class_attr}>{escape(value)}</td>")
+        lines.append("    </tr>")
+
     lines.extend(['  </tbody>', '</table>'])
     return "\n".join(lines)
+
+
+def _summarize_team_totals(
+    players: Sequence[Mapping[str, Any]],
+    columns: Sequence[tuple[str, Optional[str], bool, Optional[str]]],
+    team_overview: Optional[Mapping[str, Any]] = None,
+) -> List[tuple[str, bool]]:
+    overview_totals = (
+        team_overview.get("totals")
+        if isinstance(team_overview, Mapping)
+        and isinstance(team_overview.get("totals"), Mapping)
+        else {}
+    )
+
+    def _coerce_int(value: Any) -> Optional[int]:
+        if value is None:
+            return None
+        if isinstance(value, bool):
+            return int(value)
+        if isinstance(value, (int, float)):
+            if isinstance(value, float) and value.is_integer():
+                return int(value)
+            if isinstance(value, float):
+                return int(round(value))
+            return int(value)
+        if isinstance(value, str):
+            stripped = value.strip()
+            if not stripped:
+                return None
+            try:
+                return int(float(stripped.replace(",", ".")))
+            except ValueError:
+                return None
+        return None
+
+    def _sum_player_totals_field(field: str) -> Optional[int]:
+        total = 0
+        has_value = False
+        for player in players:
+            totals = (
+                player.get("totals")
+                if isinstance(player.get("totals"), Mapping)
+                else {}
+            )
+            value = _coerce_int(totals.get(field))
+            if value is None:
+                continue
+            total += value
+            has_value = True
+        return total if has_value else None
+
+    def _sum_player_field(field: str) -> Optional[int]:
+        total = 0
+        has_value = False
+        for player in players:
+            value = _coerce_int(player.get(field))
+            if value is None:
+                continue
+            total += value
+            has_value = True
+        return total if has_value else None
+
+    def _prefer_int(primary: Optional[int], fallback: Optional[int]) -> Optional[int]:
+        return primary if primary is not None else fallback
+
+    def _format_percentage(numerator: Optional[int], denominator: Optional[int]) -> Optional[str]:
+        if numerator is None or not denominator:
+            return None
+        return f"{int(round((numerator / denominator) * 100))}%"
+
+    match_count: Optional[int] = None
+    if isinstance(team_overview, Mapping):
+        match_count = _coerce_int(team_overview.get("match_count"))
+    if match_count is None:
+        seen_matches: set[str] = set()
+        for player in players:
+            matches = (
+                player.get("matches")
+                if isinstance(player.get("matches"), Sequence)
+                else []
+            )
+            for match in matches:
+                if not isinstance(match, Mapping):
+                    continue
+                key = None
+                for attr in ("match_number", "match_id"):
+                    value = match.get(attr)
+                    if value:
+                        key = str(value)
+                        break
+                if not key:
+                    kickoff = match.get("kickoff")
+                    opponent = match.get("opponent") or match.get("opponent_short")
+                    if kickoff and opponent:
+                        key = f"{kickoff}|{opponent}"
+                if key:
+                    seen_matches.add(key)
+        if seen_matches:
+            match_count = len(seen_matches)
+    if match_count is None:
+        player_counts = [
+            _coerce_int(player.get("match_count")) for player in players
+        ]
+        filtered = [count for count in player_counts if count is not None]
+        if filtered:
+            match_count = max(filtered)
+
+    totals_result: Dict[str, Any] = {}
+
+    count_fields = (
+        "serves_attempts",
+        "serves_errors",
+        "serves_points",
+        "receptions_attempts",
+        "receptions_errors",
+        "receptions_positive",
+        "receptions_perfect",
+        "attacks_attempts",
+        "attacks_errors",
+        "attacks_blocked",
+        "attacks_points",
+        "blocks_points",
+    )
+
+    for field in count_fields:
+        overview_value = _coerce_int(overview_totals.get(field))
+        totals_result[field] = _prefer_int(
+            overview_value, _sum_player_totals_field(field)
+        )
+
+    totals_result["total_points"] = _sum_player_field("total_points")
+    totals_result["break_points_total"] = _sum_player_field("break_points_total")
+    totals_result["plus_minus_total"] = _sum_player_field("plus_minus_total")
+    totals_result["match_count"] = match_count
+
+    overview_positive_pct = overview_totals.get("receptions_positive_pct")
+    if overview_positive_pct not in (None, ""):
+        receptions_positive_pct = str(overview_positive_pct)
+    else:
+        receptions_positive_pct = _format_percentage(
+            totals_result.get("receptions_positive"),
+            totals_result.get("receptions_attempts"),
+        )
+
+    overview_perfect_pct = overview_totals.get("receptions_perfect_pct")
+    if overview_perfect_pct not in (None, ""):
+        receptions_perfect_pct = str(overview_perfect_pct)
+    else:
+        receptions_perfect_pct = _format_percentage(
+            totals_result.get("receptions_perfect"),
+            totals_result.get("receptions_attempts"),
+        )
+
+    overview_attack_pct = overview_totals.get("attacks_success_pct")
+    if overview_attack_pct not in (None, ""):
+        attacks_success_pct = str(overview_attack_pct)
+    else:
+        attacks_success_pct = _format_percentage(
+            totals_result.get("attacks_points"),
+            totals_result.get("attacks_attempts"),
+        )
+
+    totals_result["receptions_positive_pct"] = receptions_positive_pct
+    totals_result["receptions_perfect_pct"] = receptions_perfect_pct
+    totals_result["attacks_success_pct"] = attacks_success_pct
+
+    totals_row: List[tuple[str, bool]] = []
+    for _, _, is_numeric, key in columns[2:]:
+        if not key:
+            totals_row.append(("", is_numeric))
+            continue
+        raw_value = totals_result.get(key)
+        if key.endswith("_pct"):
+            formatted = _format_pct_value(raw_value, default="–")
+        else:
+            formatted = _format_int_value(raw_value, default="–")
+        totals_row.append((formatted, is_numeric))
+
+    if any(value not in ("", "–") for value, _ in totals_row):
+        return totals_row
+    return []
 
 
 def _build_player_card_html(player: Mapping[str, Any]) -> str:
@@ -5178,7 +5374,7 @@ def _render_player_overview_content(
         else f"{len(players)} Spielerinnen mit Statistikdaten."
     )
 
-    table_html_raw = _build_player_totals_table_html(players)
+    table_html_raw = _build_player_totals_table_html(players, scouting)
     table_html = (
         _indent_html(table_html_raw, 8) if table_html_raw else default_table
     )
@@ -5816,7 +6012,7 @@ def build_html_report(
       return match.metrics[key];
     }}
 
-    function buildPlayerSummaryTable(players) {{
+    function buildPlayerSummaryTable(players, overview) {{
       const entries = Array.isArray(players)
         ? players.filter(player => player && typeof player === 'object')
         : [];
@@ -5827,24 +6023,163 @@ def build_html_report(
       const columns = [
         {{ label: '#', title: 'Rückennummer', numeric: true }},
         {{ label: 'Spielerin', numeric: false }},
-        {{ label: 'Sp.', title: 'Spiele mit Statistikdaten', numeric: true }},
-        {{ label: 'Auf-Ges', title: 'Aufschlag-Versuche', numeric: true }},
-        {{ label: 'Auf-Fhl', title: 'Aufschlag-Fehler', numeric: true }},
-        {{ label: 'Auf-Pkt', title: 'Aufschlag-Asse', numeric: true }},
-        {{ label: 'An-Ges', title: 'Annahme-Versuche', numeric: true }},
-        {{ label: 'An-Fhl', title: 'Annahme-Fehler', numeric: true }},
-        {{ label: 'An-Pos%', title: 'Positive Annahmen', numeric: true }},
-        {{ label: 'An-Prf%', title: 'Perfekte Annahmen', numeric: true }},
-        {{ label: 'Ag-Ges', title: 'Angriffs-Versuche', numeric: true }},
-        {{ label: 'Ag-Fhl', title: 'Angriffs-Fehler', numeric: true }},
-        {{ label: 'Ag-Blo', title: 'Geblockte Angriffe', numeric: true }},
-        {{ label: 'Ag-Pkt', title: 'Angriffspunkte', numeric: true }},
-        {{ label: 'Ag-%', title: 'Angriffsquote', numeric: true }},
-        {{ label: 'Block', title: 'Blockpunkte', numeric: true }},
-        {{ label: 'Pkt.', title: 'Gesamtpunkte', numeric: true }},
-        {{ label: 'Breakpkt.', title: 'Breakpunkte', numeric: true }},
-        {{ label: '+/-', title: 'Plus/Minus', numeric: true }},
+        {{ label: 'Sp.', title: 'Spiele mit Statistikdaten', numeric: true, key: 'match_count' }},
+        {{ label: 'Auf-Ges', title: 'Aufschlag-Versuche', numeric: true, key: 'serves_attempts' }},
+        {{ label: 'Auf-Fhl', title: 'Aufschlag-Fehler', numeric: true, key: 'serves_errors' }},
+        {{ label: 'Auf-Pkt', title: 'Aufschlag-Asse', numeric: true, key: 'serves_points' }},
+        {{ label: 'An-Ges', title: 'Annahme-Versuche', numeric: true, key: 'receptions_attempts' }},
+        {{ label: 'An-Fhl', title: 'Annahme-Fehler', numeric: true, key: 'receptions_errors' }},
+        {{ label: 'An-Pos%', title: 'Positive Annahmen', numeric: true, key: 'receptions_positive_pct' }},
+        {{ label: 'An-Prf%', title: 'Perfekte Annahmen', numeric: true, key: 'receptions_perfect_pct' }},
+        {{ label: 'Ag-Ges', title: 'Angriffs-Versuche', numeric: true, key: 'attacks_attempts' }},
+        {{ label: 'Ag-Fhl', title: 'Angriffs-Fehler', numeric: true, key: 'attacks_errors' }},
+        {{ label: 'Ag-Blo', title: 'Geblockte Angriffe', numeric: true, key: 'attacks_blocked' }},
+        {{ label: 'Ag-Pkt', title: 'Angriffspunkte', numeric: true, key: 'attacks_points' }},
+        {{ label: 'Ag-%', title: 'Angriffsquote', numeric: true, key: 'attacks_success_pct' }},
+        {{ label: 'Block', title: 'Blockpunkte', numeric: true, key: 'blocks_points' }},
+        {{ label: 'Pkt.', title: 'Gesamtpunkte', numeric: true, key: 'total_points' }},
+        {{ label: 'Breakpkt.', title: 'Breakpunkte', numeric: true, key: 'break_points_total' }},
+        {{ label: '+/-', title: 'Plus/Minus', numeric: true, key: 'plus_minus_total' }},
       ];
+
+      const overviewTotals = overview && overview.totals && typeof overview.totals === 'object'
+        ? overview.totals
+        : null;
+
+      const coerceInt = value => {{
+        if (value === null || value === undefined) return null;
+        if (typeof value === 'boolean') return value ? 1 : 0;
+        if (typeof value === 'number') {{
+          if (!Number.isFinite(value)) return null;
+          return Math.round(value);
+        }}
+        if (typeof value === 'string') {{
+          const trimmed = value.trim();
+          if (!trimmed) return null;
+          const normalized = trimmed.replace(',', '.');
+          const parsed = Number(normalized);
+          if (!Number.isFinite(parsed)) return null;
+          return Math.round(parsed);
+        }}
+        return null;
+      }};
+
+      const sumPlayerTotalsField = field => {{
+        let total = 0;
+        let hasValue = false;
+        entries.forEach(player => {{
+          const totals = player && typeof player.totals === 'object' ? player.totals : null;
+          if (!totals || !(field in totals)) return;
+          const value = coerceInt(totals[field]);
+          if (value === null) return;
+          total += value;
+          hasValue = true;
+        }});
+        return hasValue ? total : null;
+      }};
+
+      const sumPlayerField = field => {{
+        let total = 0;
+        let hasValue = false;
+        entries.forEach(player => {{
+          const value = player ? coerceInt(player[field]) : null;
+          if (value === null) return;
+          total += value;
+          hasValue = true;
+        }});
+        return hasValue ? total : null;
+      }};
+
+      const prefer = (primary, fallback) => (
+        primary !== null && primary !== undefined ? primary : fallback
+      );
+
+      const computePercentage = (numerator, denominator) => {{
+        if (numerator === null || numerator === undefined) return null;
+        if (!denominator) return null;
+        const pct = Math.round((numerator / denominator) * 100);
+        if (!Number.isFinite(pct)) return null;
+        return `${{pct}}%`;
+      }};
+
+      let matchCount = coerceInt(overview && overview.match_count);
+      if (matchCount === null) {{
+        const seenMatches = new Set();
+        entries.forEach(player => {{
+          const matches = Array.isArray(player.matches)
+            ? player.matches.filter(match => match && typeof match === 'object')
+            : [];
+          matches.forEach(match => {{
+            let key = null;
+            if (match && match.match_number !== null && match.match_number !== undefined) {{
+              key = String(match.match_number);
+            }} else if (match && match.match_id !== null && match.match_id !== undefined) {{
+              key = String(match.match_id);
+            }} else if (match) {{
+              const kickoff = match.kickoff;
+              const opponent = match.opponent || match.opponent_short;
+              if (kickoff && opponent) {{
+                key = `${{kickoff}}|${{opponent}}`;
+              }}
+            }}
+            if (key) {{
+              seenMatches.add(key);
+            }}
+          }});
+        }});
+        if (seenMatches.size) {{
+          matchCount = seenMatches.size;
+        }}
+      }}
+      if (matchCount === null) {{
+        const counts = entries
+          .map(player => (player ? coerceInt(player.match_count) : null))
+          .filter(value => value !== null);
+        if (counts.length) {{
+          matchCount = Math.max(...counts);
+        }}
+      }}
+
+      const totalsResult = {{ match_count: matchCount }};
+
+      const countFields = [
+        'serves_attempts',
+        'serves_errors',
+        'serves_points',
+        'receptions_attempts',
+        'receptions_errors',
+        'receptions_positive',
+        'receptions_perfect',
+        'attacks_attempts',
+        'attacks_errors',
+        'attacks_blocked',
+        'attacks_points',
+        'blocks_points',
+      ];
+
+      countFields.forEach(field => {{
+        const overviewValue = overviewTotals ? coerceInt(overviewTotals[field]) : null;
+        totalsResult[field] = prefer(overviewValue, sumPlayerTotalsField(field));
+      }});
+
+      totalsResult.total_points = sumPlayerField('total_points');
+      totalsResult.break_points_total = sumPlayerField('break_points_total');
+      totalsResult.plus_minus_total = sumPlayerField('plus_minus_total');
+
+      const pickOverviewPct = key => {{
+        if (!overviewTotals || !(key in overviewTotals)) return null;
+        const raw = overviewTotals[key];
+        if (raw === null || raw === undefined) return null;
+        const text = String(raw).trim();
+        return text ? text : null;
+      }};
+
+      totalsResult.receptions_positive_pct = pickOverviewPct('receptions_positive_pct')
+        || computePercentage(totalsResult.receptions_positive, totalsResult.receptions_attempts);
+      totalsResult.receptions_perfect_pct = pickOverviewPct('receptions_perfect_pct')
+        || computePercentage(totalsResult.receptions_perfect, totalsResult.receptions_attempts);
+      totalsResult.attacks_success_pct = pickOverviewPct('attacks_success_pct')
+        || computePercentage(totalsResult.attacks_points, totalsResult.attacks_attempts);
 
       const table = document.createElement('table');
       table.className = 'stats-table';
@@ -5923,6 +6258,38 @@ def build_html_report(
         }});
         tbody.appendChild(row);
       }});
+
+      const totalsRowValues = columns.slice(2).map(column => {{
+        if (!column.key) {{
+          return {{ value: '', numeric: !!column.numeric }};
+        }}
+        const raw = totalsResult[column.key];
+        if (column.key.endsWith('_pct')) {{
+          return {{ value: formatPctOrDash(raw), numeric: true }};
+        }}
+        return {{ value: formatIntOrDash(raw), numeric: true }};
+      }});
+
+      const hasTotals = totalsRowValues.some(cell => cell.value !== '–' && cell.value !== '');
+      if (hasTotals) {{
+        const totalRow = document.createElement('tr');
+        totalRow.className = 'stats-table__total';
+        const headerCell = document.createElement('th');
+        headerCell.scope = 'row';
+        headerCell.colSpan = 2;
+        headerCell.textContent = 'Summe';
+        totalRow.appendChild(headerCell);
+        totalsRowValues.forEach((cell, index) => {{
+          const td = document.createElement('td');
+          const columnIndex = index + 2;
+          if (cell.numeric || (columns[columnIndex] && columns[columnIndex].numeric)) {{
+            td.className = columnIndex >= 2 ? 'numeric-center' : 'numeric';
+          }}
+          td.textContent = cell.value;
+          totalRow.appendChild(td);
+        }});
+        tbody.appendChild(totalRow);
+      }}
 
       table.appendChild(tbody);
       return table;
@@ -6082,7 +6449,7 @@ def build_html_report(
         return;
       }}
       if (tableContainer) {{
-        const table = buildPlayerSummaryTable(players);
+        const table = buildPlayerSummaryTable(players, data);
         if (table) {{
           tableContainer.appendChild(table);
         }} else {{
