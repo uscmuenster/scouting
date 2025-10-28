@@ -17,7 +17,7 @@ on:
         type: boolean
 
 permissions:
-  contents: write  # wichtig, um Push ins Repo zu erlauben
+  contents: write  # erlaubt Push ins Repo
 
 jobs:
   run-workflow:
@@ -38,11 +38,10 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Pfad auf repo-b anpassen
-          pip install -e repo-b
+          pip install -e repo-b  # Abhängigkeiten im Unterordner installieren
 
-      - name: Run workflow
-        working-directory: repo-b   # 👈 Wichtige Änderung
+      - name: Run Volleystats workflow
+        working-directory: repo-b  # Arbeitsverzeichnis auf Unterordner setzen
         env:
           WORKFLOW_CHOICE: ${{ github.event.inputs.workflow }}
           LOG_ENABLED: ${{ github.event.inputs.log }}
@@ -59,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: volleystats-data
-          path: repo-b/data     # 👈 Pfad anpassen
+          path: repo-b/data
           if-no-files-found: warn
 
       - name: Commit and push CSVs
@@ -68,8 +67,14 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          mkdir -p docs/data
-          cp -r repo-b/data/*.csv docs/data/ || echo "No CSV files found"
-          git add docs/data/*.csv || echo "Nothing to add"
+          
+          # Zielordner vorbereiten
+          mkdir -p docs/data/csv
+          
+          # CSVs aus repo-b/data/ verschieben
+          cp -r repo-b/data/*.csv docs/data/csv/ || echo "No CSV files found"
+          
+          # Änderungen committen
+          git add docs/data/csv/*.csv || echo "Nothing to add"
           git commit -m "chore: update volleystats CSV data [skip ci]" || echo "No changes to commit"
           git push
