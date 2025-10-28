@@ -55,6 +55,16 @@ from .stats import (
     collect_usc_player_stats,
     summarize_metrics,
 )
+from .statsvbl import (
+    DEFAULT_VBL_BASE_URL,
+    VBLMatch,
+    VBLLegResult,
+    collect_vbl_match_leg_results,
+    fetch_competition_matches,
+    fetch_match_leg_list,
+    parse_competition_matches_html,
+    parse_leg_list_html,
+)
 
 __all__ = [
     "DEFAULT_SCHEDULE_URL",
@@ -103,6 +113,14 @@ __all__ = [
     "collect_usc_match_stats",
     "collect_usc_player_stats",
     "summarize_metrics",
+    "DEFAULT_VBL_BASE_URL",
+    "VBLMatch",
+    "VBLLegResult",
+    "collect_vbl_match_leg_results",
+    "fetch_competition_matches",
+    "fetch_match_leg_list",
+    "parse_competition_matches_html",
+    "parse_leg_list_html",
     "DEFAULT_MANUAL_STATS_OVERVIEW_PATH",
     "build_manual_stats_overview",
     "load_manual_team_files",
