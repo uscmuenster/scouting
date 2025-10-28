@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
+import json
+from pathlib import Path
 import re
 from typing import Callable, Dict, Iterable, List, Optional, Sequence, Tuple
 from urllib.parse import parse_qs, urlencode, urljoin, urlparse
@@ -11,6 +13,8 @@ import requests
 from bs4 import BeautifulSoup, Tag
 
 DEFAULT_VBL_BASE_URL = "https://vbl-web.dataproject.com"
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_VBL_OUTPUT_DIR = _REPO_ROOT / "docs" / "data" / "vbl"
 REQUEST_TIMEOUT = 20
 
 
@@ -521,15 +525,84 @@ def collect_vbl_match_leg_results(
     }
 
 
+def _sanitize_identifier(value: str) -> str:
+    sanitized = re.sub(r"[^0-9A-Za-z_-]+", "_", value.strip())
+    sanitized = sanitized.strip("_")
+    return sanitized or "value"
+
+
+def build_vbl_output_path(
+    competition_id: str,
+    phase_id: str,
+    *,
+    club_id: Optional[str] = None,
+    output_dir: Path = DEFAULT_VBL_OUTPUT_DIR,
+) -> Path:
+    """Return a deterministic JSON output path for VBL match data."""
+
+    output_dir = Path(output_dir)
+    components = [
+        _sanitize_identifier(competition_id),
+        _sanitize_identifier(phase_id),
+    ]
+    if club_id:
+        components.append(_sanitize_identifier(club_id))
+    filename = "_".join(components) + ".json"
+    return output_dir / filename
+
+
+def save_vbl_match_leg_results(
+    competition_id: str,
+    phase_id: str,
+    *,
+    club_id: Optional[str] = None,
+    base_url: str = DEFAULT_VBL_BASE_URL,
+    output_path: Optional[Path] = None,
+    output_dir: Path = DEFAULT_VBL_OUTPUT_DIR,
+    match_fetcher: Optional[Callable[[str], str]] = None,
+    leg_fetcher: Optional[Callable[[VBLMatch, str], str]] = None,
+) -> Path:
+    """Collect match data from the VBL portal and write it to JSON."""
+
+    payload = collect_vbl_match_leg_results(
+        competition_id,
+        phase_id,
+        club_id=club_id,
+        base_url=base_url,
+        match_fetcher=match_fetcher,
+        leg_fetcher=leg_fetcher,
+    )
+
+    target_path = (
+        Path(output_path)
+        if output_path is not None
+        else build_vbl_output_path(
+            competition_id,
+            phase_id,
+            club_id=club_id,
+            output_dir=output_dir,
+        )
+    )
+    target_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with target_path.open("w", encoding="utf-8") as fp:
+        json.dump(payload, fp, ensure_ascii=False, indent=2, sort_keys=True)
+
+    return target_path
+
+
 __all__ = [
     "DEFAULT_VBL_BASE_URL",
+    "DEFAULT_VBL_OUTPUT_DIR",
     "VBLMatch",
     "VBLLegResult",
+    "build_vbl_output_path",
     "build_leg_list_url",
     "collect_vbl_match_leg_results",
     "fetch_competition_matches",
     "fetch_match_leg_list",
     "parse_competition_matches_html",
     "parse_leg_list_html",
+    "save_vbl_match_leg_results",
 ]
 

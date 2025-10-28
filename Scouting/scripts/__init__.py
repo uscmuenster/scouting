@@ -57,13 +57,16 @@ from .stats import (
 )
 from .statsvbl import (
     DEFAULT_VBL_BASE_URL,
+    DEFAULT_VBL_OUTPUT_DIR,
     VBLMatch,
     VBLLegResult,
+    build_vbl_output_path,
     collect_vbl_match_leg_results,
     fetch_competition_matches,
     fetch_match_leg_list,
     parse_competition_matches_html,
     parse_leg_list_html,
+    save_vbl_match_leg_results,
 )
 
 __all__ = [
@@ -114,13 +117,16 @@ __all__ = [
     "collect_usc_player_stats",
     "summarize_metrics",
     "DEFAULT_VBL_BASE_URL",
+    "DEFAULT_VBL_OUTPUT_DIR",
     "VBLMatch",
     "VBLLegResult",
+    "build_vbl_output_path",
     "collect_vbl_match_leg_results",
     "fetch_competition_matches",
     "fetch_match_leg_list",
     "parse_competition_matches_html",
     "parse_leg_list_html",
+    "save_vbl_match_leg_results",
     "DEFAULT_MANUAL_STATS_OVERVIEW_PATH",
     "build_manual_stats_overview",
     "load_manual_team_files",
