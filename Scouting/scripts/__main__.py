@@ -14,6 +14,13 @@ from .report import (
     fetch_schedule_match_metadata,
     load_schedule_from_file,
 )
+from .report2 import (
+    CSV_DIRECTORY,
+    HTML_OUTPUT_PATH as CSV_HTML_OUTPUT_PATH,
+    JSON_OUTPUT_PATH as CSV_JSON_OUTPUT_PATH,
+    build_overview_payload as build_csv_overview_payload,
+    render_html as render_csv_html,
+)
 from .stats import (
     AACHEN_CANONICAL_NAME,
     AACHEN_OUTPUT_PATH,
@@ -78,6 +85,29 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Skip generating the HTML report and manifest so only the JSON overviews are updated."
         ),
+    )
+    parser.add_argument(
+        "--skip-csv-report",
+        action="store_true",
+        help="Skip generating the CSV-based scouting overview (index2).",
+    )
+    parser.add_argument(
+        "--csv-data-dir",
+        type=Path,
+        default=CSV_DIRECTORY,
+        help="Directory containing exported CSV statistics (default: docs/data/csv).",
+    )
+    parser.add_argument(
+        "--csv-json-output",
+        type=Path,
+        default=CSV_JSON_OUTPUT_PATH,
+        help="Target JSON output for the CSV-based overview (default: docs/data/index2_stats_overview.json).",
+    )
+    parser.add_argument(
+        "--csv-html-output",
+        type=Path,
+        default=CSV_HTML_OUTPUT_PATH,
+        help="Target HTML output for the CSV-based overview (default: docs/index2.html).",
     )
     return parser
 
@@ -188,6 +218,45 @@ def main() -> int:
         "League scouting overview updated:",
         f"{league_payload['team_count']} teams processed -> {LEAGUE_STATS_OUTPUT_PATH}",
     )
+
+    if not args.skip_csv_report:
+        csv_payload = build_csv_overview_payload(args.csv_data_dir)
+
+        csv_json_output = args.csv_json_output
+        csv_json_output.parent.mkdir(parents=True, exist_ok=True)
+        csv_json_output.write_text(
+            json.dumps(csv_payload, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+        try:
+            csv_json_relative = csv_json_output.relative_to(Path.cwd())
+        except ValueError:
+            csv_json_relative = csv_json_output
+
+        print(
+            "CSV scouting overview updated:",
+            f"{csv_payload['team_count']} teams processed -> {csv_json_relative}",
+        )
+
+        if not args.skip_html:
+            csv_html_output = args.csv_html_output
+            csv_html_output.parent.mkdir(parents=True, exist_ok=True)
+            csv_html_output.write_text(
+                render_csv_html(json_path=csv_json_output),
+                encoding="utf-8",
+            )
+
+            try:
+                csv_html_relative = csv_html_output.relative_to(Path.cwd())
+            except ValueError:
+                csv_html_relative = csv_html_output
+
+            print("CSV HTML dashboard generated:", csv_html_relative)
+        else:
+            print("CSV HTML dashboard generation skipped via --skip-html")
+    else:
+        print("CSV scouting overview generation skipped via --skip-csv-report")
 
     if args.skip_html:
         return 0
