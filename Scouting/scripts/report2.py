@@ -1,0 +1,1163 @@
+"""Generate an HTML/JSON report that is backed by the CSV exports.
+
+This helper focuses on the pre-parsed CSV files that live under
+``docs/data/csv``.  Unlike :mod:`Scouting.scripts.report`, which downloads
+PDFs and extracts their statistics, this module keeps everything offline and
+only works with the CSV data that already exists in the repository.
+
+The script builds two artefacts:
+
+``docs/data/index2_stats_overview.json``
+    Aggregated metrics for every team that appears in the CSV directory.
+
+``docs/index2.html``
+    A lightweight dashboard similar to ``docs/index.html`` which consumes the
+    JSON payload above.  The HTML is intentionally generated from within this
+    module so the resulting page can easily be reproduced.
+"""
+
+from __future__ import annotations
+
+import argparse
+import csv
+import json
+import re
+from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
+from typing import Dict, Iterator, List, Mapping, Optional
+
+from zoneinfo import ZoneInfo
+
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+CSV_DIRECTORY = BASE_DIR / "docs" / "data" / "csv"
+HTML_OUTPUT_PATH = BASE_DIR / "docs" / "index2.html"
+JSON_OUTPUT_PATH = BASE_DIR / "docs" / "data" / "index2_stats_overview.json"
+
+
+BERLIN_TZ = ZoneInfo("Europe/Berlin")
+
+
+# -- Name handling --------------------------------------------------------
+
+TEAM_NAME_OVERRIDES: Mapping[str, str] = {
+    "usc münster": "USC Münster",
+    "vc wiesbaden": "VC Wiesbaden",
+    "ssc palmberg schwerin": "SSC Palmberg Schwerin",
+    "etv hamburger volksbank volleys": "ETV Hamburger Volksbank Volleys",
+    "ladies in black aachen": "Ladies in Black Aachen",
+    "vfb suhl lotto thüringen": "VfB Suhl LOTTO Thüringen",
+    "skurios volleys borken": "Skurios Volleys Borken",
+    "binder blaubären tsv flacht": "Binder Blaubären TSV Flacht",
+    "schwarz-weiß erfurt": "Schwarz-Weiß Erfurt",
+    "allianz mtv stuttgart": "Allianz MTV Stuttgart",
+}
+
+TEAM_SHORT_NAME_OVERRIDES: Mapping[str, str] = {
+    "Allianz MTV Stuttgart": "Stuttgart",
+    "Binder Blaubären TSV Flacht": "Flacht",
+    "Dresdner SC": "Dresden",
+    "ETV Hamburger Volksbank Volleys": "Hamburg",
+    "Ladies in Black Aachen": "Aachen",
+    "SSC Palmberg Schwerin": "Schwerin",
+    "Schwarz-Weiß Erfurt": "Erfurt",
+    "Skurios Volleys Borken": "Borken",
+    "USC Münster": "Münster",
+    "VC Wiesbaden": "Wiesbaden",
+    "VfB Suhl LOTTO Thüringen": "Suhl",
+}
+
+
+def _smart_capitalize(value: str) -> str:
+    tokens = []
+    for token in value.split():
+        sub_tokens = [sub.capitalize() for sub in token.split("-")]
+        tokens.append("-".join(sub_tokens))
+    return " ".join(tokens)
+
+
+def canonicalize_team_name(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value:
+        return "Unbekanntes Team"
+    lower = value.lower()
+    if lower in TEAM_NAME_OVERRIDES:
+        return TEAM_NAME_OVERRIDES[lower]
+    return _smart_capitalize(lower)
+
+
+def short_team_label(name: str) -> str:
+    canonical = canonicalize_team_name(name)
+    return TEAM_SHORT_NAME_OVERRIDES.get(canonical, canonical)
+
+
+def slugify(value: str) -> str:
+    normalized = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    return normalized or "team"
+
+
+def normalize_key(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", value.lower())
+
+
+# -- Parsing helpers ------------------------------------------------------
+
+def parse_int(value: Optional[str]) -> int:
+    if value is None:
+        return 0
+    text = value.strip()
+    if not text or text in {"-", ".", "na", "n/a"}:
+        return 0
+    try:
+        return int(float(text.replace(",", ".")))
+    except ValueError:
+        return 0
+
+
+def parse_percentage(value: Optional[str]) -> Optional[float]:
+    if value is None:
+        return None
+    text = value.strip().replace("%", "")
+    if not text:
+        return None
+    try:
+        return float(text.replace(",", ".")) / 100
+    except ValueError:
+        return None
+
+
+def compute_count_from_percentage(
+    percentage: Optional[float], attempts: int
+) -> int:
+    if percentage is None or attempts <= 0:
+        return 0
+    return int(round(attempts * percentage))
+
+
+def format_percentage(numerator: int, denominator: int) -> Optional[str]:
+    if denominator <= 0:
+        return None
+    ratio = numerator / denominator
+    return f"{round(ratio * 100):d}%"
+
+
+def resolve_field(row: Mapping[str, str], *candidates: str) -> str:
+    for candidate in candidates:
+        if candidate in row:
+            return row[candidate]
+    return ""
+
+
+# -- Metrics accumulation -------------------------------------------------
+
+@dataclass
+class MetricsAccumulator:
+    serves_attempts: int = 0
+    serves_errors: int = 0
+    serves_points: int = 0
+    receptions_attempts: int = 0
+    receptions_errors: int = 0
+    receptions_positive: int = 0
+    receptions_perfect: int = 0
+    attacks_attempts: int = 0
+    attacks_errors: int = 0
+    attacks_blocked: int = 0
+    attacks_points: int = 0
+    blocks_points: int = 0
+
+    def add(self, metrics: Mapping[str, int]) -> None:
+        self.serves_attempts += metrics.get("serves_attempts", 0)
+        self.serves_errors += metrics.get("serves_errors", 0)
+        self.serves_points += metrics.get("serves_points", 0)
+        self.receptions_attempts += metrics.get("receptions_attempts", 0)
+        self.receptions_errors += metrics.get("receptions_errors", 0)
+        self.receptions_positive += metrics.get("receptions_positive", 0)
+        self.receptions_perfect += metrics.get("receptions_perfect", 0)
+        self.attacks_attempts += metrics.get("attacks_attempts", 0)
+        self.attacks_errors += metrics.get("attacks_errors", 0)
+        self.attacks_blocked += metrics.get("attacks_blocked", 0)
+        self.attacks_points += metrics.get("attacks_points", 0)
+        self.blocks_points += metrics.get("blocks_points", 0)
+
+    def to_payload(self) -> Dict[str, object]:
+        return {
+            "serves_attempts": self.serves_attempts,
+            "serves_errors": self.serves_errors,
+            "serves_points": self.serves_points,
+            "receptions_attempts": self.receptions_attempts,
+            "receptions_errors": self.receptions_errors,
+            "receptions_positive": self.receptions_positive,
+            "receptions_perfect": self.receptions_perfect,
+            "receptions_positive_pct": format_percentage(
+                self.receptions_positive, self.receptions_attempts
+            ),
+            "receptions_perfect_pct": format_percentage(
+                self.receptions_perfect, self.receptions_attempts
+            ),
+            "attacks_attempts": self.attacks_attempts,
+            "attacks_errors": self.attacks_errors,
+            "attacks_blocked": self.attacks_blocked,
+            "attacks_points": self.attacks_points,
+            "attacks_success_pct": format_percentage(
+                self.attacks_points, self.attacks_attempts
+            ),
+            "blocks_points": self.blocks_points,
+        }
+
+
+@dataclass
+class TeamAccumulator:
+    team: str
+    slug: str
+    matches: List[Mapping[str, object]] = field(default_factory=list)
+    totals: MetricsAccumulator = field(default_factory=MetricsAccumulator)
+    total_points: int = 0
+    break_points: int = 0
+    plus_minus: int = 0
+
+    def add_match(
+        self,
+        match_entry: Mapping[str, object],
+        metrics: Mapping[str, int],
+        *,
+        total_points: int,
+        break_points: int,
+        plus_minus: int,
+    ) -> None:
+        self.matches.append(match_entry)
+        self.totals.add(metrics)
+        self.total_points += total_points
+        self.break_points += break_points
+        self.plus_minus += plus_minus
+
+    def to_payload(self) -> Dict[str, object]:
+        matches_sorted = sorted(
+            self.matches,
+            key=lambda entry: entry.get("kickoff", ""),
+            reverse=True,
+        )
+        totals_payload = self.totals.to_payload()
+        totals_payload.update(
+            {
+                "total_points": self.total_points,
+                "break_points": self.break_points,
+                "plus_minus": self.plus_minus,
+            }
+        )
+        return {
+            "team": self.team,
+            "team_slug": self.slug,
+            "match_count": len(self.matches),
+            "totals": totals_payload,
+            "matches": matches_sorted,
+        }
+
+
+# -- Data loading ---------------------------------------------------------
+
+def iter_schedule_rows(csv_dir: Path) -> Iterator[Mapping[str, str]]:
+    for path in sorted(csv_dir.glob("*competition*matches*.csv")):
+        if path.stat().st_size == 0:
+            continue
+        with path.open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            for row in reader:
+                if not row:
+                    continue
+                yield row
+
+
+def load_competition_schedule(csv_dir: Path) -> Dict[str, Dict[str, object]]:
+    schedule: Dict[str, Dict[str, object]] = {}
+    for row in iter_schedule_rows(csv_dir):
+        match_id = (row.get("Match ID") or "").strip()
+        if not match_id:
+            continue
+        home_team_raw = row.get("Home Team") or ""
+        guest_team_raw = row.get("Guest Team") or ""
+        entry = schedule.setdefault(match_id, {})
+        entry.update(
+            {
+                "match_id": match_id,
+                "match_date": (row.get("Match Date") or "").strip(),
+                "stadium": (row.get("Stadium") or "").strip(),
+                "home_team_raw": home_team_raw,
+                "guest_team_raw": guest_team_raw,
+                "home_team": canonicalize_team_name(home_team_raw),
+                "guest_team": canonicalize_team_name(guest_team_raw),
+                "home_points": parse_int(row.get("Home Points")),
+                "guest_points": parse_int(row.get("Guest Points")),
+            }
+        )
+    return schedule
+
+
+def parse_metrics_row(row: Mapping[str, str]) -> Dict[str, int | str | None]:
+    serves_attempts = parse_int(resolve_field(row, "Total Serve", "Total Serves"))
+    receptions_attempts = parse_int(resolve_field(row, "Total Receptions"))
+    attacks_attempts = parse_int(resolve_field(row, "Total Attacks"))
+
+    positive_pct = parse_percentage(
+        resolve_field(
+            row,
+            "Positive Pass Percentage",
+            "Positive Pass Percentage (Pos%)",
+        )
+    )
+    perfect_pct = parse_percentage(
+        resolve_field(
+            row,
+            "Excellent/ Perfect Pass Percentage",
+            "Excellent/ Perfect Pass Percentage (Exc.%)",
+        )
+    )
+
+    receptions_positive = compute_count_from_percentage(positive_pct, receptions_attempts)
+    receptions_perfect = compute_count_from_percentage(perfect_pct, receptions_attempts)
+
+    attacks_points = parse_int(resolve_field(row, "Attack Points (Exc.)", "Attack Points"))
+
+    metrics: Dict[str, int | str | None] = {
+        "serves_attempts": serves_attempts,
+        "serves_errors": parse_int(resolve_field(row, "Serve Errors")),
+        "serves_points": parse_int(resolve_field(row, "Ace", "Aces")),
+        "receptions_attempts": receptions_attempts,
+        "receptions_errors": parse_int(resolve_field(row, "Reception Erros", "Reception Errors")),
+        "receptions_positive": receptions_positive,
+        "receptions_perfect": receptions_perfect,
+        "receptions_positive_pct": format_percentage(receptions_positive, receptions_attempts),
+        "receptions_perfect_pct": format_percentage(receptions_perfect, receptions_attempts),
+        "attacks_attempts": attacks_attempts,
+        "attacks_errors": parse_int(resolve_field(row, "Attack Erros", "Attack Errors")),
+        "attacks_blocked": parse_int(resolve_field(row, "Blocked Attack", "Blocked Attacks")),
+        "attacks_points": attacks_points,
+        "attacks_success_pct": format_percentage(attacks_points, attacks_attempts),
+        "blocks_points": parse_int(resolve_field(row, "Block Points")),
+        "total_points": parse_int(resolve_field(row, "Total Points")),
+        "break_points": parse_int(resolve_field(row, "Break Points")),
+        "plus_minus": parse_int(resolve_field(row, "W-L")),
+    }
+    return metrics
+
+
+def build_match_entry(
+    *,
+    metrics: Mapping[str, int | str | None],
+    schedule_entry: Optional[Mapping[str, object]],
+    team_canonical: str,
+    opponent_raw: str,
+    is_home: bool,
+    match_id: str,
+    match_date: str,
+    stadium_raw: str,
+    csv_path: str,
+) -> Dict[str, object]:
+    opponent_canonical = canonicalize_team_name(opponent_raw)
+    opponent_short = short_team_label(opponent_canonical)
+    kickoff_iso = None
+    if match_date:
+        try:
+            kickoff_dt = datetime.strptime(match_date, "%Y-%m-%d").replace(
+                hour=18,
+                minute=0,
+                tzinfo=BERLIN_TZ,
+            )
+            kickoff_iso = kickoff_dt.isoformat()
+        except ValueError:
+            kickoff_iso = None
+
+    result_summary = None
+    if schedule_entry:
+        home_points = schedule_entry.get("home_points")
+        guest_points = schedule_entry.get("guest_points")
+        if isinstance(home_points, int) and isinstance(guest_points, int):
+            if is_home:
+                result_summary = f"{home_points}:{guest_points}"
+            else:
+                result_summary = f"{guest_points}:{home_points}"
+
+    location = (stadium_raw or "").strip()
+    if not location and schedule_entry:
+        location = str(schedule_entry.get("stadium") or "").strip()
+
+    match_entry: Dict[str, object] = {
+        "match_number": match_id,
+        "match_id": match_id,
+        "kickoff": kickoff_iso,
+        "is_home": is_home,
+        "opponent": opponent_canonical,
+        "opponent_short": opponent_short,
+        "host": schedule_entry.get("home_team") if schedule_entry else team_canonical,
+        "location": location or None,
+        "result": {"summary": result_summary} if result_summary else None,
+        "metrics": {
+            "serves_attempts": metrics["serves_attempts"],
+            "serves_errors": metrics["serves_errors"],
+            "serves_points": metrics["serves_points"],
+            "receptions_attempts": metrics["receptions_attempts"],
+            "receptions_errors": metrics["receptions_errors"],
+            "receptions_positive_pct": metrics["receptions_positive_pct"],
+            "receptions_perfect_pct": metrics["receptions_perfect_pct"],
+            "attacks_attempts": metrics["attacks_attempts"],
+            "attacks_errors": metrics["attacks_errors"],
+            "attacks_blocked": metrics["attacks_blocked"],
+            "attacks_points": metrics["attacks_points"],
+            "attacks_success_pct": metrics["attacks_success_pct"],
+            "blocks_points": metrics["blocks_points"],
+            "receptions_positive": metrics["receptions_positive"],
+            "receptions_perfect": metrics["receptions_perfect"],
+        },
+        "total_points": metrics["total_points"],
+        "break_points": metrics["break_points"],
+        "plus_minus": metrics["plus_minus"],
+        "csv_path": csv_path,
+    }
+
+    return match_entry
+
+
+def collect_team_accumulators(csv_dir: Path, schedule: Mapping[str, Mapping[str, object]]) -> Dict[str, TeamAccumulator]:
+    teams: Dict[str, TeamAccumulator] = {}
+    for path in sorted(csv_dir.glob("vbl-*.csv")):
+        if "competition" in path.name:
+            continue
+        if path.stat().st_size == 0:
+            continue
+
+        with path.open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
+            team_field = None
+            if reader.fieldnames:
+                if "Home Team" in reader.fieldnames:
+                    team_field = "Home Team"
+                elif "Guest Team" in reader.fieldnames:
+                    team_field = "Guest Team"
+
+            team_row: Optional[Mapping[str, str]] = None
+            metrics_row: Optional[Mapping[str, str]] = None
+            for row in reader:
+                if not row:
+                    continue
+                name_raw = (row.get("Name") or "").strip().lower()
+                if name_raw == "totals":
+                    team_row = row
+                    metrics_row = row
+                    break
+
+            if not team_row or not metrics_row:
+                continue
+
+            match_id = (team_row.get("Match ID") or "").strip()
+            if not match_id:
+                continue
+
+            match_date = (team_row.get("Match Date") or "").strip()
+            stadium_raw = (team_row.get("Stadium") or "").strip()
+
+            if team_field is None:
+                continue
+
+            team_name_raw = team_row.get(team_field) or ""
+            team_canonical = canonicalize_team_name(team_name_raw)
+            team_key = normalize_key(team_canonical)
+            opponent_raw = ""
+            schedule_entry = schedule.get(match_id)
+            is_home = team_field == "Home Team"
+            if schedule_entry:
+                opponent_raw = (
+                    schedule_entry["guest_team_raw"]
+                    if is_home
+                    else schedule_entry["home_team_raw"]
+                )
+
+            metrics = parse_metrics_row(metrics_row)
+            match_entry = build_match_entry(
+                metrics=metrics,
+                schedule_entry=schedule_entry,
+                team_canonical=team_canonical,
+                opponent_raw=opponent_raw,
+                is_home=is_home,
+                match_id=match_id,
+                match_date=match_date,
+                stadium_raw=stadium_raw,
+                csv_path=f"data/csv/{path.name}",
+            )
+
+            accumulator = teams.setdefault(
+                team_key, TeamAccumulator(team=team_canonical, slug=slugify(team_canonical))
+            )
+            accumulator.add_match(
+                match_entry,
+                metrics,
+                total_points=metrics["total_points"],
+                break_points=metrics["break_points"],
+                plus_minus=metrics["plus_minus"],
+            )
+
+    return teams
+
+
+def build_overview_payload(csv_dir: Path) -> Dict[str, object]:
+    schedule = load_competition_schedule(csv_dir)
+    teams = collect_team_accumulators(csv_dir, schedule)
+    generated_at = datetime.now(tz=BERLIN_TZ)
+    return {
+        "generated": generated_at.isoformat(),
+        "team_count": len(teams),
+        "teams": [team.to_payload() for team in sorted(teams.values(), key=lambda item: item.team)],
+    }
+
+
+# -- HTML generation ------------------------------------------------------
+
+HTML_TEMPLATE = """<!DOCTYPE html>
+<html lang=\"de\">
+<head>
+  <meta charset=\"utf-8\">
+  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
+  <title>Scouting Übersicht (CSV)</title>
+  <link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"favicon.png\">
+  <link rel=\"manifest\" href=\"manifest.webmanifest\">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7f9;
+      --fg: #0f172a;
+      --accent: #0f766e;
+      --card-bg: #ffffff;
+      --card-border: rgba(15, 118, 110, 0.18);
+      --muted: #475569;
+      --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1f24;
+        --fg: #e2f1f4;
+        --card-bg: #132a30;
+        --card-border: rgba(94, 234, 212, 0.28);
+        --muted: #cbd5f5;
+        --shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: \"Inter\", \"Segoe UI\", -apple-system, BlinkMacSystemFont, \"Helvetica Neue\", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 58rem;
+      margin: 0 auto;
+      padding: clamp(1.2rem, 3vw, 2.8rem) clamp(1rem, 4vw, 3.2rem);
+      display: grid;
+      gap: clamp(1.8rem, 4vw, 3rem);
+    }
+
+    header.page-header {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      letter-spacing: -0.01em;
+    }
+
+    p.page-intro {
+      margin: 0;
+      max-width: 42rem;
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      color: var(--muted);
+    }
+
+    .team-selector {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .team-selector label {
+      font-weight: 600;
+    }
+
+    .team-selector select {
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(15, 118, 110, 0.35);
+      background: var(--card-bg);
+      color: inherit;
+      font-size: 1rem;
+    }
+
+    .update-note {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.12);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 1px solid rgba(15, 118, 110, 0.24);
+    }
+
+    section {
+      display: grid;
+      gap: clamp(1rem, 3vw, 1.8rem);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 1.8rem);
+    }
+
+    .metrics-grid {
+      display: grid;
+      gap: clamp(0.9rem, 3vw, 1.2rem);
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border-radius: 0.9rem;
+      border: 1px solid var(--card-border);
+      padding: clamp(0.9rem, 3vw, 1.2rem);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .metric-card h3 {
+      margin: 0;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      color: var(--accent);
+    }
+
+    .metric-card dl {
+      margin: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .metric-card dt {
+      font-weight: 600;
+    }
+
+    .metric-card dd {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .match-list {
+      display: grid;
+      gap: clamp(1rem, 3vw, 1.6rem);
+    }
+
+    .match-card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      padding: clamp(1rem, 3vw, 1.6rem);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .match-title {
+      margin: 0;
+      font-size: clamp(1.1rem, 2.6vw, 1.4rem);
+    }
+
+    .match-meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: grid;
+      gap: 0.3rem;
+    }
+
+    .match-result {
+      margin: 0;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .match-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .match-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.12);
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .match-links a:hover,
+    .match-links a:focus-visible {
+      text-decoration: underline;
+    }
+
+    .match-metrics {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .match-metrics .metric-card {
+      box-shadow: none;
+      border-color: rgba(15, 118, 110, 0.14);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .empty-state {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 40rem) {
+      main {
+        padding: 1.2rem;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .match-metrics .metric-card {
+        background: rgba(19, 42, 48, 0.85);
+        border-color: rgba(94, 234, 212, 0.22);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class=\"page-header\">
+      <h1 data-team-heading>Scouting Übersicht (CSV)</h1>
+      <p class=\"page-intro\">
+        Übersicht über die Teamstatistiken aus den vorhandenen CSV-Dateien. Wähle eine Mannschaft,
+        um die aggregierten Werte einzublenden.
+      </p>
+      <div class=\"team-selector\" data-selector hidden>
+        <label for=\"team-select\">Mannschaft</label>
+        <select id=\"team-select\" data-team-select></select>
+      </div>
+      <p class=\"update-note\" data-generated>Stand: wird geladen …</p>
+    </header>
+
+    <section aria-labelledby=\"totals-heading\" hidden data-section=\"totals\">
+      <h2 id=\"totals-heading\">Aggregierte Teamstatistiken</h2>
+      <div class=\"metrics-grid\" data-totals></div>
+    </section>
+
+    <section aria-labelledby=\"matches-heading\" hidden data-section=\"matches\">
+      <h2 id=\"matches-heading\">Spiele</h2>
+      <div class=\"match-list\" data-matches></div>
+    </section>
+
+    <footer>
+      Datenquelle: CSV-Exporte aus ``docs/data/csv``
+    </footer>
+  </main>
+
+  <script>
+    const DATA_URL = "__JSON_PATH__";
+    const METRIC_GROUPS = [
+      {
+        title: "Aufschlag",
+        items: [
+          { key: "serves_attempts", label: "Aufschläge" },
+          { key: "serves_errors", label: "Fehler" },
+          { key: "serves_points", label: "Asse" }
+        ]
+      },
+      {
+        title: "Annahme",
+        items: [
+          { key: "receptions_attempts", label: "Annahmen" },
+          { key: "receptions_errors", label: "Fehler" },
+          { key: "receptions_positive_pct", label: "Positiv" },
+          { key: "receptions_perfect_pct", label: "Perfekt" }
+        ]
+      },
+      {
+        title: "Angriff",
+        items: [
+          { key: "attacks_attempts", label: "Angriffe" },
+          { key: "attacks_errors", label: "Fehler" },
+          { key: "attacks_blocked", label: "Geblockt" },
+          { key: "attacks_points", label: "Punkte" },
+          { key: "attacks_success_pct", label: "Erfolgsquote" }
+        ]
+      },
+      {
+        title: "Block",
+        items: [{ key: "blocks_points", label: "Blockpunkte" }]
+      }
+    ];
+
+    let overviewPayload = null;
+
+    async function loadOverview() {
+      try {
+        const response = await fetch(DATA_URL, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Fehler beim Laden der Daten: ${response.status}`);
+        }
+        overviewPayload = await response.json();
+        setupTeams(overviewPayload);
+      } catch (error) {
+        console.error(error);
+        showError();
+      }
+    }
+
+    function setupTeams(payload) {
+      updateGenerated(payload.generated);
+      const teams = Array.isArray(payload.teams) ? payload.teams : [];
+      const selectorWrapper = document.querySelector('[data-selector]');
+      const select = document.querySelector('[data-team-select]');
+      if (!selectorWrapper || !select) return;
+
+      select.innerHTML = "";
+      teams.forEach((team, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = team.team || `Team ${index + 1}`;
+        select.append(option);
+      });
+
+      if (teams.length > 1) {
+        selectorWrapper.hidden = false;
+      }
+
+      select.addEventListener('change', () => {
+        const idx = Number.parseInt(select.value, 10);
+        renderTeam(teams[idx] || null);
+      });
+
+      renderTeam(teams[0] || null);
+    }
+
+    function renderTeam(team) {
+      const heading = document.querySelector('[data-team-heading]');
+      if (heading) {
+        heading.textContent = team?.team ? `Scouting ${team.team} (CSV)` : 'Scouting Übersicht (CSV)';
+      }
+      if (!team) {
+        renderTotals(null);
+        renderMatches([]);
+        return;
+      }
+      renderTotals(team.totals);
+      renderMatches(Array.isArray(team.matches) ? team.matches : []);
+    }
+
+    function updateGenerated(timestamp) {
+      const target = document.querySelector('[data-generated]');
+      if (!target) return;
+      if (!timestamp) {
+        target.textContent = 'Stand: keine Daten verfügbar';
+        return;
+      }
+      const date = new Date(timestamp);
+      const formatted = date.toLocaleString('de-DE', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      });
+      target.textContent = `Stand: ${formatted}`;
+    }
+
+    function renderTotals(totals) {
+      const section = document.querySelector('[data-section="totals"]');
+      const container = document.querySelector('[data-totals]');
+      if (!section || !container) return;
+      container.innerHTML = '';
+      if (!totals) {
+        section.hidden = false;
+        container.innerHTML = '<p class="empty-state">Noch keine Statistiken vorhanden.</p>';
+        return;
+      }
+      for (const group of METRIC_GROUPS) {
+        const card = document.createElement('article');
+        card.className = 'metric-card';
+        const title = document.createElement('h3');
+        title.textContent = group.title;
+        card.append(title);
+        const list = document.createElement('dl');
+        for (const item of group.items) {
+          const value = formatMetricValue(totals[item.key]);
+          const dt = document.createElement('dt');
+          dt.textContent = item.label;
+          const dd = document.createElement('dd');
+          dd.textContent = value;
+          list.append(dt, dd);
+        }
+        card.append(list);
+        container.append(card);
+      }
+      section.hidden = false;
+    }
+
+    function renderMatches(matches) {
+      const section = document.querySelector('[data-section="matches"]');
+      const container = document.querySelector('[data-matches]');
+      if (!section || !container) return;
+      container.innerHTML = '';
+      if (!matches.length) {
+        container.innerHTML = '<p class="empty-state">Es liegen noch keine Spiele mit Statistikdaten vor.</p>';
+        section.hidden = false;
+        return;
+      }
+      for (const entry of matches) {
+        container.append(buildMatchCard(entry));
+      }
+      section.hidden = false;
+    }
+
+    function buildMatchCard(entry) {
+      const card = document.createElement('article');
+      card.className = 'match-card';
+
+      const title = document.createElement('h3');
+      title.className = 'match-title';
+      title.textContent = buildMatchTitle(entry);
+      card.append(title);
+
+      const meta = document.createElement('p');
+      meta.className = 'match-meta';
+      const primaryLine = buildMetaLine(formatMatchDate(entry.kickoff), entry.location);
+      if (primaryLine) {
+        meta.append(primaryLine);
+      }
+      if (entry.break_points != null) {
+        meta.append(`Breakpunkte: ${entry.break_points}`);
+      }
+      if (entry.plus_minus != null && entry.plus_minus !== 0) {
+        meta.append(`Plus/Minus: ${entry.plus_minus}`);
+      }
+      if (meta.childNodes.length) {
+        card.append(meta);
+      }
+
+      if (entry.result?.summary) {
+        const result = document.createElement('p');
+        result.className = 'match-result';
+        result.textContent = `Ergebnis: ${entry.result.summary}`;
+        card.append(result);
+      }
+
+      const links = buildMatchLinks(entry);
+      if (links.children.length) {
+        card.append(links);
+      }
+
+      if (entry.metrics) {
+        card.append(buildMetrics(entry.metrics));
+      }
+
+      return card;
+    }
+
+    function buildMetaLine(dateLabel, location) {
+      if (dateLabel && location) {
+        return `${dateLabel} • ${location}`;
+      }
+      if (dateLabel) {
+        return dateLabel;
+      }
+      return location || '';
+    }
+
+    function buildMatchLinks(match) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'match-links';
+      if (!match) {
+        return wrapper;
+      }
+      if (match.csv_path) {
+        wrapper.append(createLink(match.csv_path, 'Statistik (CSV)'));
+      }
+      if (match.info_url) {
+        wrapper.append(createLink(match.info_url, 'Spielinfos'));
+      }
+      if (match.stats_url) {
+        wrapper.append(createLink(match.stats_url, 'Statistik (PDF)'));
+      }
+      if (match.scoresheet_url) {
+        wrapper.append(createLink(match.scoresheet_url, 'Spielbericht'));
+      }
+      return wrapper;
+    }
+
+    function createLink(href, label) {
+      const link = document.createElement('a');
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noreferrer noopener';
+      link.textContent = label;
+      return link;
+    }
+
+    function buildMetrics(metrics) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'match-metrics';
+      for (const group of METRIC_GROUPS) {
+        const card = document.createElement('article');
+        card.className = 'metric-card';
+        const title = document.createElement('h3');
+        title.textContent = group.title;
+        card.append(title);
+        const list = document.createElement('dl');
+        for (const item of group.items) {
+          const dt = document.createElement('dt');
+          dt.textContent = item.label;
+          const dd = document.createElement('dd');
+          dd.textContent = formatMetricValue(metrics[item.key]);
+          list.append(dt, dd);
+        }
+        card.append(list);
+        wrapper.append(card);
+      }
+      return wrapper;
+    }
+
+    function buildMatchTitle(entry) {
+      const opponent = entry.opponent || 'Unbekannt';
+      const isHome = entry.is_home;
+      const matchup = isHome
+        ? `${entry.host || 'Heimteam'} vs. ${opponent}`
+        : `${opponent} vs. ${entry.host || 'Heimteam'}`;
+      const date = formatMatchDate(entry.kickoff);
+      return date ? `${matchup} (${date})` : matchup;
+    }
+
+    function formatMatchDate(input) {
+      if (!input) {
+        return '';
+      }
+      const date = new Date(input);
+      if (Number.isNaN(date.getTime())) {
+        return '';
+      }
+      return date.toLocaleDateString('de-DE', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    function formatMetricValue(value) {
+      if (value === null || value === undefined) {
+        return '–';
+      }
+      if (typeof value === 'number') {
+        return Number.isFinite(value) ? value.toString() : '–';
+      }
+      return String(value);
+    }
+
+    function showError() {
+      const heading = document.querySelector('[data-team-heading]');
+      if (heading) {
+        heading.textContent = 'Scouting Übersicht (CSV)';
+      }
+      renderTotals(null);
+      renderMatches([]);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOverview);
+  </script>
+</body>
+</html>
+"""
+
+
+# -- CLI ------------------------------------------------------------------
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Generate the CSV-based scouting overview"
+    )
+    parser.add_argument(
+        "--csv-dir",
+        type=Path,
+        default=CSV_DIRECTORY,
+        help="Directory containing the exported CSV files.",
+    )
+    parser.add_argument(
+        "--json-output",
+        type=Path,
+        default=JSON_OUTPUT_PATH,
+        help="Target JSON path (default: docs/data/index2_stats_overview.json).",
+    )
+    parser.add_argument(
+        "--html-output",
+        type=Path,
+        default=HTML_OUTPUT_PATH,
+        help="Target HTML path (default: docs/index2.html).",
+    )
+    return parser
+
+
+def render_html(*, json_path: Path) -> str:
+    try:
+        relative_path = json_path.relative_to(HTML_OUTPUT_PATH.parent)
+    except ValueError:
+        relative_path = json_path
+    json_href = str(relative_path).replace('\\', '/')
+    return HTML_TEMPLATE.replace("__JSON_PATH__", json_href)
+
+
+def main() -> int:
+    parser = build_parser()
+    args = parser.parse_args()
+
+    csv_dir = args.csv_dir
+    json_output: Path = args.json_output
+    html_output: Path = args.html_output
+
+    payload = build_overview_payload(csv_dir)
+
+    json_output.parent.mkdir(parents=True, exist_ok=True)
+    json_output.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+
+    html_output.parent.mkdir(parents=True, exist_ok=True)
+    html_output.write_text(
+        render_html(json_path=json_output),
+        encoding="utf-8",
+    )
+
+    print(
+        f"Generated CSV overview for {payload['team_count']} teams -> {json_output.relative_to(BASE_DIR)}"
+    )
+    print(f"HTML dashboard written to {html_output.relative_to(BASE_DIR)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

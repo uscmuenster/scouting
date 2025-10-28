@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scouting Übersicht (CSV)</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7f9;
+      --fg: #0f172a;
+      --accent: #0f766e;
+      --card-bg: #ffffff;
+      --card-border: rgba(15, 118, 110, 0.18);
+      --muted: #475569;
+      --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1f24;
+        --fg: #e2f1f4;
+        --card-bg: #132a30;
+        --card-border: rgba(94, 234, 212, 0.28);
+        --muted: #cbd5f5;
+        --shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 58rem;
+      margin: 0 auto;
+      padding: clamp(1.2rem, 3vw, 2.8rem) clamp(1rem, 4vw, 3.2rem);
+      display: grid;
+      gap: clamp(1.8rem, 4vw, 3rem);
+    }
+
+    header.page-header {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      letter-spacing: -0.01em;
+    }
+
+    p.page-intro {
+      margin: 0;
+      max-width: 42rem;
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      color: var(--muted);
+    }
+
+    .team-selector {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .team-selector label {
+      font-weight: 600;
+    }
+
+    .team-selector select {
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(15, 118, 110, 0.35);
+      background: var(--card-bg);
+      color: inherit;
+      font-size: 1rem;
+    }
+
+    .update-note {
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.12);
+      color: var(--accent);
+      font-weight: 600;
+      font-size: 0.85rem;
+      border: 1px solid rgba(15, 118, 110, 0.24);
+    }
+
+    section {
+      display: grid;
+      gap: clamp(1rem, 3vw, 1.8rem);
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 1.8rem);
+    }
+
+    .metrics-grid {
+      display: grid;
+      gap: clamp(0.9rem, 3vw, 1.2rem);
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border-radius: 0.9rem;
+      border: 1px solid var(--card-border);
+      padding: clamp(0.9rem, 3vw, 1.2rem);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .metric-card h3 {
+      margin: 0;
+      font-size: clamp(1rem, 2.4vw, 1.2rem);
+      color: var(--accent);
+    }
+
+    .metric-card dl {
+      margin: 0;
+      display: grid;
+      gap: 0.35rem;
+    }
+
+    .metric-card dt {
+      font-weight: 600;
+    }
+
+    .metric-card dd {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .match-list {
+      display: grid;
+      gap: clamp(1rem, 3vw, 1.6rem);
+    }
+
+    .match-card {
+      background: var(--card-bg);
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      padding: clamp(1rem, 3vw, 1.6rem);
+      box-shadow: var(--shadow);
+      display: grid;
+      gap: 0.85rem;
+    }
+
+    .match-title {
+      margin: 0;
+      font-size: clamp(1.1rem, 2.6vw, 1.4rem);
+    }
+
+    .match-meta {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      display: grid;
+      gap: 0.3rem;
+    }
+
+    .match-result {
+      margin: 0;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .match-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .match-links a {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(15, 118, 110, 0.12);
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .match-links a:hover,
+    .match-links a:focus-visible {
+      text-decoration: underline;
+    }
+
+    .match-metrics {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .match-metrics .metric-card {
+      box-shadow: none;
+      border-color: rgba(15, 118, 110, 0.14);
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .empty-state {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    footer {
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 40rem) {
+      main {
+        padding: 1.2rem;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .match-metrics .metric-card {
+        background: rgba(19, 42, 48, 0.85);
+        border-color: rgba(94, 234, 212, 0.22);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="page-header">
+      <h1 data-team-heading>Scouting Übersicht (CSV)</h1>
+      <p class="page-intro">
+        Übersicht über die Teamstatistiken aus den vorhandenen CSV-Dateien. Wähle eine Mannschaft,
+        um die aggregierten Werte einzublenden.
+      </p>
+      <div class="team-selector" data-selector hidden>
+        <label for="team-select">Mannschaft</label>
+        <select id="team-select" data-team-select></select>
+      </div>
+      <p class="update-note" data-generated>Stand: wird geladen …</p>
+    </header>
+
+    <section aria-labelledby="totals-heading" hidden data-section="totals">
+      <h2 id="totals-heading">Aggregierte Teamstatistiken</h2>
+      <div class="metrics-grid" data-totals></div>
+    </section>
+
+    <section aria-labelledby="matches-heading" hidden data-section="matches">
+      <h2 id="matches-heading">Spiele</h2>
+      <div class="match-list" data-matches></div>
+    </section>
+
+    <footer>
+      Datenquelle: CSV-Exporte aus ``docs/data/csv``
+    </footer>
+  </main>
+
+  <script>
+    const DATA_URL = "data/index2_stats_overview.json";
+    const METRIC_GROUPS = [
+      {
+        title: "Aufschlag",
+        items: [
+          { key: "serves_attempts", label: "Aufschläge" },
+          { key: "serves_errors", label: "Fehler" },
+          { key: "serves_points", label: "Asse" }
+        ]
+      },
+      {
+        title: "Annahme",
+        items: [
+          { key: "receptions_attempts", label: "Annahmen" },
+          { key: "receptions_errors", label: "Fehler" },
+          { key: "receptions_positive_pct", label: "Positiv" },
+          { key: "receptions_perfect_pct", label: "Perfekt" }
+        ]
+      },
+      {
+        title: "Angriff",
+        items: [
+          { key: "attacks_attempts", label: "Angriffe" },
+          { key: "attacks_errors", label: "Fehler" },
+          { key: "attacks_blocked", label: "Geblockt" },
+          { key: "attacks_points", label: "Punkte" },
+          { key: "attacks_success_pct", label: "Erfolgsquote" }
+        ]
+      },
+      {
+        title: "Block",
+        items: [{ key: "blocks_points", label: "Blockpunkte" }]
+      }
+    ];
+
+    let overviewPayload = null;
+
+    async function loadOverview() {
+      try {
+        const response = await fetch(DATA_URL, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Fehler beim Laden der Daten: ${response.status}`);
+        }
+        overviewPayload = await response.json();
+        setupTeams(overviewPayload);
+      } catch (error) {
+        console.error(error);
+        showError();
+      }
+    }
+
+    function setupTeams(payload) {
+      updateGenerated(payload.generated);
+      const teams = Array.isArray(payload.teams) ? payload.teams : [];
+      const selectorWrapper = document.querySelector('[data-selector]');
+      const select = document.querySelector('[data-team-select]');
+      if (!selectorWrapper || !select) return;
+
+      select.innerHTML = "";
+      teams.forEach((team, index) => {
+        const option = document.createElement('option');
+        option.value = String(index);
+        option.textContent = team.team || `Team ${index + 1}`;
+        select.append(option);
+      });
+
+      if (teams.length > 1) {
+        selectorWrapper.hidden = false;
+      }
+
+      select.addEventListener('change', () => {
+        const idx = Number.parseInt(select.value, 10);
+        renderTeam(teams[idx] || null);
+      });
+
+      renderTeam(teams[0] || null);
+    }
+
+    function renderTeam(team) {
+      const heading = document.querySelector('[data-team-heading]');
+      if (heading) {
+        heading.textContent = team?.team ? `Scouting ${team.team} (CSV)` : 'Scouting Übersicht (CSV)';
+      }
+      if (!team) {
+        renderTotals(null);
+        renderMatches([]);
+        return;
+      }
+      renderTotals(team.totals);
+      renderMatches(Array.isArray(team.matches) ? team.matches : []);
+    }
+
+    function updateGenerated(timestamp) {
+      const target = document.querySelector('[data-generated]');
+      if (!target) return;
+      if (!timestamp) {
+        target.textContent = 'Stand: keine Daten verfügbar';
+        return;
+      }
+      const date = new Date(timestamp);
+      const formatted = date.toLocaleString('de-DE', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      });
+      target.textContent = `Stand: ${formatted}`;
+    }
+
+    function renderTotals(totals) {
+      const section = document.querySelector('[data-section="totals"]');
+      const container = document.querySelector('[data-totals]');
+      if (!section || !container) return;
+      container.innerHTML = '';
+      if (!totals) {
+        section.hidden = false;
+        container.innerHTML = '<p class="empty-state">Noch keine Statistiken vorhanden.</p>';
+        return;
+      }
+      for (const group of METRIC_GROUPS) {
+        const card = document.createElement('article');
+        card.className = 'metric-card';
+        const title = document.createElement('h3');
+        title.textContent = group.title;
+        card.append(title);
+        const list = document.createElement('dl');
+        for (const item of group.items) {
+          const value = formatMetricValue(totals[item.key]);
+          const dt = document.createElement('dt');
+          dt.textContent = item.label;
+          const dd = document.createElement('dd');
+          dd.textContent = value;
+          list.append(dt, dd);
+        }
+        card.append(list);
+        container.append(card);
+      }
+      section.hidden = false;
+    }
+
+    function renderMatches(matches) {
+      const section = document.querySelector('[data-section="matches"]');
+      const container = document.querySelector('[data-matches]');
+      if (!section || !container) return;
+      container.innerHTML = '';
+      if (!matches.length) {
+        container.innerHTML = '<p class="empty-state">Es liegen noch keine Spiele mit Statistikdaten vor.</p>';
+        section.hidden = false;
+        return;
+      }
+      for (const entry of matches) {
+        container.append(buildMatchCard(entry));
+      }
+      section.hidden = false;
+    }
+
+    function buildMatchCard(entry) {
+      const card = document.createElement('article');
+      card.className = 'match-card';
+
+      const title = document.createElement('h3');
+      title.className = 'match-title';
+      title.textContent = buildMatchTitle(entry);
+      card.append(title);
+
+      const meta = document.createElement('p');
+      meta.className = 'match-meta';
+      const primaryLine = buildMetaLine(formatMatchDate(entry.kickoff), entry.location);
+      if (primaryLine) {
+        meta.append(primaryLine);
+      }
+      if (entry.break_points != null) {
+        meta.append(`Breakpunkte: ${entry.break_points}`);
+      }
+      if (entry.plus_minus != null && entry.plus_minus !== 0) {
+        meta.append(`Plus/Minus: ${entry.plus_minus}`);
+      }
+      if (meta.childNodes.length) {
+        card.append(meta);
+      }
+
+      if (entry.result?.summary) {
+        const result = document.createElement('p');
+        result.className = 'match-result';
+        result.textContent = `Ergebnis: ${entry.result.summary}`;
+        card.append(result);
+      }
+
+      const links = buildMatchLinks(entry);
+      if (links.children.length) {
+        card.append(links);
+      }
+
+      if (entry.metrics) {
+        card.append(buildMetrics(entry.metrics));
+      }
+
+      return card;
+    }
+
+    function buildMetaLine(dateLabel, location) {
+      if (dateLabel && location) {
+        return `${dateLabel} • ${location}`;
+      }
+      if (dateLabel) {
+        return dateLabel;
+      }
+      return location || '';
+    }
+
+    function buildMatchLinks(match) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'match-links';
+      if (!match) {
+        return wrapper;
+      }
+      if (match.csv_path) {
+        wrapper.append(createLink(match.csv_path, 'Statistik (CSV)'));
+      }
+      if (match.info_url) {
+        wrapper.append(createLink(match.info_url, 'Spielinfos'));
+      }
+      if (match.stats_url) {
+        wrapper.append(createLink(match.stats_url, 'Statistik (PDF)'));
+      }
+      if (match.scoresheet_url) {
+        wrapper.append(createLink(match.scoresheet_url, 'Spielbericht'));
+      }
+      return wrapper;
+    }
+
+    function createLink(href, label) {
+      const link = document.createElement('a');
+      link.href = href;
+      link.target = '_blank';
+      link.rel = 'noreferrer noopener';
+      link.textContent = label;
+      return link;
+    }
+
+    function buildMetrics(metrics) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'match-metrics';
+      for (const group of METRIC_GROUPS) {
+        const card = document.createElement('article');
+        card.className = 'metric-card';
+        const title = document.createElement('h3');
+        title.textContent = group.title;
+        card.append(title);
+        const list = document.createElement('dl');
+        for (const item of group.items) {
+          const dt = document.createElement('dt');
+          dt.textContent = item.label;
+          const dd = document.createElement('dd');
+          dd.textContent = formatMetricValue(metrics[item.key]);
+          list.append(dt, dd);
+        }
+        card.append(list);
+        wrapper.append(card);
+      }
+      return wrapper;
+    }
+
+    function buildMatchTitle(entry) {
+      const opponent = entry.opponent || 'Unbekannt';
+      const isHome = entry.is_home;
+      const matchup = isHome
+        ? `${entry.host || 'Heimteam'} vs. ${opponent}`
+        : `${opponent} vs. ${entry.host || 'Heimteam'}`;
+      const date = formatMatchDate(entry.kickoff);
+      return date ? `${matchup} (${date})` : matchup;
+    }
+
+    function formatMatchDate(input) {
+      if (!input) {
+        return '';
+      }
+      const date = new Date(input);
+      if (Number.isNaN(date.getTime())) {
+        return '';
+      }
+      return date.toLocaleDateString('de-DE', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    function formatMetricValue(value) {
+      if (value === null || value === undefined) {
+        return '–';
+      }
+      if (typeof value === 'number') {
+        return Number.isFinite(value) ? value.toString() : '–';
+      }
+      return String(value);
+    }
+
+    function showError() {
+      const heading = document.querySelector('[data-team-heading]');
+      if (heading) {
+        heading.textContent = 'Scouting Übersicht (CSV)';
+      }
+      renderTotals(null);
+      renderMatches([]);
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOverview);
+  </script>
+</body>
+</html>
