@@ -3,7 +3,7 @@ name: Update scouting vbl
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 4 * * *'
+    - cron: '0 4 * * *'  # täglich um 04:00 Uhr UTC
 
 permissions:
   contents: write
@@ -11,21 +11,25 @@ permissions:
 jobs:
   build-usc-stats-overview:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+    steps:
+      - name: 🧩 Check out repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - run: pip install -r requirements.txt
+      - name: 📦 Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Analyse https://vbl-web.dataproject.com
+      - name: 🔍 Analyse https://vbl-web.dataproject.com
         env:
           PYTHONPATH: Scouting
-      - run: python Scouting/scripts/statsvbl.py
+        run: python Scouting/scripts/statsvbl.py
 
-      - name: Commit and push changes
+      - name: 💾 Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
