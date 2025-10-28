@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import json
 from typing import Dict
 
 from scripts.statsvbl import (
+    build_vbl_output_path,
     collect_vbl_match_leg_results,
     parse_competition_matches_html,
     parse_leg_list_html,
+    save_vbl_match_leg_results,
 )
 
 
@@ -187,4 +190,41 @@ def test_collect_vbl_match_leg_results_combines_matches_and_leg_lists() -> None:
     assert second["home_sets"] == 3
     assert second["away_sets"] == 0
     assert second["set_scores"] == "25-21, 25-19, 25-18"
+
+
+def test_build_vbl_output_path_appends_identifiers(tmp_path) -> None:
+    path = build_vbl_output_path(
+        "185",
+        "209",
+        club_id="228",
+        output_dir=tmp_path,
+    )
+    assert path.parent == tmp_path
+    assert path.name == "185_209_228.json"
+
+
+def test_save_vbl_match_leg_results_writes_json(tmp_path) -> None:
+    output_dir = tmp_path / "vbl"
+    path = save_vbl_match_leg_results(
+        "185",
+        "209",
+        club_id="228",
+        base_url="https://example.com",
+        output_dir=output_dir,
+        match_fetcher=lambda url: COMPETITION_HTML,
+        leg_fetcher=lambda match, url: {
+            "11835": LEG_LIST_HTML,
+            "11832": LEG_LIST_HTML,
+        }[match.match_id],
+    )
+
+    assert path.parent == output_dir
+    assert path.exists()
+
+    with path.open(encoding="utf-8") as fp:
+        payload = json.load(fp)
+
+    assert payload["competition_id"] == "185"
+    assert payload["phase_id"] == "209"
+    assert payload["match_count"] == 2
 
