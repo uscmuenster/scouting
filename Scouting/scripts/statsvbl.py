@@ -13,7 +13,8 @@ import requests
 from bs4 import BeautifulSoup, Tag
 
 DEFAULT_VBL_BASE_URL = "https://vbl-web.dataproject.com"
-DEFAULT_VBL_OUTPUT_DIR = Path("docs/data/vbl")
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_VBL_OUTPUT_DIR = _REPO_ROOT / "docs" / "data" / "vbl"
 REQUEST_TIMEOUT = 20
 
 
