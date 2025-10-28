@@ -2841,6 +2841,8 @@ def _tokenize_compact_stats_text(text: str) -> List[str]:
     sanitized = re.sub(r"(?<=\d)[+](?=\d)", " +", sanitized)
     sanitized = re.sub(r"(?<=\d)-(?!\s)(?=\d)", " -", sanitized)
     sanitized = re.sub(r"(?<=\d)\.(?=\s)", " .", sanitized)
+    sanitized = re.sub(r"(?<=\s\.)(?=\d)", " ", sanitized)
+    sanitized = sanitized.replace("%.", "% .")
     sanitized = re.sub(r"%(?=\d)", "% ", sanitized)
     parts = [part for part in sanitized.split() if part and part != "*"]
     if not parts:
@@ -2922,69 +2924,146 @@ def _build_metrics_from_compact_tokens(tokens: Sequence[str]) -> MatchStatsMetri
     )
 
 
+def _metrics_information_score(metrics: MatchStatsMetrics) -> Tuple[int, int]:
+    significant = (
+        metrics.attacks_attempts,
+        metrics.attacks_points,
+        metrics.blocks_points,
+    )
+    non_zero = sum(1 for value in significant if value > 0)
+    aggregate = sum(significant)
+    return non_zero, aggregate
+
+
 def _parse_compact_player_stats(
     rest: str, team_name: str, jersey_number: Optional[int]
 ) -> Optional[MatchPlayerStats]:
     parts = _tokenize_compact_stats_text(rest)
-    modern_match = None
-    value_tokens: List[str]
-    metrics: MatchStatsMetrics
-    using_modern = False
+    modern_match: Optional[re.Match[str]] = None
+    modern_tokens: Optional[List[str]] = None
+    modern_metrics: Optional[MatchStatsMetrics] = None
+    modern_name_segment: Optional[str] = None
+
+    legacy_tokens: Optional[List[str]] = None
+    legacy_metrics: Optional[MatchStatsMetrics] = None
+    legacy_name_segment: Optional[str] = None
+
     modern_prefix_present = _extract_modern_compact_prefix_values(rest) is not None
     if modern_prefix_present or _looks_like_modern_compact_format(parts):
         modern_match = re.search(_MODERN_COMPACT_PREFIX_PATTERN, rest)
-        modern_tokens = _build_modern_compact_tokens(rest)
-        modern_metrics = _build_metrics_from_compact_tokens(modern_tokens)
+        candidate_tokens = _build_modern_compact_tokens(rest)
+        candidate_metrics = _build_metrics_from_compact_tokens(candidate_tokens)
         if not (
-            modern_metrics.serves_attempts == 0
-            and modern_metrics.receptions_attempts == 0
+            candidate_metrics.serves_attempts == 0
+            and candidate_metrics.receptions_attempts == 0
         ):
-            value_tokens = modern_tokens
-            metrics = modern_metrics
-            using_modern = True
+            modern_tokens = list(candidate_tokens)
+            modern_metrics = candidate_metrics
             if modern_match:
-                name_segment = rest[: modern_match.start()].strip(" .:-")
+                modern_name_segment = rest[: modern_match.start()].strip(" .:-")
             else:
                 name_tokens: List[str] = []
                 for token in parts:
                     if _COMPACT_VALUE_PATTERN.match(token):
                         break
                     name_tokens.append(token)
-                name_segment = " ".join(name_tokens).strip(" .:-")
+                modern_name_segment = " ".join(name_tokens).strip(" .:-")
         else:
             modern_match = None
 
-    if not using_modern:
-        extracted = _extract_compact_value_tokens(parts)
-        if not extracted:
-            return None
+    extracted = _extract_compact_value_tokens(parts)
+    consumed_count = 0
+    if extracted:
         value_tokens, consumed_count = extracted
         if value_tokens and _MODERN_COMPACT_PREFIX_PATTERN.fullmatch(value_tokens[0]):
             value_tokens = value_tokens[1:] + ["."]
+        if len(value_tokens) > 3 and value_tokens[3].startswith("-"):
+            if len(value_tokens) > 2 and value_tokens[2] in {".", "0"}:
+                value_tokens[2] = value_tokens[3]
+                value_tokens[3] = "."
         if (
             len(value_tokens) >= 15
-            and re.fullmatch(r"\d{2,3}", value_tokens[12] or "")
-            and value_tokens[13] and value_tokens[13].endswith("%")
+            and re.fullmatch(r"\d{2,4}", value_tokens[12] or "")
+            and value_tokens[13]
+            and value_tokens[13].endswith("%")
         ):
-            combined = value_tokens[12]
-            value_tokens = (
-                value_tokens[:12]
-                + [combined[0], combined[1:]]
-                + value_tokens[13:]
+            split_values = _split_compound_value(
+                value_tokens[12], first_max=25, second_max=200
             )
-            if len(value_tokens) > 16:
-                value_tokens = value_tokens[:16]
-        metrics = _build_metrics_from_compact_tokens(value_tokens)
+            if split_values:
+                value_tokens = (
+                    value_tokens[:12]
+                    + [str(split_values[0]), str(split_values[1])]
+                    + value_tokens[13:]
+                )
+                if len(value_tokens) > 16:
+                    value_tokens = value_tokens[:16]
+        if len(value_tokens) >= 6 and value_tokens[4].isdigit():
+            serve_attempts = _parse_int_token(value_tokens[3])
+            if serve_attempts > 0 and int(value_tokens[4]) > serve_attempts:
+                split_values = _split_compound_value(
+                    value_tokens[4],
+                    first_max=serve_attempts,
+                    second_max=max(serve_attempts, 30),
+                )
+                if split_values:
+                    value_tokens[4] = str(split_values[0])
+                    value_tokens.insert(5, str(split_values[1]))
+                    if len(value_tokens) > 16:
+                        value_tokens.pop()
+        attack_blocked_index = 12
+        attack_points_index = 13
+        attack_pct_index = 14
+        if (
+            len(value_tokens) > attack_blocked_index
+            and value_tokens[attack_blocked_index]
+            and re.fullmatch(r"\d{2,4}", value_tokens[attack_blocked_index] or "")
+            and len(value_tokens) > attack_points_index
+            and value_tokens[attack_points_index]
+            and value_tokens[attack_points_index].endswith("%")
+        ):
+            split_values = _split_compound_value(
+                value_tokens[attack_blocked_index], first_max=25, second_max=200
+            )
+            if split_values:
+                value_tokens[attack_blocked_index] = str(split_values[0])
+                value_tokens.insert(attack_points_index, str(split_values[1]))
+                if len(value_tokens) > 16:
+                    value_tokens.pop()
+        legacy_metrics = _build_metrics_from_compact_tokens(value_tokens)
         prefix_length = len(parts) - consumed_count
         name_tokens = parts[:prefix_length]
-        if not name_tokens:
-            return None
-        pre_str = " ".join(name_tokens).strip()
-        cutoff = re.search(r"\s[.\d+-]", pre_str)
-        if cutoff:
-            name_segment = pre_str[: cutoff.start()].strip(" .:-")
+        if name_tokens:
+            pre_str = " ".join(name_tokens).strip()
+            cutoff = re.search(r"\s[.\d+-]", pre_str)
+            if cutoff:
+                legacy_name_segment = pre_str[: cutoff.start()].strip(" .:-")
+            else:
+                legacy_name_segment = pre_str.strip(" .:-")
+        legacy_tokens = value_tokens
+
+    use_modern = False
+    if modern_metrics is not None:
+        if legacy_metrics is None:
+            use_modern = True
         else:
-            name_segment = pre_str.strip(" .:-")
+            if _metrics_information_score(modern_metrics) >= _metrics_information_score(
+                legacy_metrics
+            ):
+                use_modern = True
+
+    if use_modern:
+        if modern_tokens is None or not modern_name_segment:
+            return None
+        value_tokens = modern_tokens
+        metrics = modern_metrics
+        name_segment = modern_name_segment
+    else:
+        if legacy_tokens is None or legacy_metrics is None or not legacy_name_segment:
+            return None
+        value_tokens = legacy_tokens
+        metrics = legacy_metrics
+        name_segment = legacy_name_segment
         modern_match = None
     if not name_segment:
         return None
