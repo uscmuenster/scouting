@@ -63,6 +63,39 @@ COMPETITION_HTML = """
 """
 
 
+CALENDAR_COMPETITION_HTML = """
+<html>
+  <body>
+    <div id="ctl00_Content_Main_228_userControl_RADLIST_Legs_ctrl0_RADLIST_Matches_ctrl0_MatchRow" class="AlternateRow_Item">
+      <div class="t-container t-container-fluid">
+        <div class="t-row t-hidden-xs t-hidden-sm">
+          <div class="t-col t-col-1">
+            <div onclick="javascript:window.location='MatchStatistics.aspx?mID=21001&ID=185&CID=228&PID=209&type=LegList';"></div>
+            <div onclick="javascript:window.location='MatchStatistics.aspx?mID=21001&ID=185&CID=228&PID=209&type=Summary';"></div>
+          </div>
+          <div class="t-col t-col-2">
+            <p class="Calendar_p_TextRow Calendar_p_TextRow_Italic">17/02/2024 - 19:00</p>
+          </div>
+          <div class="t-col t-col-2">
+            <p class="Calendar_p_TextRow">USC Münster</p>
+          </div>
+          <div class="t-col t-col-2">
+            <p class="Calendar_p_TextRow">3 - 2</p>
+          </div>
+          <div class="t-col t-col-2">
+            <p class="Calendar_p_TextRow">Dresdner SC</p>
+          </div>
+          <div class="t-col t-col-2">
+            <p class="Calendar_p_TextRow Calendar_p_TextRow_Italic">Referee Info</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+"""
+
+
 LEG_LIST_HTML = """
 <html>
   <body>
@@ -132,6 +165,28 @@ def test_parse_competition_matches_html_extracts_basic_fields() -> None:
     assert first.leg_list_url == (
         "https://example.com/MatchStatistics.aspx?mID=11835&ID=185&CID=228&PID=209&type=LegList"
     )
+
+
+def test_parse_competition_matches_html_supports_calendar_layout() -> None:
+    matches = parse_competition_matches_html(
+        CALENDAR_COMPETITION_HTML,
+        base_url="https://vbl-web.dataproject.com",
+    )
+    assert len(matches) == 1
+    match = matches[0]
+    assert match.match_id == "21001"
+    assert match.competition_id == "185"
+    assert match.phase_id == "209"
+    assert match.club_id == "228"
+    assert match.date_label == "17.02.2024"
+    assert match.time_label == "19:00"
+    assert match.home_team == "USC Münster"
+    assert match.away_team == "Dresdner SC"
+    assert match.result == "3 - 2"
+    assert match.leg_list_url is not None
+    assert match.leg_list_url.endswith("type=LegList")
+    assert match.info_url is not None
+    assert match.info_url.endswith("type=Summary")
 
 
 def test_parse_leg_list_html_extracts_sets() -> None:

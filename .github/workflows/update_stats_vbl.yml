@@ -24,17 +24,15 @@ jobs:
       - name: 📦 Install dependencies
         run: pip install -r requirements.txt
 
-      - name: 🔍 Analyse https://vbl-web.dataproject.com
+      - name: 🔍 Sammle VBL-Matchdaten
         env:
           PYTHONPATH: Scouting
-        run: python Scouting/scripts/statsvbl.py
+        run: python Scouting/scripts/update_vbl_match_data.py --use-default-datasets
 
       - name: 💾 Commit and push changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/data/usc_stats_overview.json \
-                  docs/data/hamburg_stats_overview.json \
-                  docs/data/stats_pdfs/
-          git commit -m "chore: update scouting statistics overviews" || echo "No changes"
+          git add docs/data/vbl/
+          git commit -m "chore: update VBL match data" || echo "No changes"
           git push
