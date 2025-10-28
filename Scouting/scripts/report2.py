@@ -68,6 +68,8 @@ TEAM_SHORT_NAME_OVERRIDES: Mapping[str, str] = {
     "VfB Suhl LOTTO Thüringen": "Suhl",
 }
 
+PLAYER_SUFFIX_RE = re.compile(r"\s*\([^)]*\)\s*$")
+
 
 def _smart_capitalize(value: str) -> str:
     tokens = []
@@ -99,6 +101,30 @@ def slugify(value: str) -> str:
 
 def normalize_key(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", value.lower())
+
+
+def parse_optional_int(value: Optional[str]) -> Optional[int]:
+    if value is None:
+        return None
+    text = value.strip()
+    if not text or text in {"-", ".", "na", "n/a"}:
+        return None
+    try:
+        return int(text)
+    except ValueError:
+        try:
+            return int(float(text.replace(",", ".")))
+        except ValueError:
+            return None
+
+
+def canonicalize_player_name(raw: str) -> str:
+    value = (raw or "").strip()
+    if not value:
+        return "Unbekannte Spielerin"
+    cleaned = PLAYER_SUFFIX_RE.sub("", value)
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return _smart_capitalize(cleaned.lower())
 
 
 # -- Parsing helpers ------------------------------------------------------
@@ -207,6 +233,53 @@ class MetricsAccumulator:
 
 
 @dataclass
+class PlayerAccumulator:
+    name: str
+    jersey_number: Optional[int]
+    matches: List[Mapping[str, object]] = field(default_factory=list)
+    totals: MetricsAccumulator = field(default_factory=MetricsAccumulator)
+    total_points: int = 0
+    break_points: int = 0
+    plus_minus: int = 0
+
+    def add_match(
+        self,
+        match_entry: Mapping[str, object],
+        metrics: Mapping[str, int],
+        *,
+        total_points: int,
+        break_points: int,
+        plus_minus: int,
+        jersey_number: Optional[int],
+    ) -> None:
+        self.matches.append(match_entry)
+        self.totals.add(metrics)
+        self.total_points += total_points
+        self.break_points += break_points
+        self.plus_minus += plus_minus
+        if jersey_number is not None and self.jersey_number is None:
+            self.jersey_number = jersey_number
+
+    def to_payload(self) -> Dict[str, object]:
+        matches_sorted = sorted(
+            self.matches,
+            key=lambda entry: entry.get("kickoff", ""),
+            reverse=True,
+        )
+        totals_payload = self.totals.to_payload()
+        return {
+            "name": self.name,
+            "jersey_number": self.jersey_number,
+            "match_count": len(self.matches),
+            "matches": matches_sorted,
+            "totals": totals_payload,
+            "total_points": self.total_points,
+            "break_points_total": self.break_points,
+            "plus_minus_total": self.plus_minus,
+        }
+
+
+@dataclass
 class TeamAccumulator:
     team: str
     slug: str
@@ -215,6 +288,7 @@ class TeamAccumulator:
     total_points: int = 0
     break_points: int = 0
     plus_minus: int = 0
+    players: Dict[str, PlayerAccumulator] = field(default_factory=dict)
 
     def add_match(
         self,
@@ -231,6 +305,30 @@ class TeamAccumulator:
         self.break_points += break_points
         self.plus_minus += plus_minus
 
+    def add_player_match(
+        self,
+        key: str,
+        player_name: str,
+        jersey_number: Optional[int],
+        match_entry: Mapping[str, object],
+        metrics: Mapping[str, int],
+        *,
+        total_points: int,
+        break_points: int,
+        plus_minus: int,
+    ) -> None:
+        accumulator = self.players.setdefault(
+            key, PlayerAccumulator(name=player_name, jersey_number=jersey_number)
+        )
+        accumulator.add_match(
+            match_entry,
+            metrics,
+            total_points=total_points,
+            break_points=break_points,
+            plus_minus=plus_minus,
+            jersey_number=jersey_number,
+        )
+
     def to_payload(self) -> Dict[str, object]:
         matches_sorted = sorted(
             self.matches,
@@ -245,12 +343,21 @@ class TeamAccumulator:
                 "plus_minus": self.plus_minus,
             }
         )
+        players_sorted = sorted(
+            self.players.values(),
+            key=lambda player: (
+                player.jersey_number is None,
+                player.jersey_number if player.jersey_number is not None else 0,
+                player.name,
+            ),
+        )
         return {
             "team": self.team,
             "team_slug": self.slug,
             "match_count": len(self.matches),
             "totals": totals_payload,
             "matches": matches_sorted,
+            "players": [player.to_payload() for player in players_sorted],
         }
 
 
@@ -352,6 +459,8 @@ def build_match_entry(
     match_date: str,
     stadium_raw: str,
     csv_path: str,
+    player_name: Optional[str] = None,
+    jersey_number: Optional[int] = None,
 ) -> Dict[str, object]:
     opponent_canonical = canonicalize_team_name(opponent_raw)
     opponent_short = short_team_label(opponent_canonical)
@@ -414,6 +523,11 @@ def build_match_entry(
         "csv_path": csv_path,
     }
 
+    if player_name:
+        match_entry["player"] = player_name
+    if jersey_number is not None:
+        match_entry["jersey_number"] = jersey_number
+
     return match_entry
 
 
@@ -434,46 +548,78 @@ def collect_team_accumulators(csv_dir: Path, schedule: Mapping[str, Mapping[str,
                 elif "Guest Team" in reader.fieldnames:
                     team_field = "Guest Team"
 
-            team_row: Optional[Mapping[str, str]] = None
-            metrics_row: Optional[Mapping[str, str]] = None
-            for row in reader:
-                if not row:
-                    continue
-                name_raw = (row.get("Name") or "").strip().lower()
-                if name_raw == "totals":
-                    team_row = row
-                    metrics_row = row
-                    break
+            rows: List[Mapping[str, str]] = [row for row in reader if row]
 
-            if not team_row or not metrics_row:
+        totals_row: Optional[Mapping[str, str]] = None
+        player_rows: List[Mapping[str, str]] = []
+        for row in rows:
+            name_raw = (row.get("Name") or "").strip()
+            if not name_raw:
                 continue
+            if name_raw.lower() == "totals":
+                totals_row = row
+            else:
+                player_rows.append(row)
 
-            match_id = (team_row.get("Match ID") or "").strip()
-            if not match_id:
+        if not totals_row:
+            continue
+
+        match_id = (totals_row.get("Match ID") or "").strip()
+        if not match_id:
+            continue
+
+        match_date = (totals_row.get("Match Date") or "").strip()
+        stadium_raw = (totals_row.get("Stadium") or "").strip()
+
+        if team_field is None:
+            continue
+
+        team_name_raw = totals_row.get(team_field) or ""
+        team_canonical = canonicalize_team_name(team_name_raw)
+        team_key = normalize_key(team_canonical)
+        opponent_raw = ""
+        schedule_entry = schedule.get(match_id)
+        is_home = team_field == "Home Team"
+        if schedule_entry:
+            opponent_raw = (
+                schedule_entry["guest_team_raw"]
+                if is_home
+                else schedule_entry["home_team_raw"]
+            )
+
+        metrics = parse_metrics_row(totals_row)
+        match_entry = build_match_entry(
+            metrics=metrics,
+            schedule_entry=schedule_entry,
+            team_canonical=team_canonical,
+            opponent_raw=opponent_raw,
+            is_home=is_home,
+            match_id=match_id,
+            match_date=match_date,
+            stadium_raw=stadium_raw,
+            csv_path=f"data/csv/{path.name}",
+        )
+
+        accumulator = teams.setdefault(
+            team_key, TeamAccumulator(team=team_canonical, slug=slugify(team_canonical))
+        )
+        accumulator.add_match(
+            match_entry,
+            metrics,
+            total_points=metrics["total_points"],
+            break_points=metrics["break_points"],
+            plus_minus=metrics["plus_minus"],
+        )
+
+        for player_row in player_rows:
+            player_name_raw = (player_row.get("Name") or "").strip()
+            if not player_name_raw:
                 continue
-
-            match_date = (team_row.get("Match Date") or "").strip()
-            stadium_raw = (team_row.get("Stadium") or "").strip()
-
-            if team_field is None:
-                continue
-
-            team_name_raw = team_row.get(team_field) or ""
-            team_canonical = canonicalize_team_name(team_name_raw)
-            team_key = normalize_key(team_canonical)
-            opponent_raw = ""
-            schedule_entry = schedule.get(match_id)
-            is_home = team_field == "Home Team"
-            if schedule_entry:
-                opponent_raw = (
-                    schedule_entry["guest_team_raw"]
-                    if is_home
-                    else schedule_entry["home_team_raw"]
-                )
-
-            metrics = parse_metrics_row(metrics_row)
-            match_entry = build_match_entry(
-                metrics=metrics,
+            player_name = canonicalize_player_name(player_name_raw)
+            jersey_number = parse_optional_int(player_row.get("Number"))
+            player_metrics = parse_metrics_row(player_row)
+            player_entry = build_match_entry(
+                metrics=player_metrics,
                 schedule_entry=schedule_entry,
                 team_canonical=team_canonical,
                 opponent_raw=opponent_raw,
@@ -482,17 +628,20 @@ def collect_team_accumulators(csv_dir: Path, schedule: Mapping[str, Mapping[str,
                 match_date=match_date,
                 stadium_raw=stadium_raw,
                 csv_path=f"data/csv/{path.name}",
+                player_name=player_name,
+                jersey_number=jersey_number,
             )
-
-            accumulator = teams.setdefault(
-                team_key, TeamAccumulator(team=team_canonical, slug=slugify(team_canonical))
-            )
-            accumulator.add_match(
-                match_entry,
-                metrics,
-                total_points=metrics["total_points"],
-                break_points=metrics["break_points"],
-                plus_minus=metrics["plus_minus"],
+            player_key_source = f"{player_name}-{jersey_number or ''}"
+            player_key = normalize_key(player_key_source) or slugify(player_key_source)
+            accumulator.add_player_match(
+                player_key,
+                player_name,
+                jersey_number,
+                player_entry,
+                player_metrics,
+                total_points=player_metrics["total_points"],
+                break_points=player_metrics["break_points"],
+                plus_minus=player_metrics["plus_minus"],
             )
 
     return teams
@@ -657,6 +806,52 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       color: var(--muted);
     }
 
+    .player-table-wrapper {
+      overflow-x: auto;
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+    }
+
+    table.player-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 48rem;
+    }
+
+    table.player-table thead th {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 1px solid var(--card-border);
+      z-index: 1;
+    }
+
+    table.player-table th.numeric,
+    table.player-table td.numeric {
+      text-align: right;
+    }
+
+    table.player-table tbody td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.12);
+      white-space: nowrap;
+    }
+
+    table.player-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.player-table tbody tr:nth-child(odd) {
+      background: rgba(15, 118, 110, 0.04);
+    }
+
     .match-list {
       display: grid;
       gap: clamp(1rem, 3vw, 1.6rem);
@@ -747,6 +942,15 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         background: rgba(19, 42, 48, 0.85);
         border-color: rgba(94, 234, 212, 0.22);
       }
+
+      .player-table-wrapper {
+        background: rgba(19, 42, 48, 0.9);
+        border-color: rgba(94, 234, 212, 0.22);
+      }
+
+      table.player-table tbody tr:nth-child(odd) {
+        background: rgba(94, 234, 212, 0.08);
+      }
     }
   </style>
 </head>
@@ -768,6 +972,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     <section aria-labelledby=\"totals-heading\" hidden data-section=\"totals\">
       <h2 id=\"totals-heading\">Aggregierte Teamstatistiken</h2>
       <div class=\"metrics-grid\" data-totals></div>
+    </section>
+
+    <section aria-labelledby=\"players-heading\" hidden data-section=\"players\">
+      <h2 id=\"players-heading\">Spielerinnen</h2>
+      <div class=\"player-table-wrapper\" data-player-table>
+        <p class=\"empty-state\">Noch keine Spielerinnendaten verfügbar.</p>
+      </div>
     </section>
 
     <section aria-labelledby=\"matches-heading\" hidden data-section=\"matches\">
@@ -813,6 +1024,92 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       {
         title: "Block",
         items: [{ key: "blocks_points", label: "Blockpunkte" }]
+      }
+    ];
+
+    const PLAYER_COLUMNS = [
+      { label: "#", getter: player => player?.jersey_number ?? null, numeric: true },
+      { label: "Name", getter: player => player?.name || "Unbekannt" },
+      { label: "Sp.", getter: player => player?.match_count ?? 0, numeric: true },
+      {
+        label: "Auf-Ges",
+        getter: player => player?.totals?.serves_attempts ?? null,
+        numeric: true
+      },
+      {
+        label: "Auf-Fhl",
+        getter: player => player?.totals?.serves_errors ?? null,
+        numeric: true
+      },
+      {
+        label: "Auf-Pkt",
+        getter: player => player?.totals?.serves_points ?? null,
+        numeric: true
+      },
+      {
+        label: "An-Ges",
+        getter: player => player?.totals?.receptions_attempts ?? null,
+        numeric: true
+      },
+      {
+        label: "An-Fhl",
+        getter: player => player?.totals?.receptions_errors ?? null,
+        numeric: true
+      },
+      {
+        label: "An-Pos%",
+        getter: player => player?.totals?.receptions_positive_pct ?? null,
+        numeric: true
+      },
+      {
+        label: "An-Prf%",
+        getter: player => player?.totals?.receptions_perfect_pct ?? null,
+        numeric: true
+      },
+      {
+        label: "Ag-Ges",
+        getter: player => player?.totals?.attacks_attempts ?? null,
+        numeric: true
+      },
+      {
+        label: "Ag-Fhl",
+        getter: player => player?.totals?.attacks_errors ?? null,
+        numeric: true
+      },
+      {
+        label: "Ag-Blo",
+        getter: player => player?.totals?.attacks_blocked ?? null,
+        numeric: true
+      },
+      {
+        label: "Ag-Pkt",
+        getter: player => player?.totals?.attacks_points ?? null,
+        numeric: true
+      },
+      {
+        label: "Ag-%",
+        getter: player => player?.totals?.attacks_success_pct ?? null,
+        numeric: true
+      },
+      {
+        label: "Block",
+        getter: player => player?.totals?.blocks_points ?? null,
+        numeric: true
+      },
+      {
+        label: "Pkt.",
+        getter: player => player?.total_points ?? null,
+        numeric: true
+      },
+      {
+        label: "Breakpkt.",
+        getter: player => player?.break_points_total ?? null,
+        numeric: true
+      },
+      {
+        label: "+/-",
+        getter: player => player?.plus_minus_total ?? null,
+        numeric: true
       }
     ];
 
@@ -866,10 +1163,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       }
       if (!team) {
         renderTotals(null);
+        renderPlayers(null);
         renderMatches([]);
         return;
       }
       renderTotals(team.totals);
+      const players = Array.isArray(team.players) ? team.players : [];
+      renderPlayers(players);
       renderMatches(Array.isArray(team.matches) ? team.matches : []);
     }
 
@@ -917,6 +1217,53 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         container.append(card);
       }
       section.hidden = false;
+    }
+
+    function renderPlayers(players) {
+      const section = document.querySelector('[data-section="players"]');
+      const container = document.querySelector('[data-player-table]');
+      if (!section || !container) return;
+      container.innerHTML = '';
+      const entries = Array.isArray(players) ? players : [];
+      if (!entries.length) {
+        container.innerHTML = '<p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>';
+        section.hidden = false;
+        return;
+      }
+      container.append(buildPlayerTable(entries));
+      section.hidden = false;
+    }
+
+    function buildPlayerTable(players) {
+      const table = document.createElement('table');
+      table.className = 'player-table';
+
+      const thead = document.createElement('thead');
+      const headerRow = document.createElement('tr');
+      PLAYER_COLUMNS.forEach(column => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) th.classList.add('numeric');
+        th.textContent = column.label;
+        headerRow.append(th);
+      });
+      thead.append(headerRow);
+      table.append(thead);
+
+      const tbody = document.createElement('tbody');
+      players.forEach(player => {
+        const row = document.createElement('tr');
+        PLAYER_COLUMNS.forEach(column => {
+          const td = document.createElement('td');
+          if (column.numeric) td.classList.add('numeric');
+          const value = typeof column.getter === 'function' ? column.getter(player) : null;
+          td.textContent = formatMetricValue(value);
+          row.append(td);
+        });
+        tbody.append(row);
+      });
+      table.append(tbody);
+      return table;
     }
 
     function renderMatches(matches) {
@@ -1084,6 +1431,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         heading.textContent = 'Scouting Übersicht (CSV)';
       }
       renderTotals(null);
+      renderPlayers([]);
       renderMatches([]);
     }
 
