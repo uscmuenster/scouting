@@ -47,7 +47,7 @@ FIELD_ORDER = [
 ]
 
 
-SOURCE_PRIORITY = {"pdf": 2, "csv": 1}
+SOURCE_PRIORITY = {"pdf": 1, "csv": 2}
 
 
 CSV_TOTAL_MARKER = "totals"

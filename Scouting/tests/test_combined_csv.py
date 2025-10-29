@@ -202,9 +202,9 @@ def test_export_combined_player_stats_merges_sources(tmp_path):
     assert row["team"] == "Test Team"
     assert row["opponent"] == "Other Team"
     assert row["data_sources"] == "csv;pdf"
-    assert row["total_points"] == "12"
-    assert row["serves_attempts"] == "5"
+    assert row["total_points"] == "11"
+    assert row["serves_attempts"] == "6"
     assert row["csv_path"] == "data/csv/m1-test-team.csv"
     assert row["stats_url"] == "https://example.com/stats.pdf"
     assert row["host"] == "Test Team"
-    assert float(row["receptions_positive_pct"]) == 0.6
+    assert float(row["receptions_positive_pct"]) == 0.5
