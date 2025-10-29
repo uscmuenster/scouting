@@ -86,6 +86,7 @@ class _RowState:
     values: Dict[str, object]
     field_priorities: Dict[str, int]
     data_sources: set[str]
+    field_values_by_source: Dict[str, Dict[str, object]]
 
 
 def _make_base_row() -> Dict[str, object]:
@@ -116,6 +117,11 @@ def _merge_row(
                 field: priority for field, value in values.items() if value is not None
             },
             data_sources={source},
+            field_values_by_source={
+                field: {source: value}
+                for field, value in values.items()
+                if value is not None
+            },
         )
         return
 
@@ -124,6 +130,8 @@ def _merge_row(
     for field, value in values.items():
         if value is None:
             continue
+        field_sources = state.field_values_by_source.setdefault(field, {})
+        field_sources[source] = value
         current_priority = state.field_priorities.get(field, 0)
         if state.values.get(field) is None or priority > current_priority:
             state.values[field] = value
@@ -136,7 +144,7 @@ def _serialise_rows(
     ordered: list[Dict[str, object]] = []
     for state in rows.values():
         row = dict(state.values)
-        row["data_sources"] = ";".join(sorted(state.data_sources))
+        row["data_sources"] = _format_data_sources(state)
         ordered.append(row)
 
     ordered.sort(
@@ -148,6 +156,28 @@ def _serialise_rows(
         )
     )
     return ordered
+
+
+def _format_data_sources(state: _RowState) -> str:
+    sources = sorted(state.data_sources)
+    if _sources_agree(state):
+        return ";".join([*sources, "match"])
+    return ";".join(sources)
+
+
+def _sources_agree(state: _RowState) -> bool:
+    if not {"csv", "pdf"}.issubset(state.data_sources):
+        return False
+
+    agreement_found = False
+    for field_sources in state.field_values_by_source.values():
+        if "csv" not in field_sources or "pdf" not in field_sources:
+            continue
+        agreement_found = True
+        if field_sources["csv"] != field_sources["pdf"]:
+            return False
+
+    return agreement_found
 
 
 def _iter_pdf_player_rows(payload: Mapping[str, object]) -> Iterator[Dict[str, object]]:
