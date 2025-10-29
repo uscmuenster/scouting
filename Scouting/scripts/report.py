@@ -4808,30 +4808,32 @@ def _indent_html(content: str, spaces: int) -> str:
     return "\n".join(f"{indent}{line}" if line else "" for line in content.splitlines())
 
 
+_SET_RESULT_PATTERN = re.compile(r"(\d+)\s*:\s*(\d+)")
+
+
 def _summarize_set_results(sets: Sequence[str]) -> Optional[str]:
     home_sets = 0
     away_sets = 0
     parsed_any = False
 
     for raw_value in sets:
-        parts = raw_value.split(":", 1)
-        if len(parts) != 2:
-            continue
-        left, right = parts
-        try:
-            left_points = int(left.strip())
-            right_points = int(right.strip())
-        except ValueError:
-            continue
+        text = str(raw_value)
+        for match in _SET_RESULT_PATTERN.finditer(text):
+            try:
+                left_points = int(match.group(1))
+                right_points = int(match.group(2))
+            except (TypeError, ValueError):
+                continue
 
-        if left_points == right_points:
-            continue
+            if left_points == right_points:
+                parsed_any = True
+                continue
 
-        parsed_any = True
-        if left_points > right_points:
-            home_sets += 1
-        else:
-            away_sets += 1
+            parsed_any = True
+            if left_points > right_points:
+                home_sets += 1
+            else:
+                away_sets += 1
 
     if not parsed_any:
         return None
@@ -4840,22 +4842,34 @@ def _summarize_set_results(sets: Sequence[str]) -> Optional[str]:
 
 
 def _format_match_sets_label(match: Mapping[str, Any]) -> str:
-    result = match.get("result") or {}
+    result_value = match.get("result")
 
-    score_value = (result.get("score") or "").strip()
+    score_value: str = ""
+    sets: Sequence[str] = ()
+
+    if isinstance(result_value, MatchResult):
+        score_value = (result_value.score or "").strip()
+        sets = result_value.sets
+    elif isinstance(result_value, Mapping):
+        raw_score = result_value.get("score")
+        if raw_score is not None:
+            score_value = str(raw_score).strip()
+
+        raw_sets = result_value.get("sets")
+        if isinstance(raw_sets, Sequence) and not isinstance(raw_sets, (str, bytes)):
+            sets = tuple(raw_sets)
+
+    cleaned_sets = [str(item).strip() for item in sets if str(item).strip()]
+    if cleaned_sets:
+        summarized = _summarize_set_results(cleaned_sets)
+        if summarized:
+            return summarized
+        return " ".join(cleaned_sets)
+
     if score_value:
         return score_value
 
-    sets = result.get("sets") or []
-    cleaned = [str(item).strip() for item in sets if str(item).strip()]
-    if not cleaned:
-        return "–"
-
-    summarized = _summarize_set_results(cleaned)
-    if summarized:
-        return summarized
-
-    return " ".join(cleaned)
+    return "–"
 
 
 def _resolve_match_metric(match: Mapping[str, Any], key: str) -> Any:
