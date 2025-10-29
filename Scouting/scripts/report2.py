@@ -961,16 +961,16 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <p class=\"update-note\" data-generated>Stand: wird geladen …</p>
     </header>
 
+    <section aria-labelledby=\"matches-heading\" hidden data-section=\"matches\">
+      <h2 id=\"matches-heading\">Spiele</h2>
+      <div data-matches></div>
+    </section>
+
     <section aria-labelledby=\"players-heading\" hidden data-section=\"players\">
       <h2 id=\"players-heading\">Spielerinnen</h2>
       <div class=\"player-table-wrapper\" data-player-table>
         <p class=\"empty-state\">Noch keine Spielerinnendaten verfügbar.</p>
       </div>
-    </section>
-
-    <section aria-labelledby=\"matches-heading\" hidden data-section=\"matches\">
-      <h2 id=\"matches-heading\">Spiele</h2>
-      <div data-matches></div>
     </section>
 
     <footer>
