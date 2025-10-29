@@ -1472,23 +1472,128 @@
       "time": "20:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 7,
       "away_team": "Schwarz-Weiß Erfurt",
       "club_id": "228",
       "competition_id": "185",
       "date": "28.10.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 3,
       "home_team": "VC Wiesbaden",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11858&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11858&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "López Rey Cayetana",
+          "home_points": 5,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "van der Pijl Pleun",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Weinmann Hanna",
+          "home_points": 1,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Dordevic Jovana",
+          "home_points": -1,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 13,
+          "duration": null,
+          "home_label": "Sain Rene (L)",
+          "home_points": -1,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Broekstra Laura",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Konijnenberg Sanne",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": null,
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Boom Dagmar",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Bietau Lilly",
+          "home_points": 1,
+          "set": 9
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Rieger Marlene Katharina",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Clayton Hannah",
+          "home_points": 6,
+          "set": 11
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Fernandez Gayoso Jimena",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": null,
+          "away_points": 22,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 28,
+          "set": 13
+        }
+      ],
       "match_id": "11858",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 2",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "5-5, 4-5, 1-1, -1-2, -1-13, 5-6, 3-4, 1-2, 1-1, 2-3, 6-1, 6-1, 28-22",
       "time": "19:30"
     },
     {
