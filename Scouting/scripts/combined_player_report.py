@@ -21,15 +21,14 @@ BERLIN_TZ = ZoneInfo("Europe/Berlin")
 
 COLUMN_LABELS: Mapping[str, str] = {
     "data_sources": "Quellen",
-    "match_number": "Match-Nr.",
-    "match_id": "Match-ID",
     "kickoff": "Anpfiff",
-    "is_home": "Heimspiel",
+    "kickoff_comparison": "Datum (PDF/CSV)",
     "team": "Team",
     "opponent": "Gegner",
+    "opponent_comparison": "Gegner (PDF/CSV)",
     "opponent_short": "Gegner (kurz)",
     "host": "Ausrichter",
-    "location": "Spielort",
+    "host_comparison": "Ausrichter (PDF/CSV)",
     "result_summary": "Ergebnis",
     "player_name": "Spielerin",
     "jersey_number": "Rückennr.",

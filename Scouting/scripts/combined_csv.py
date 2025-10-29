@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import csv
+from datetime import datetime
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, Iterator, Mapping, MutableMapping, Optional, Sequence
+from typing import Callable, Dict, Iterable, Iterator, Mapping, MutableMapping, Optional, Sequence
+
+from zoneinfo import ZoneInfo
 
 from .report2 import canonicalize_player_name, canonicalize_team_name
 
@@ -15,11 +18,14 @@ FIELD_ORDER = [
     "match_number",
     "match_id",
     "kickoff",
+    "kickoff_comparison",
     "is_home",
     "team",
     "opponent",
+    "opponent_comparison",
     "opponent_short",
     "host",
+    "host_comparison",
     "location",
     "result_summary",
     "player_name",
@@ -48,6 +54,10 @@ FIELD_ORDER = [
 
 
 SOURCE_PRIORITY = {"pdf": 1, "csv": 2}
+
+SOURCE_LABELS = {"pdf": "PDF", "csv": "CSV"}
+
+BERLIN_TZ = ZoneInfo("Europe/Berlin")
 
 
 CSV_TOTAL_MARKER = "totals"
@@ -100,10 +110,18 @@ def _merge_row(
     source: str,
 ) -> None:
     priority = SOURCE_PRIORITY[source]
+    match_id = str(values.get("match_id") or "")
+    match_number = str(values.get("match_number") or "")
+    kickoff_value = str(values.get("kickoff") or "")
+    if match_id or match_number:
+        kickoff_key = ""
+    else:
+        kickoff_key = kickoff_value
+
     key = (
-        str(values.get("match_id") or ""),
-        str(values.get("match_number") or ""),
-        str(values.get("kickoff") or ""),
+        match_id,
+        match_number,
+        kickoff_key,
         (values.get("team") or "").lower(),
         (values.get("player_name") or "").lower(),
     )
@@ -145,6 +163,11 @@ def _serialise_rows(
     for state in rows.values():
         row = dict(state.values)
         row["data_sources"] = _format_data_sources(state)
+        row["kickoff_comparison"] = _format_source_comparison(
+            state, "kickoff", value_formatter=_format_kickoff_date
+        )
+        row["host_comparison"] = _format_source_comparison(state, "host")
+        row["opponent_comparison"] = _format_source_comparison(state, "opponent")
         ordered.append(row)
 
     ordered.sort(
@@ -178,6 +201,72 @@ def _sources_agree(state: _RowState) -> bool:
             return False
 
     return agreement_found
+
+
+def _format_source_comparison(
+    state: _RowState,
+    field: str,
+    *,
+    value_formatter: Optional[Callable[[object], str]] = None,
+) -> str:
+    values_by_source = state.field_values_by_source.get(field)
+    if not values_by_source:
+        value = state.values.get(field)
+        return _format_comparison_value(value, value_formatter)
+
+    items: list[tuple[int, str, str]] = []
+    for source, raw_value in values_by_source.items():
+        priority = SOURCE_PRIORITY.get(source, 99)
+        label = SOURCE_LABELS.get(source, source.upper())
+        formatted = _format_comparison_value(raw_value, value_formatter)
+        items.append((priority, label, formatted))
+
+    if not items:
+        value = state.values.get(field)
+        return _format_comparison_value(value, value_formatter)
+
+    items.sort(key=lambda item: item[0])
+    non_empty_values = {formatted for _, _, formatted in items if formatted}
+
+    if non_empty_values and len(non_empty_values) == 1:
+        shared_value = non_empty_values.pop()
+        labels = ", ".join(label for _, label, _ in items)
+        return f"{labels}: {shared_value}" if shared_value else labels
+
+    parts = []
+    for _, label, formatted in items:
+        if formatted:
+            parts.append(f"{label}: {formatted}")
+        else:
+            parts.append(label)
+    return " / ".join(parts)
+
+
+def _format_comparison_value(
+    value: object, formatter: Optional[Callable[[object], str]] = None
+) -> str:
+    if value is None:
+        return ""
+    if formatter is not None:
+        return formatter(value)
+    text = str(value).strip()
+    return text
+
+
+def _format_kickoff_date(value: object) -> str:
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        text = str(value).strip()
+        if not text:
+            return ""
+        try:
+            dt = datetime.fromisoformat(text)
+        except ValueError:
+            return text
+    if dt.tzinfo is not None:
+        dt = dt.astimezone(BERLIN_TZ)
+    return dt.strftime("%d.%m.%Y")
 
 
 def _iter_pdf_player_rows(payload: Mapping[str, object]) -> Iterator[Dict[str, object]]:
