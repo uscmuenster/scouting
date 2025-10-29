@@ -996,85 +996,85 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         resolver: entry => entry?.result?.summary ?? '–'
       },
       {
-        label: 'AUF-GES',
+        label: 'Auf-Ges',
         resolver: entry => resolveMatchMetric(entry, 'serves_attempts'),
         totalsKey: 'serves_attempts',
         numeric: true
       },
       {
-        label: 'AUF-FEI',
+        label: 'Auf-Fhl',
         resolver: entry => resolveMatchMetric(entry, 'serves_errors'),
         totalsKey: 'serves_errors',
         numeric: true
       },
       {
-        label: 'AUF-AS',
+        label: 'Auf-Pkt',
         resolver: entry => resolveMatchMetric(entry, 'serves_points'),
         totalsKey: 'serves_points',
         numeric: true
       },
       {
-        label: 'AN-GES',
+        label: 'An-Ges',
         resolver: entry => resolveMatchMetric(entry, 'receptions_attempts'),
         totalsKey: 'receptions_attempts',
         numeric: true
       },
       {
-        label: 'AN-FEI',
+        label: 'An-Fhl',
         resolver: entry => resolveMatchMetric(entry, 'receptions_errors'),
         totalsKey: 'receptions_errors',
         numeric: true
       },
       {
-        label: 'AN-POS%',
+        label: 'An-Pos%',
         resolver: entry => resolveMatchMetric(entry, 'receptions_positive_pct'),
         totalsKey: 'receptions_positive_pct',
         numeric: true
       },
       {
-        label: 'AN-PERF%',
+        label: 'An-Prf%',
         resolver: entry => resolveMatchMetric(entry, 'receptions_perfect_pct'),
         totalsKey: 'receptions_perfect_pct',
         numeric: true
       },
       {
-        label: 'ANG-GES',
+        label: 'Ag-Ges',
         resolver: entry => resolveMatchMetric(entry, 'attacks_attempts'),
         totalsKey: 'attacks_attempts',
         numeric: true
       },
       {
-        label: 'ANG-FEI',
+        label: 'Ag-Fhl',
         resolver: entry => resolveMatchMetric(entry, 'attacks_errors'),
         totalsKey: 'attacks_errors',
         numeric: true
       },
       {
-        label: 'ANG-BLK',
+        label: 'Ag-Blo',
         resolver: entry => resolveMatchMetric(entry, 'attacks_blocked'),
         totalsKey: 'attacks_blocked',
         numeric: true
       },
       {
-        label: 'ANG-PKT',
+        label: 'Ag-Pkt',
         resolver: entry => resolveMatchMetric(entry, 'attacks_points'),
         totalsKey: 'attacks_points',
         numeric: true
       },
       {
-        label: 'ANG-%',
+        label: 'Ag-%',
         resolver: entry => resolveMatchMetric(entry, 'attacks_success_pct'),
         totalsKey: 'attacks_success_pct',
         numeric: true
       },
       {
-        label: 'BLOCK',
+        label: 'Block',
         resolver: entry => resolveMatchMetric(entry, 'blocks_points'),
         totalsKey: 'blocks_points',
         numeric: true
       },
       {
-        label: 'PKT.',
+        label: 'Pkt.',
         resolver: entry => resolveMatchMetric(entry, 'total_points'),
         totalsKey: 'total_points',
         numeric: true
