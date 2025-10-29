@@ -4842,22 +4842,34 @@ def _summarize_set_results(sets: Sequence[str]) -> Optional[str]:
 
 
 def _format_match_sets_label(match: Mapping[str, Any]) -> str:
-    result = match.get("result") or {}
+    result_value = match.get("result")
 
-    score_value = (result.get("score") or "").strip()
+    score_value: str = ""
+    sets: Sequence[str] = ()
+
+    if isinstance(result_value, MatchResult):
+        score_value = (result_value.score or "").strip()
+        sets = result_value.sets
+    elif isinstance(result_value, Mapping):
+        raw_score = result_value.get("score")
+        if raw_score is not None:
+            score_value = str(raw_score).strip()
+
+        raw_sets = result_value.get("sets")
+        if isinstance(raw_sets, Sequence) and not isinstance(raw_sets, (str, bytes)):
+            sets = tuple(raw_sets)
+
+    cleaned_sets = [str(item).strip() for item in sets if str(item).strip()]
+    if cleaned_sets:
+        summarized = _summarize_set_results(cleaned_sets)
+        if summarized:
+            return summarized
+        return " ".join(cleaned_sets)
+
     if score_value:
         return score_value
 
-    sets = result.get("sets") or []
-    cleaned = [str(item).strip() for item in sets if str(item).strip()]
-    if not cleaned:
-        return "–"
-
-    summarized = _summarize_set_results(cleaned)
-    if summarized:
-        return summarized
-
-    return " ".join(cleaned)
+    return "–"
 
 
 def _resolve_match_metric(match: Mapping[str, Any], key: str) -> Any:
