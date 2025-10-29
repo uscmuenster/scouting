@@ -128,6 +128,15 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--combined-player-diff-output",
+        type=Path,
+        default=Path("docs/data/pdf_csv_differences.csv"),
+        help=(
+            "Target CSV path for listing differing values between PDF and CSV sources "
+            "(default: docs/data/pdf_csv_differences.csv)."
+        ),
+    )
+    parser.add_argument(
         "--combined-player-html-output",
         type=Path,
         default=COMBINED_PLAYER_HTML_OUTPUT_PATH,
@@ -301,6 +310,7 @@ def main() -> int:
             csv_payload=csv_payload,
             csv_data_dir=args.csv_data_dir,
             output_path=combined_output,
+            diff_output_path=args.combined_player_diff_output,
         )
 
         try:
@@ -312,6 +322,14 @@ def main() -> int:
             "Combined player CSV generated:",
             f"{combined_count} rows -> {combined_relative}",
         )
+
+        diff_output = args.combined_player_diff_output
+        try:
+            diff_relative = diff_output.relative_to(Path.cwd())
+        except ValueError:
+            diff_relative = diff_output
+
+        print("PDF/CSV differences CSV generated:", diff_relative)
 
         if not args.skip_html:
             csv_html_output = args.csv_html_output
