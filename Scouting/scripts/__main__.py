@@ -4,6 +4,10 @@ from datetime import datetime
 from pathlib import Path
 
 from .combined_csv import export_combined_player_stats
+from .combined_player_report import (
+    DEFAULT_HTML_OUTPUT_PATH as COMBINED_PLAYER_HTML_OUTPUT_PATH,
+    generate_combined_player_html,
+)
 from .report import (
     BERLIN_TZ,
     DEFAULT_SCHEDULE_URL,
@@ -121,6 +125,14 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Target CSV path for the merged player statistics overview (default: "
             "docs/data/combined_player_stats.csv)."
+        ),
+    )
+    parser.add_argument(
+        "--combined-player-html-output",
+        type=Path,
+        default=COMBINED_PLAYER_HTML_OUTPUT_PATH,
+        help=(
+            "Target HTML output for the combined player overview (default: docs/index3.html)."
         ),
     )
     return parser
@@ -315,6 +327,19 @@ def main() -> int:
                 csv_html_relative = csv_html_output
 
             print("CSV HTML dashboard generated:", csv_html_relative)
+
+            combined_html_output = args.combined_player_html_output
+            generate_combined_player_html(
+                csv_path=combined_output,
+                output_path=combined_html_output,
+            )
+
+            try:
+                combined_html_relative = combined_html_output.relative_to(Path.cwd())
+            except ValueError:
+                combined_html_relative = combined_html_output
+
+            print("Combined player HTML dashboard generated:", combined_html_relative)
         else:
             print("CSV HTML dashboard generation skipped via --skip-html")
     else:
