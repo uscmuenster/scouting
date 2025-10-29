@@ -210,9 +210,11 @@ def render_combined_player_html(*, csv_path: Path) -> str:
     }}
     .table-wrapper {{
       border-radius: 1rem;
-      overflow: hidden;
+      overflow-x: auto;
+      overflow-y: hidden;
       background: rgba(15, 23, 42, 0.92);
       box-shadow: 0 20px 45px rgba(15, 23, 42, 0.55);
+      -webkit-overflow-scrolling: touch;
     }}
     table {{
       width: 100%;
