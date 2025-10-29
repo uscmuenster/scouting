@@ -769,10 +769,65 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       font-size: clamp(1.35rem, 3vw, 1.8rem);
     }
 
-    .metrics-grid {
-      display: grid;
-      gap: clamp(0.9rem, 3vw, 1.2rem);
-      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    .totals-table-wrapper {
+      overflow-x: auto;
+      border-radius: 1rem;
+      border: 1px solid var(--card-border);
+      background: var(--card-bg);
+      box-shadow: var(--shadow);
+      padding: clamp(0.6rem, 2vw, 1rem);
+    }
+
+    table.totals-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+      min-width: 32rem;
+    }
+
+    table.totals-table thead th {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      background: var(--card-bg);
+      color: var(--accent);
+      font-weight: 600;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    table.totals-table thead th.numeric {
+      text-align: right;
+    }
+
+    table.totals-table tbody th,
+    table.totals-table tbody td {
+      padding: 0.65rem 0.9rem;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.12);
+      vertical-align: top;
+    }
+
+    table.totals-table tbody th {
+      text-align: left;
+      font-weight: 600;
+      color: var(--accent);
+      min-width: 8rem;
+    }
+
+    table.totals-table tbody td {
+      color: var(--muted);
+    }
+
+    table.totals-table tbody td.numeric {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.totals-table tbody tr:nth-child(odd) {
+      background: rgba(15, 118, 110, 0.05);
+    }
+
+    table.totals-table tbody tr:last-child th,
+    table.totals-table tbody tr:last-child td {
+      border-bottom: none;
     }
 
     .metric-card {
@@ -1020,7 +1075,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <section aria-labelledby=\"totals-heading\" hidden data-section=\"totals\">
       <h2 id=\"totals-heading\">Aggregierte Teamstatistiken</h2>
-      <div class=\"metrics-grid\" data-totals></div>
+      <div class=\"totals-table-wrapper\" data-totals></div>
     </section>
 
     <section aria-labelledby=\"players-heading\" hidden data-section=\"players\">
@@ -1288,24 +1343,75 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         container.innerHTML = '<p class="empty-state">Noch keine Statistiken vorhanden.</p>';
         return;
       }
-      for (const group of METRIC_GROUPS) {
-        const card = document.createElement('article');
-        card.className = 'metric-card';
-        const title = document.createElement('h3');
-        title.textContent = group.title;
-        card.append(title);
-        const list = document.createElement('dl');
-        for (const item of group.items) {
-          const value = formatMetricValue(totals[item.key]);
-          const dt = document.createElement('dt');
-          dt.textContent = item.label;
-          const dd = document.createElement('dd');
-          dd.textContent = value;
-          list.append(dt, dd);
+      const table = document.createElement('table');
+      table.className = 'totals-table';
+
+      const thead = document.createElement('thead');
+      const headRow = document.createElement('tr');
+      [
+        { label: 'Bereich' },
+        { label: 'Metrik' },
+        { label: 'Wert', className: 'numeric' }
+      ].forEach(column => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        th.textContent = column.label;
+        if (column.className) th.classList.add(column.className);
+        headRow.append(th);
+      });
+      thead.append(headRow);
+      table.append(thead);
+
+      const tbody = document.createElement('tbody');
+
+      const isNumericValue = value => {
+        if (typeof value === 'number') {
+          return Number.isFinite(value);
         }
-        card.append(list);
-        container.append(card);
+        if (typeof value === 'string') {
+          const trimmed = value.trim();
+          if (!trimmed) return false;
+          return /^-?\d+(?:[.,]\d+)?%?$/.test(trimmed);
+        }
+        return false;
+      };
+
+      for (const group of METRIC_GROUPS) {
+        const items = Array.isArray(group.items) ? group.items : [];
+        if (!items.length) continue;
+        items.forEach((item, index) => {
+          const row = document.createElement('tr');
+          if (index === 0) {
+            const groupCell = document.createElement('th');
+            groupCell.scope = 'rowgroup';
+            groupCell.rowSpan = items.length;
+            groupCell.textContent = group.title;
+            row.append(groupCell);
+          }
+          const metricCell = document.createElement('th');
+          metricCell.scope = 'row';
+          metricCell.textContent = item.label;
+          row.append(metricCell);
+
+          const valueCell = document.createElement('td');
+          const rawValue = totals[item.key];
+          if (isNumericValue(rawValue)) {
+            valueCell.classList.add('numeric');
+          }
+          valueCell.textContent = formatMetricValue(rawValue);
+          row.append(valueCell);
+          tbody.append(row);
+        });
       }
+
+      if (!tbody.childElementCount) {
+        container.innerHTML = '<p class="empty-state">Noch keine Statistiken vorhanden.</p>';
+        section.hidden = false;
+        return;
+      }
+
+      table.append(tbody);
+      container.append(table);
       section.hidden = false;
     }
 
