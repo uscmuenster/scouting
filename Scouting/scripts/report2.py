@@ -651,10 +651,37 @@ def build_overview_payload(csv_dir: Path) -> Dict[str, object]:
     schedule = load_competition_schedule(csv_dir)
     teams = collect_team_accumulators(csv_dir, schedule)
     generated_at = datetime.now(tz=BERLIN_TZ)
+
+    league_totals: Optional[Dict[str, object]] = None
+    if teams:
+        totals_accumulator = MetricsAccumulator()
+        total_points = 0
+        break_points = 0
+        plus_minus = 0
+        match_count = 0
+
+        for team in teams.values():
+            totals_accumulator.add(vars(team.totals))
+            total_points += team.total_points
+            break_points += team.break_points
+            plus_minus += team.plus_minus
+            match_count += len(team.matches)
+
+        league_totals = totals_accumulator.to_payload()
+        league_totals.update(
+            {
+                "total_points": total_points,
+                "break_points": break_points,
+                "plus_minus": plus_minus,
+                "match_count": match_count,
+            }
+        )
+
     return {
         "generated": generated_at.isoformat(),
         "team_count": len(teams),
         "teams": [team.to_payload() for team in sorted(teams.values(), key=lambda item: item.team)],
+        "league_totals": league_totals,
     }
 
 
@@ -908,11 +935,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--accent);
+      border-bottom: none;
     }
 
     table.match-table .match-summary td {
       font-weight: 600;
       color: var(--accent);
+      border-bottom: none;
     }
 
     .empty-state {
@@ -984,8 +1013,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     const MATCH_COLUMNS = [
       {
         label: 'Datum',
-        resolver: entry => formatMatchDate(entry?.kickoff) || '–',
-        totalsResolver: () => 'Summe'
+        resolver: entry => formatMatchDate(entry?.kickoff) || '–'
       },
       {
         label: 'Gegner',
@@ -1180,6 +1208,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     ];
 
     let overviewPayload = null;
+    let leagueTotals = null;
 
     async function loadOverview() {
       try {
@@ -1197,6 +1226,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     function setupTeams(payload) {
       updateGenerated(payload.generated);
+      leagueTotals = payload?.league_totals || null;
       const teams = Array.isArray(payload.teams) ? payload.teams : [];
       const selectorWrapper = document.querySelector('[data-selector]');
       const select = document.querySelector('[data-team-select]');
@@ -1238,7 +1268,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         Array.isArray(team.matches) ? team.matches : [],
         {
           teamName: team.team || null,
-          totals: team.totals || null
+          totals: team.totals || null,
+          leagueTotals
         }
       );
     }
@@ -1362,6 +1393,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (context && context.totals) {
         tbody.append(buildMatchTotalsRow(context.totals));
       }
+      if (context && context.leagueTotals) {
+        tbody.append(buildMatchTotalsRow(context.leagueTotals, 'VBL'));
+      }
       return tbody;
     }
 
@@ -1378,7 +1412,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       return null;
     }
 
-    function buildMatchTotalsRow(totals) {
+    function buildMatchTotalsRow(totals, label = 'Summe') {
       const row = document.createElement('tr');
       row.className = 'match-summary';
       MATCH_COLUMNS.forEach((column, index) => {
@@ -1389,12 +1423,12 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           cell.classList.add('numeric');
         }
         let value;
-        if (typeof column.totalsResolver === 'function') {
+        if (index === 0) {
+          value = label;
+        } else if (typeof column.totalsResolver === 'function') {
           value = column.totalsResolver(totals, index);
         } else if (column.totalsKey && totals) {
           value = totals[column.totalsKey];
-        } else if (index === 0) {
-          value = 'Summe';
         } else {
           value = '';
         }
