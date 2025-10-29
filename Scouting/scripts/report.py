@@ -2857,6 +2857,24 @@ def _tokenize_compact_stats_text(text: str) -> List[str]:
                 merged.append(f"{token}{follower}")
                 index += 2
                 continue
+        if token == "%":
+            digits: List[str] = []
+            while (
+                merged
+                and merged[-1]
+                and merged[-1].isdigit()
+                and len(digits) < 2
+            ):
+                digits.append(merged.pop())
+            if len(digits) == 2 and merged and merged[-1] == "1":
+                digits.append(merged.pop())
+            if digits:
+                digits.reverse()
+                merged.append("".join(digits) + "%")
+            else:
+                merged.append(token)
+            index += 1
+            continue
         merged.append(token)
         index += 1
     return merged
