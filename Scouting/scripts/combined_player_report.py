@@ -241,11 +241,12 @@ def render_combined_player_html(*, csv_path: Path) -> str:
       color: var(--accent);
     }}
     .table-wrapper {{
-      overflow: auto;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 1.1rem;
-      box-shadow: var(--shadow);
+      border-radius: 1rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      background: rgba(15, 23, 42, 0.92);
+      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.55);
+      -webkit-overflow-scrolling: touch;
     }}
     table {{
       width: 100%;
