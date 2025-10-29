@@ -911,117 +911,69 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     .match-table-wrapper {
       background: var(--card-bg);
-      border-radius: 1rem;
+      border-radius: 0.9rem;
       border: 1px solid var(--card-border);
-      padding: clamp(0.75rem, 2.5vw, 1.1rem);
-      box-shadow: var(--shadow);
+      padding: clamp(0.6rem, 2vw, 1rem);
+      box-shadow: none;
       overflow-x: auto;
     }
 
     table.match-table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 48rem;
-      font-size: 0.95rem;
+      min-width: 62rem;
+      font-size: 0.9rem;
     }
 
     table.match-table thead th {
       text-align: left;
-      padding: 0.75rem 0.9rem;
-      position: sticky;
-      top: 0;
-      background: var(--card-bg);
-      color: var(--accent);
+      padding: 0.6rem 0.75rem;
+      background: rgba(15, 118, 110, 0.08);
+      color: var(--muted);
       font-weight: 600;
-      border-bottom: 1px solid var(--card-border);
-      z-index: 1;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 2px solid rgba(15, 118, 110, 0.2);
       white-space: nowrap;
     }
 
-    table.match-table tbody td {
-      padding: 0.6rem 0.9rem;
+    table.match-table tbody td,
+    table.match-table tbody th {
+      padding: 0.55rem 0.75rem;
       border-bottom: 1px solid rgba(15, 118, 110, 0.12);
-      vertical-align: top;
+      vertical-align: middle;
     }
 
-    table.match-table tbody tr:last-child td {
+    table.match-table tbody tr:nth-child(even) {
+      background: rgba(15, 118, 110, 0.05);
+    }
+
+    table.match-table tbody tr:last-child td,
+    table.match-table tbody tr:last-child th {
       border-bottom: none;
-    }
-
-    table.match-table tbody tr:nth-child(odd) {
-      background: rgba(15, 118, 110, 0.04);
     }
 
     table.match-table .numeric {
       text-align: right;
+      font-variant-numeric: tabular-nums;
       white-space: nowrap;
     }
 
-    table.match-table td .match-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.45rem;
-    }
-
-    table.match-table td .match-links a {
-      display: inline-flex;
-      align-items: center;
-      padding: 0.3rem 0.65rem;
-      border-radius: 999px;
+    table.match-table .match-summary {
       background: rgba(15, 118, 110, 0.12);
+    }
+
+    table.match-table .match-summary th {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       color: var(--accent);
-      font-weight: 600;
-      text-decoration: none;
-      font-size: 0.85rem;
-      white-space: nowrap;
     }
 
-    table.match-table td .match-links a:hover,
-    table.match-table td .match-links a:focus-visible {
-      text-decoration: underline;
-    }
-
-    .match-metric-details {
-      min-width: 12rem;
-    }
-
-    .match-metric-details summary {
-      cursor: pointer;
+    table.match-table .match-summary td {
       font-weight: 600;
       color: var(--accent);
-      outline: none;
-      list-style: none;
-    }
-
-    .match-metric-details summary::-webkit-details-marker {
-      display: none;
-    }
-
-    .match-metric-details[open] summary {
-      margin-bottom: 0.75rem;
-    }
-
-    .match-metric-details summary::after {
-      content: '▾';
-      display: inline-block;
-      margin-left: 0.35rem;
-      font-size: 0.8rem;
-      transition: transform 0.2s ease;
-    }
-
-    .match-metric-details[open] summary::after {
-      transform: rotate(180deg);
-    }
-
-    .match-metrics {
-      display: grid;
-      gap: 0.75rem;
-    }
-
-    .match-metrics .metric-card {
-      box-shadow: none;
-      border-color: rgba(15, 118, 110, 0.14);
-      background: rgba(255, 255, 255, 0.9);
     }
 
     .empty-state {
@@ -1042,11 +994,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
 
     @media (prefers-color-scheme: dark) {
-      .match-metrics .metric-card {
-        background: rgba(19, 42, 48, 0.85);
-        border-color: rgba(94, 234, 212, 0.22);
-      }
-
       .match-table-wrapper,
       .player-table-wrapper {
         background: rgba(19, 42, 48, 0.9);
@@ -1136,41 +1083,112 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     const MATCH_COLUMNS = [
       {
         label: 'Datum',
-        resolver: entry => formatMatchDate(entry?.kickoff) || '–'
+        resolver: entry => formatMatchDate(entry?.kickoff) || '–',
+        totalsResolver: () => 'Summe'
       },
       {
-        label: 'Spiel',
-        resolver: (entry, context) => buildMatchupLabel(entry, context?.teamName)
+        label: 'Gegner',
+        resolver: entry => entry?.opponent_short || entry?.opponent || '–'
       },
       {
-        label: 'H/A',
-        resolver: entry => describeHomeAway(entry?.is_home)
-      },
-      {
-        label: 'Ort',
-        resolver: entry => formatMatchLocation(entry)
-      },
-      {
-        label: 'Ergebnis',
+        label: 'Sätze',
         resolver: entry => entry?.result?.summary ?? '–'
+      },
+      {
+        label: 'AUF-GES',
+        resolver: entry => resolveMatchMetric(entry, 'serves_attempts'),
+        totalsKey: 'serves_attempts',
+        numeric: true
+      },
+      {
+        label: 'AUF-FEI',
+        resolver: entry => resolveMatchMetric(entry, 'serves_errors'),
+        totalsKey: 'serves_errors',
+        numeric: true
+      },
+      {
+        label: 'AUF-AS',
+        resolver: entry => resolveMatchMetric(entry, 'serves_points'),
+        totalsKey: 'serves_points',
+        numeric: true
+      },
+      {
+        label: 'AN-GES',
+        resolver: entry => resolveMatchMetric(entry, 'receptions_attempts'),
+        totalsKey: 'receptions_attempts',
+        numeric: true
+      },
+      {
+        label: 'AN-FEI',
+        resolver: entry => resolveMatchMetric(entry, 'receptions_errors'),
+        totalsKey: 'receptions_errors',
+        numeric: true
+      },
+      {
+        label: 'AN-POS%',
+        resolver: entry => resolveMatchMetric(entry, 'receptions_positive_pct'),
+        totalsKey: 'receptions_positive_pct',
+        numeric: true
+      },
+      {
+        label: 'AN-PERF%',
+        resolver: entry => resolveMatchMetric(entry, 'receptions_perfect_pct'),
+        totalsKey: 'receptions_perfect_pct',
+        numeric: true
+      },
+      {
+        label: 'ANG-GES',
+        resolver: entry => resolveMatchMetric(entry, 'attacks_attempts'),
+        totalsKey: 'attacks_attempts',
+        numeric: true
+      },
+      {
+        label: 'ANG-FEI',
+        resolver: entry => resolveMatchMetric(entry, 'attacks_errors'),
+        totalsKey: 'attacks_errors',
+        numeric: true
+      },
+      {
+        label: 'ANG-BLK',
+        resolver: entry => resolveMatchMetric(entry, 'attacks_blocked'),
+        totalsKey: 'attacks_blocked',
+        numeric: true
+      },
+      {
+        label: 'ANG-PKT',
+        resolver: entry => resolveMatchMetric(entry, 'attacks_points'),
+        totalsKey: 'attacks_points',
+        numeric: true
+      },
+      {
+        label: 'ANG-%',
+        resolver: entry => resolveMatchMetric(entry, 'attacks_success_pct'),
+        totalsKey: 'attacks_success_pct',
+        numeric: true
+      },
+      {
+        label: 'BLOCK',
+        resolver: entry => resolveMatchMetric(entry, 'blocks_points'),
+        totalsKey: 'blocks_points',
+        numeric: true
+      },
+      {
+        label: 'PKT.',
+        resolver: entry => resolveMatchMetric(entry, 'total_points'),
+        totalsKey: 'total_points',
+        numeric: true
       },
       {
         label: 'Breakpkt.',
         resolver: entry => entry?.break_points ?? null,
+        totalsKey: 'break_points',
         numeric: true
       },
       {
         label: '+/-',
         resolver: entry => entry?.plus_minus ?? null,
+        totalsKey: 'plus_minus',
         numeric: true
-      },
-      {
-        label: 'Links',
-        resolver: entry => buildMatchLinks(entry)
-      },
-      {
-        label: 'Statistiken',
-        resolver: entry => buildMatchMetricsDetails(entry?.metrics)
       }
     ];
 
@@ -1311,13 +1329,19 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (!team) {
         renderTotals(null);
         renderPlayers(null);
-        renderMatches([], null);
+        renderMatches([], {});
         return;
       }
       renderTotals(team.totals);
       const players = Array.isArray(team.players) ? team.players : [];
       renderPlayers(players);
-      renderMatches(Array.isArray(team.matches) ? team.matches : [], team.team || null);
+      renderMatches(
+        Array.isArray(team.matches) ? team.matches : [],
+        {
+          teamName: team.team || null,
+          totals: team.totals || null
+        }
+      );
     }
 
     function updateGenerated(timestamp) {
@@ -1464,7 +1488,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       return table;
     }
 
-    function renderMatches(matches, teamName) {
+    function renderMatches(matches, context = {}) {
       const section = document.querySelector('[data-section="matches"]');
       const container = document.querySelector('[data-matches]');
       if (!section || !container) return;
@@ -1475,7 +1499,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         section.hidden = false;
         return;
       }
-      const tableWrapper = buildMatchTable(entries, { teamName: teamName || null });
+      const tableWrapper = buildMatchTable(entries, context || {});
       container.append(tableWrapper);
       section.hidden = false;
     }
@@ -1513,117 +1537,58 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           const td = document.createElement('td');
           if (column.numeric) td.classList.add('numeric');
           const value = typeof column.resolver === 'function' ? column.resolver(entry, context) : null;
-          if (value instanceof Node) {
-            td.append(value);
-          } else {
-            td.textContent = formatMetricValue(value);
-          }
+          td.textContent = formatMetricValue(value);
           row.append(td);
         });
         tbody.append(row);
       });
+      if (context && context.totals) {
+        tbody.append(buildMatchTotalsRow(context.totals));
+      }
       return tbody;
     }
 
-    function buildMatchLinks(match) {
-      if (!match) {
+    function resolveMatchMetric(entry, key) {
+      if (!entry || typeof entry !== 'object' || !key) {
         return null;
       }
-      const wrapper = document.createElement('div');
-      wrapper.className = 'match-links';
-      if (match.csv_path) {
-        wrapper.append(createLink(match.csv_path, 'Statistik (CSV)'));
+      if (entry.metrics && Object.prototype.hasOwnProperty.call(entry.metrics, key)) {
+        return entry.metrics[key];
       }
-      if (match.info_url) {
-        wrapper.append(createLink(match.info_url, 'Spielinfos'));
+      if (Object.prototype.hasOwnProperty.call(entry, key)) {
+        return entry[key];
       }
-      if (match.stats_url) {
-        wrapper.append(createLink(match.stats_url, 'Statistik (PDF)'));
-      }
-      if (match.scoresheet_url) {
-        wrapper.append(createLink(match.scoresheet_url, 'Spielbericht'));
-      }
-      return wrapper.children.length ? wrapper : null;
+      return null;
     }
 
-    function createLink(href, label) {
-      const link = document.createElement('a');
-      link.href = href;
-      link.target = '_blank';
-      link.rel = 'noreferrer noopener';
-      link.textContent = label;
-      return link;
-    }
-
-    function buildMatchMetricsDetails(metrics) {
-      if (!metrics) {
-        return null;
-      }
-      const details = document.createElement('details');
-      details.className = 'match-metric-details';
-      const summary = document.createElement('summary');
-      summary.textContent = 'Statistiken';
-      details.append(summary);
-
-      const grid = document.createElement('div');
-      grid.className = 'match-metrics';
-      for (const group of METRIC_GROUPS) {
-        const card = document.createElement('article');
-        card.className = 'metric-card';
-        const title = document.createElement('h3');
-        title.textContent = group.title;
-        card.append(title);
-        const list = document.createElement('dl');
-        for (const item of group.items) {
-          const dt = document.createElement('dt');
-          dt.textContent = item.label;
-          const dd = document.createElement('dd');
-          dd.textContent = formatMetricValue(metrics[item.key]);
-          list.append(dt, dd);
+    function buildMatchTotalsRow(totals) {
+      const row = document.createElement('tr');
+      row.className = 'match-summary';
+      MATCH_COLUMNS.forEach((column, index) => {
+        const cell = document.createElement(index === 0 ? 'th' : 'td');
+        if (index === 0) {
+          cell.scope = 'row';
+        } else if (column.numeric) {
+          cell.classList.add('numeric');
         }
-        card.append(list);
-        grid.append(card);
-      }
-      details.append(grid);
-      return details;
-    }
-
-    function buildMatchupLabel(entry, teamName) {
-      const opponent = entry?.opponent || 'Unbekannt';
-      const host = entry?.host || null;
-      const labelTeam = teamName || 'Unbekannt';
-      if (entry?.is_home === true) {
-        return `${labelTeam} vs. ${opponent}`;
-      }
-      if (entry?.is_home === false) {
-        return `${opponent} vs. ${labelTeam}`;
-      }
-      if (host) {
-        return `${host} vs. ${opponent}`;
-      }
-      return `${labelTeam} vs. ${opponent}`;
-    }
-
-    function describeHomeAway(isHome) {
-      if (isHome === true) {
-        return 'Heim';
-      }
-      if (isHome === false) {
-        return 'Auswärts';
-      }
-      return '–';
-    }
-
-    function formatMatchLocation(entry) {
-      if (!entry) {
-        return '–';
-      }
-      const location = typeof entry.location === 'string' ? entry.location.trim() : '';
-      const host = typeof entry.host === 'string' ? entry.host.trim() : '';
-      if (location && host && location !== host) {
-        return `${location} (${host})`;
-      }
-      return location || host || '–';
+        let value;
+        if (typeof column.totalsResolver === 'function') {
+          value = column.totalsResolver(totals, index);
+        } else if (column.totalsKey && totals) {
+          value = totals[column.totalsKey];
+        } else if (index === 0) {
+          value = 'Summe';
+        } else {
+          value = '';
+        }
+        if (value === null || value === undefined || value === '') {
+          cell.textContent = '';
+        } else {
+          cell.textContent = formatMetricValue(value);
+        }
+        row.append(cell);
+      });
+      return row;
     }
 
     function formatMatchDate(input) {
@@ -1635,10 +1600,9 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         return '';
       }
       return date.toLocaleDateString('de-DE', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
       });
     }
 
@@ -1660,7 +1624,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       }
       renderTotals(null);
       renderPlayers([]);
-      renderMatches([], null);
+      renderMatches([], {});
     }
 
     document.addEventListener('DOMContentLoaded', loadOverview);
