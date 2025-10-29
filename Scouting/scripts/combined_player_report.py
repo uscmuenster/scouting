@@ -169,50 +169,83 @@ def render_combined_player_html(*, csv_path: Path) -> str:
   <style>
     :root {{
       color-scheme: light dark;
+      --bg: #f5f7f9;
+      --fg: #0f172a;
+      --accent: #0f766e;
+      --muted: #475569;
+      --card-bg: #ffffff;
+      --card-border: rgba(15, 118, 110, 0.18);
+      --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
+      --table-stripe: rgba(14, 116, 144, 0.08);
+    }}
+    @media (prefers-color-scheme: dark) {{
+      :root {{
+        --bg: #0f1f24;
+        --fg: #e2f1f4;
+        --accent: #5eead4;
+        --muted: #cbd5f5;
+        --card-bg: #132a30;
+        --card-border: rgba(94, 234, 212, 0.28);
+        --shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+        --table-stripe: rgba(94, 234, 212, 0.12);
+      }}
     }}
     body {{
-      font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
       margin: 0;
-      background: #0f172a;
-      color: #f8fafc;
+      font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
     }}
     header {{
-      padding: 2.5rem 1.25rem 1.5rem;
-      background: linear-gradient(135deg, rgba(14, 116, 144, 0.96), rgba(30, 64, 175, 0.85));
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.45);
+      padding: clamp(1.8rem, 4vw, 2.6rem) clamp(1.2rem, 4vw, 2.8rem);
+      display: grid;
+      gap: 0.6rem;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
     }}
     header h1 {{
-      margin: 0 0 0.75rem;
-      font-size: 2rem;
-      font-weight: 700;
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 2.6rem);
+      letter-spacing: -0.01em;
     }}
     header p {{
-      margin: 0.35rem 0 0;
-      font-size: 0.95rem;
-      color: rgba(248, 250, 252, 0.85);
+      margin: 0;
+      color: var(--muted);
+      max-width: 50ch;
     }}
     main {{
-      padding: 1.5rem;
+      max-width: 100rem;
+      margin: 0 auto;
+      padding: clamp(1.2rem, 3vw, 2.2rem) clamp(1rem, 4vw, 3rem);
+      display: grid;
+      gap: clamp(1.4rem, 3vw, 2.4rem);
     }}
     .meta {{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      color: rgba(15, 23, 42, 0.85);
-      background: rgba(148, 163, 184, 0.18);
-      border-radius: 0.75rem;
-      padding: 1rem 1.25rem;
-      backdrop-filter: blur(6px);
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1rem;
+      padding: clamp(0.9rem, 3vw, 1.3rem);
+      box-shadow: var(--shadow);
+    }}
+    .meta div {{
+      display: grid;
+      gap: 0.2rem;
     }}
     .meta span {{
       font-weight: 600;
+      color: var(--accent);
     }}
     .table-wrapper {{
-      border-radius: 1rem;
-      overflow: hidden;
-      background: rgba(15, 23, 42, 0.92);
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.55);
+      overflow: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 1.1rem;
+      box-shadow: var(--shadow);
     }}
     table {{
       width: 100%;
@@ -221,36 +254,39 @@ def render_combined_player_html(*, csv_path: Path) -> str:
     }}
     thead th {{
       text-align: left;
-      padding: 0.85rem 0.9rem;
+      padding: 0.85rem 1rem;
       font-size: 0.85rem;
       letter-spacing: 0.03em;
       text-transform: uppercase;
-      color: rgba(148, 163, 184, 0.95);
-      background: rgba(15, 118, 110, 0.18);
+      color: var(--accent);
+      background: rgba(15, 118, 110, 0.14);
+      border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
       backdrop-filter: blur(6px);
       z-index: 1;
     }}
     tbody td {{
-      padding: 0.8rem 0.9rem;
-      border-top: 1px solid rgba(148, 163, 184, 0.15);
-      font-size: 0.9rem;
-      color: rgba(226, 232, 240, 0.92);
+      padding: 0.8rem 1rem;
+      border-top: 1px solid var(--card-border);
+      font-size: 0.92rem;
+      color: var(--fg);
       vertical-align: top;
     }}
     tbody tr:nth-child(even) td {{
-      background: rgba(30, 64, 175, 0.08);
+      background: var(--table-stripe);
     }}
     a {{
-      color: #38bdf8;
+      color: var(--accent);
+      font-weight: 600;
+      text-decoration: none;
+    }}
+    a:hover, a:focus {{
+      text-decoration: underline;
     }}
     @media (max-width: 1024px) {{
-      main {{
-        padding: 1rem;
-      }}
-      .table-wrapper {{
-        border-radius: 0.75rem;
+      header {{
+        border-radius: 0;
       }}
       table {{
         min-width: 900px;
@@ -265,9 +301,9 @@ def render_combined_player_html(*, csv_path: Path) -> str:
   </header>
   <main>
     <section class=\"meta\">
-      <div><span>Aktualisiert:</span> {generated_at.strftime("%d.%m.%Y %H:%M:%S")} Uhr</div>
-      <div><span>Einträge:</span> {row_count}</div>
-      <div><span>Quelle:</span> {escape(str(relative_path))}</div>
+      <div><span>Aktualisiert</span><div>{generated_at.strftime("%d.%m.%Y %H:%M:%S")} Uhr</div></div>
+      <div><span>Einträge</span><div>{row_count}</div></div>
+      <div><span>Quelle</span><div>{escape(str(relative_path))}</div></div>
     </section>
     <div class=\"table-wrapper\">
       <table>
