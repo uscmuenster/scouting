@@ -4808,30 +4808,32 @@ def _indent_html(content: str, spaces: int) -> str:
     return "\n".join(f"{indent}{line}" if line else "" for line in content.splitlines())
 
 
+_SET_RESULT_PATTERN = re.compile(r"(\d+)\s*:\s*(\d+)")
+
+
 def _summarize_set_results(sets: Sequence[str]) -> Optional[str]:
     home_sets = 0
     away_sets = 0
     parsed_any = False
 
     for raw_value in sets:
-        parts = raw_value.split(":", 1)
-        if len(parts) != 2:
-            continue
-        left, right = parts
-        try:
-            left_points = int(left.strip())
-            right_points = int(right.strip())
-        except ValueError:
-            continue
+        text = str(raw_value)
+        for match in _SET_RESULT_PATTERN.finditer(text):
+            try:
+                left_points = int(match.group(1))
+                right_points = int(match.group(2))
+            except (TypeError, ValueError):
+                continue
 
-        if left_points == right_points:
-            continue
+            if left_points == right_points:
+                parsed_any = True
+                continue
 
-        parsed_any = True
-        if left_points > right_points:
-            home_sets += 1
-        else:
-            away_sets += 1
+            parsed_any = True
+            if left_points > right_points:
+                home_sets += 1
+            else:
+                away_sets += 1
 
     if not parsed_any:
         return None
