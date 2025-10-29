@@ -852,61 +852,108 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       background: rgba(15, 118, 110, 0.04);
     }
 
-    .match-list {
-      display: grid;
-      gap: clamp(1rem, 3vw, 1.6rem);
-    }
-
-    .match-card {
+    .match-table-wrapper {
       background: var(--card-bg);
       border-radius: 1rem;
       border: 1px solid var(--card-border);
-      padding: clamp(1rem, 3vw, 1.6rem);
+      padding: clamp(0.75rem, 2.5vw, 1.1rem);
       box-shadow: var(--shadow);
-      display: grid;
-      gap: 0.85rem;
+      overflow-x: auto;
     }
 
-    .match-title {
-      margin: 0;
-      font-size: clamp(1.1rem, 2.6vw, 1.4rem);
-    }
-
-    .match-meta {
-      margin: 0;
-      color: var(--muted);
+    table.match-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 48rem;
       font-size: 0.95rem;
-      display: grid;
-      gap: 0.3rem;
     }
 
-    .match-result {
-      margin: 0;
-      font-weight: 600;
+    table.match-table thead th {
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+      position: sticky;
+      top: 0;
+      background: var(--card-bg);
       color: var(--accent);
+      font-weight: 600;
+      border-bottom: 1px solid var(--card-border);
+      z-index: 1;
+      white-space: nowrap;
     }
 
-    .match-links {
+    table.match-table tbody td {
+      padding: 0.6rem 0.9rem;
+      border-bottom: 1px solid rgba(15, 118, 110, 0.12);
+      vertical-align: top;
+    }
+
+    table.match-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.match-table tbody tr:nth-child(odd) {
+      background: rgba(15, 118, 110, 0.04);
+    }
+
+    table.match-table .numeric {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    table.match-table td .match-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 0.45rem;
     }
 
-    .match-links a {
+    table.match-table td .match-links a {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      padding: 0.4rem 0.75rem;
+      padding: 0.3rem 0.65rem;
       border-radius: 999px;
       background: rgba(15, 118, 110, 0.12);
       color: var(--accent);
       font-weight: 600;
       text-decoration: none;
+      font-size: 0.85rem;
+      white-space: nowrap;
     }
 
-    .match-links a:hover,
-    .match-links a:focus-visible {
+    table.match-table td .match-links a:hover,
+    table.match-table td .match-links a:focus-visible {
       text-decoration: underline;
+    }
+
+    .match-metric-details {
+      min-width: 12rem;
+    }
+
+    .match-metric-details summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--accent);
+      outline: none;
+      list-style: none;
+    }
+
+    .match-metric-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .match-metric-details[open] summary {
+      margin-bottom: 0.75rem;
+    }
+
+    .match-metric-details summary::after {
+      content: '▾';
+      display: inline-block;
+      margin-left: 0.35rem;
+      font-size: 0.8rem;
+      transition: transform 0.2s ease;
+    }
+
+    .match-metric-details[open] summary::after {
+      transform: rotate(180deg);
     }
 
     .match-metrics {
@@ -943,11 +990,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         border-color: rgba(94, 234, 212, 0.22);
       }
 
+      .match-table-wrapper,
       .player-table-wrapper {
         background: rgba(19, 42, 48, 0.9);
         border-color: rgba(94, 234, 212, 0.22);
       }
 
+      table.match-table tbody tr:nth-child(odd),
       table.player-table tbody tr:nth-child(odd) {
         background: rgba(94, 234, 212, 0.08);
       }
@@ -983,7 +1032,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
     <section aria-labelledby=\"matches-heading\" hidden data-section=\"matches\">
       <h2 id=\"matches-heading\">Spiele</h2>
-      <div class=\"match-list\" data-matches></div>
+      <div data-matches></div>
     </section>
 
     <footer>
@@ -1024,6 +1073,47 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       {
         title: "Block",
         items: [{ key: "blocks_points", label: "Blockpunkte" }]
+      }
+    ];
+
+    const MATCH_COLUMNS = [
+      {
+        label: 'Datum',
+        resolver: entry => formatMatchDate(entry?.kickoff) || '–'
+      },
+      {
+        label: 'Spiel',
+        resolver: (entry, context) => buildMatchupLabel(entry, context?.teamName)
+      },
+      {
+        label: 'H/A',
+        resolver: entry => describeHomeAway(entry?.is_home)
+      },
+      {
+        label: 'Ort',
+        resolver: entry => formatMatchLocation(entry)
+      },
+      {
+        label: 'Ergebnis',
+        resolver: entry => entry?.result?.summary ?? '–'
+      },
+      {
+        label: 'Breakpkt.',
+        resolver: entry => entry?.break_points ?? null,
+        numeric: true
+      },
+      {
+        label: '+/-',
+        resolver: entry => entry?.plus_minus ?? null,
+        numeric: true
+      },
+      {
+        label: 'Links',
+        resolver: entry => buildMatchLinks(entry)
+      },
+      {
+        label: 'Statistiken',
+        resolver: entry => buildMatchMetricsDetails(entry?.metrics)
       }
     ];
 
@@ -1164,13 +1254,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (!team) {
         renderTotals(null);
         renderPlayers(null);
-        renderMatches([]);
+        renderMatches([], null);
         return;
       }
       renderTotals(team.totals);
       const players = Array.isArray(team.players) ? team.players : [];
       renderPlayers(players);
-      renderMatches(Array.isArray(team.matches) ? team.matches : []);
+      renderMatches(Array.isArray(team.matches) ? team.matches : [], team.team || null);
     }
 
     function updateGenerated(timestamp) {
@@ -1266,82 +1356,73 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       return table;
     }
 
-    function renderMatches(matches) {
+    function renderMatches(matches, teamName) {
       const section = document.querySelector('[data-section="matches"]');
       const container = document.querySelector('[data-matches]');
       if (!section || !container) return;
       container.innerHTML = '';
-      if (!matches.length) {
+      const entries = Array.isArray(matches) ? matches : [];
+      if (!entries.length) {
         container.innerHTML = '<p class="empty-state">Es liegen noch keine Spiele mit Statistikdaten vor.</p>';
         section.hidden = false;
         return;
       }
-      for (const entry of matches) {
-        container.append(buildMatchCard(entry));
-      }
+      const tableWrapper = buildMatchTable(entries, { teamName: teamName || null });
+      container.append(tableWrapper);
       section.hidden = false;
     }
 
-    function buildMatchCard(entry) {
-      const card = document.createElement('article');
-      card.className = 'match-card';
-
-      const title = document.createElement('h3');
-      title.className = 'match-title';
-      title.textContent = buildMatchTitle(entry);
-      card.append(title);
-
-      const meta = document.createElement('p');
-      meta.className = 'match-meta';
-      const primaryLine = buildMetaLine(formatMatchDate(entry.kickoff), entry.location);
-      if (primaryLine) {
-        meta.append(primaryLine);
-      }
-      if (entry.break_points != null) {
-        meta.append(`Breakpunkte: ${entry.break_points}`);
-      }
-      if (entry.plus_minus != null && entry.plus_minus !== 0) {
-        meta.append(`Plus/Minus: ${entry.plus_minus}`);
-      }
-      if (meta.childNodes.length) {
-        card.append(meta);
-      }
-
-      if (entry.result?.summary) {
-        const result = document.createElement('p');
-        result.className = 'match-result';
-        result.textContent = `Ergebnis: ${entry.result.summary}`;
-        card.append(result);
-      }
-
-      const links = buildMatchLinks(entry);
-      if (links.children.length) {
-        card.append(links);
-      }
-
-      if (entry.metrics) {
-        card.append(buildMetrics(entry.metrics));
-      }
-
-      return card;
+    function buildMatchTable(matches, context) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'match-table-wrapper';
+      const table = document.createElement('table');
+      table.className = 'match-table';
+      table.append(buildMatchTableHead());
+      table.append(buildMatchTableBody(matches, context));
+      wrapper.append(table);
+      return wrapper;
     }
 
-    function buildMetaLine(dateLabel, location) {
-      if (dateLabel && location) {
-        return `${dateLabel} • ${location}`;
-      }
-      if (dateLabel) {
-        return dateLabel;
-      }
-      return location || '';
+    function buildMatchTableHead() {
+      const thead = document.createElement('thead');
+      const row = document.createElement('tr');
+      MATCH_COLUMNS.forEach(column => {
+        const th = document.createElement('th');
+        th.scope = 'col';
+        if (column.numeric) th.classList.add('numeric');
+        th.textContent = column.label;
+        row.append(th);
+      });
+      thead.append(row);
+      return thead;
+    }
+
+    function buildMatchTableBody(matches, context) {
+      const tbody = document.createElement('tbody');
+      matches.forEach(entry => {
+        const row = document.createElement('tr');
+        MATCH_COLUMNS.forEach(column => {
+          const td = document.createElement('td');
+          if (column.numeric) td.classList.add('numeric');
+          const value = typeof column.resolver === 'function' ? column.resolver(entry, context) : null;
+          if (value instanceof Node) {
+            td.append(value);
+          } else {
+            td.textContent = formatMetricValue(value);
+          }
+          row.append(td);
+        });
+        tbody.append(row);
+      });
+      return tbody;
     }
 
     function buildMatchLinks(match) {
+      if (!match) {
+        return null;
+      }
       const wrapper = document.createElement('div');
       wrapper.className = 'match-links';
-      if (!match) {
-        return wrapper;
-      }
       if (match.csv_path) {
         wrapper.append(createLink(match.csv_path, 'Statistik (CSV)'));
       }
@@ -1354,7 +1435,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (match.scoresheet_url) {
         wrapper.append(createLink(match.scoresheet_url, 'Spielbericht'));
       }
-      return wrapper;
+      return wrapper.children.length ? wrapper : null;
     }
 
     function createLink(href, label) {
@@ -1366,9 +1447,18 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       return link;
     }
 
-    function buildMetrics(metrics) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'match-metrics';
+    function buildMatchMetricsDetails(metrics) {
+      if (!metrics) {
+        return null;
+      }
+      const details = document.createElement('details');
+      details.className = 'match-metric-details';
+      const summary = document.createElement('summary');
+      summary.textContent = 'Statistiken';
+      details.append(summary);
+
+      const grid = document.createElement('div');
+      grid.className = 'match-metrics';
       for (const group of METRIC_GROUPS) {
         const card = document.createElement('article');
         card.className = 'metric-card';
@@ -1384,19 +1474,48 @@ HTML_TEMPLATE = """<!DOCTYPE html>
           list.append(dt, dd);
         }
         card.append(list);
-        wrapper.append(card);
+        grid.append(card);
       }
-      return wrapper;
+      details.append(grid);
+      return details;
     }
 
-    function buildMatchTitle(entry) {
-      const opponent = entry.opponent || 'Unbekannt';
-      const isHome = entry.is_home;
-      const matchup = isHome
-        ? `${entry.host || 'Heimteam'} vs. ${opponent}`
-        : `${opponent} vs. ${entry.host || 'Heimteam'}`;
-      const date = formatMatchDate(entry.kickoff);
-      return date ? `${matchup} (${date})` : matchup;
+    function buildMatchupLabel(entry, teamName) {
+      const opponent = entry?.opponent || 'Unbekannt';
+      const host = entry?.host || null;
+      const labelTeam = teamName || 'Unbekannt';
+      if (entry?.is_home === true) {
+        return `${labelTeam} vs. ${opponent}`;
+      }
+      if (entry?.is_home === false) {
+        return `${opponent} vs. ${labelTeam}`;
+      }
+      if (host) {
+        return `${host} vs. ${opponent}`;
+      }
+      return `${labelTeam} vs. ${opponent}`;
+    }
+
+    function describeHomeAway(isHome) {
+      if (isHome === true) {
+        return 'Heim';
+      }
+      if (isHome === false) {
+        return 'Auswärts';
+      }
+      return '–';
+    }
+
+    function formatMatchLocation(entry) {
+      if (!entry) {
+        return '–';
+      }
+      const location = typeof entry.location === 'string' ? entry.location.trim() : '';
+      const host = typeof entry.host === 'string' ? entry.host.trim() : '';
+      if (location && host && location !== host) {
+        return `${location} (${host})`;
+      }
+      return location || host || '–';
     }
 
     function formatMatchDate(input) {
@@ -1422,7 +1541,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (typeof value === 'number') {
         return Number.isFinite(value) ? value.toString() : '–';
       }
-      return String(value);
+      const text = String(value).trim();
+      return text ? text : '–';
     }
 
     function showError() {
@@ -1432,7 +1552,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       }
       renderTotals(null);
       renderPlayers([]);
-      renderMatches([]);
+      renderMatches([], null);
     }
 
     document.addEventListener('DOMContentLoaded', loadOverview);
