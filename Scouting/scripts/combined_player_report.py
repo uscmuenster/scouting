@@ -176,7 +176,12 @@ def render_combined_player_html(*, csv_path: Path) -> str:
       --card-bg: #ffffff;
       --card-border: rgba(15, 118, 110, 0.18);
       --shadow: 0 16px 34px rgba(15, 118, 110, 0.12);
+      --table-wrapper-bg: rgba(255, 255, 255, 0.96);
+      --table-header-bg: rgba(15, 118, 110, 0.14);
+      --table-header-color: var(--accent);
+      --table-row-bg: rgba(255, 255, 255, 0.96);
       --table-stripe: rgba(14, 116, 144, 0.08);
+      --table-shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
     }}
     @media (prefers-color-scheme: dark) {{
       :root {{
@@ -187,7 +192,12 @@ def render_combined_player_html(*, csv_path: Path) -> str:
         --card-bg: #132a30;
         --card-border: rgba(94, 234, 212, 0.28);
         --shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
-        --table-stripe: rgba(94, 234, 212, 0.12);
+        --table-wrapper-bg: rgba(17, 46, 54, 0.96);
+        --table-header-bg: rgba(94, 234, 212, 0.16);
+        --table-header-color: #0b1e23;
+        --table-row-bg: rgba(15, 38, 46, 0.92);
+        --table-stripe: rgba(94, 234, 212, 0.16);
+        --table-shadow: 0 20px 45px rgba(2, 14, 16, 0.6);
       }}
     }}
     body {{
@@ -244,9 +254,10 @@ def render_combined_player_html(*, csv_path: Path) -> str:
       border-radius: 1rem;
       overflow-x: auto;
       overflow-y: hidden;
-      background: rgba(15, 23, 42, 0.92);
-      box-shadow: 0 20px 45px rgba(15, 23, 42, 0.55);
+      background: var(--table-wrapper-bg);
+      box-shadow: var(--table-shadow);
       -webkit-overflow-scrolling: touch;
+      border: 1px solid var(--card-border);
     }}
     table {{
       width: 100%;
@@ -259,8 +270,8 @@ def render_combined_player_html(*, csv_path: Path) -> str:
       font-size: 0.85rem;
       letter-spacing: 0.03em;
       text-transform: uppercase;
-      color: var(--accent);
-      background: rgba(15, 118, 110, 0.14);
+      color: var(--table-header-color);
+      background: var(--table-header-bg);
       border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
@@ -273,6 +284,7 @@ def render_combined_player_html(*, csv_path: Path) -> str:
       font-size: 0.92rem;
       color: var(--fg);
       vertical-align: top;
+      background: var(--table-row-bg);
     }}
     tbody tr:nth-child(even) td {{
       background: var(--table-stripe);
