@@ -5042,9 +5042,33 @@ def _build_player_match_table_html(player: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _coerce_int(value: Any) -> Optional[int]:
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, (int, float)):
+        if isinstance(value, float):
+            if value.is_integer():
+                return int(value)
+            return int(round(value))
+        return int(value)
+    if isinstance(value, str):
+        stripped = value.strip()
+        if not stripped:
+            return None
+        try:
+            return int(float(stripped.replace(",", ".")))
+        except ValueError:
+            return None
+    return None
+
+
 def _build_player_totals_table_html(
     players: Sequence[Mapping[str, Any]],
     team_overview: Optional[Mapping[str, Any]] = None,
+    *,
+    league_totals: Optional[Mapping[str, Any]] = None,
 ) -> str:
     valid_players = [player for player in players if isinstance(player, Mapping)]
     if not valid_players:
@@ -5139,7 +5163,8 @@ def _build_player_totals_table_html(
             lines.append(f"      <td{cell_class}>{escape(value)}</td>")
         lines.append("    </tr>")
 
-    totals_row = _summarize_team_totals(valid_players, columns, team_overview)
+    totals_result = _compute_combined_totals(valid_players, team_overview)
+    totals_row = _format_totals_row(columns, totals_result)
     if totals_row:
         lines.append('    <tr class="stats-table__total">')
         lines.append('      <th scope="row" colspan="2">Summe</th>')
@@ -5151,42 +5176,36 @@ def _build_player_totals_table_html(
             lines.append(f"      <td{class_attr}>{escape(value)}</td>")
         lines.append("    </tr>")
 
+    league_totals_row = _format_totals_row(columns, league_totals)
+    if league_totals_row:
+        lines.append(
+            '    <tr class="stats-table__total stats-table__league-total">'
+        )
+        lines.append('      <th scope="row" colspan="2">VBL</th>')
+        for column_index, (value, is_numeric) in enumerate(
+            league_totals_row, start=2
+        ):
+            class_name = (
+                _player_totals_numeric_class(column_index) if is_numeric else ""
+            )
+            class_attr = f' class="{class_name}"' if class_name else ""
+            lines.append(f"      <td{class_attr}>{escape(value)}</td>")
+        lines.append("    </tr>")
+
     lines.extend(['  </tbody>', '</table>'])
     return "\n".join(lines)
 
 
-def _summarize_team_totals(
+def _compute_combined_totals(
     players: Sequence[Mapping[str, Any]],
-    columns: Sequence[tuple[str, Optional[str], bool, Optional[str]]],
     team_overview: Optional[Mapping[str, Any]] = None,
-) -> List[tuple[str, bool]]:
+) -> Dict[str, Any]:
     overview_totals = (
         team_overview.get("totals")
         if isinstance(team_overview, Mapping)
         and isinstance(team_overview.get("totals"), Mapping)
         else {}
     )
-
-    def _coerce_int(value: Any) -> Optional[int]:
-        if value is None:
-            return None
-        if isinstance(value, bool):
-            return int(value)
-        if isinstance(value, (int, float)):
-            if isinstance(value, float) and value.is_integer():
-                return int(value)
-            if isinstance(value, float):
-                return int(round(value))
-            return int(value)
-        if isinstance(value, str):
-            stripped = value.strip()
-            if not stripped:
-                return None
-            try:
-                return int(float(stripped.replace(",", ".")))
-            except ValueError:
-                return None
-        return None
 
     def _sum_player_totals_field(field: str) -> Optional[int]:
         total = 0
@@ -5218,7 +5237,9 @@ def _summarize_team_totals(
     def _prefer_int(primary: Optional[int], fallback: Optional[int]) -> Optional[int]:
         return primary if primary is not None else fallback
 
-    def _format_percentage(numerator: Optional[int], denominator: Optional[int]) -> Optional[str]:
+    def _format_percentage(
+        numerator: Optional[int], denominator: Optional[int]
+    ) -> Optional[str]:
         if numerator is None or not denominator:
             return None
         return f"{int(round((numerator / denominator) * 100))}%"
@@ -5319,6 +5340,16 @@ def _summarize_team_totals(
     totals_result["receptions_perfect_pct"] = receptions_perfect_pct
     totals_result["attacks_success_pct"] = attacks_success_pct
 
+    return totals_result
+
+
+def _format_totals_row(
+    columns: Sequence[tuple[str, Optional[str], bool, Optional[str]]],
+    totals_result: Optional[Mapping[str, Any]],
+) -> List[tuple[str, bool]]:
+    if not isinstance(totals_result, Mapping):
+        return []
+
     totals_row: List[tuple[str, bool]] = []
     for _, _, is_numeric, key in columns[2:]:
         if not key:
@@ -5334,6 +5365,113 @@ def _summarize_team_totals(
     if any(value not in ("", "–") for value, _ in totals_row):
         return totals_row
     return []
+
+
+def _compute_league_totals(
+    league_overview: Optional[Mapping[str, Any]] = None,
+) -> Dict[str, Any]:
+    if not isinstance(league_overview, Mapping):
+        return {}
+
+    teams_raw = league_overview.get("teams")
+    if not isinstance(teams_raw, Sequence):
+        return {}
+
+    teams: List[Mapping[str, Any]] = [
+        team for team in teams_raw if isinstance(team, Mapping)
+    ]
+    if not teams:
+        return {}
+
+    totals_result: Dict[str, Any] = {}
+
+    def _sum_team_totals_field(field: str) -> Optional[int]:
+        total = 0
+        has_value = False
+        for team in teams:
+            totals = team.get("totals")
+            if not isinstance(totals, Mapping):
+                continue
+            value = _coerce_int(totals.get(field))
+            if value is None:
+                continue
+            total += value
+            has_value = True
+        return total if has_value else None
+
+    def _sum_team_player_field(field: str) -> Optional[int]:
+        total = 0
+        has_value = False
+        for team in teams:
+            players = team.get("players")
+            if not isinstance(players, Sequence):
+                continue
+            for player in players:
+                if not isinstance(player, Mapping):
+                    continue
+                value = _coerce_int(player.get(field))
+                if value is None:
+                    continue
+                total += value
+                has_value = True
+        return total if has_value else None
+
+    match_total = 0
+    has_match_total = False
+    for team in teams:
+        value = _coerce_int(team.get("match_count"))
+        if value is None:
+            continue
+        match_total += value
+        has_match_total = True
+    totals_result["match_count"] = match_total if has_match_total else None
+
+    count_fields = (
+        "serves_attempts",
+        "serves_errors",
+        "serves_points",
+        "receptions_attempts",
+        "receptions_errors",
+        "receptions_positive",
+        "receptions_perfect",
+        "attacks_attempts",
+        "attacks_errors",
+        "attacks_blocked",
+        "attacks_points",
+        "blocks_points",
+    )
+
+    for field in count_fields:
+        totals_result[field] = _sum_team_totals_field(field)
+
+    totals_result["total_points"] = _sum_team_player_field("total_points")
+    totals_result["break_points_total"] = _sum_team_player_field(
+        "break_points_total"
+    )
+    totals_result["plus_minus_total"] = _sum_team_player_field("plus_minus_total")
+
+    def _percentage_from_counts(
+        numerator: Optional[int], denominator: Optional[int]
+    ) -> Optional[str]:
+        if numerator is None or not denominator:
+            return None
+        pct = int(round((numerator / denominator) * 100))
+        return f"{pct}%"
+
+    totals_result["receptions_positive_pct"] = _percentage_from_counts(
+        totals_result.get("receptions_positive"),
+        totals_result.get("receptions_attempts"),
+    )
+    totals_result["receptions_perfect_pct"] = _percentage_from_counts(
+        totals_result.get("receptions_perfect"),
+        totals_result.get("receptions_attempts"),
+    )
+    totals_result["attacks_success_pct"] = _percentage_from_counts(
+        totals_result.get("attacks_points"),
+        totals_result.get("attacks_attempts"),
+    )
+
+    return totals_result
 
 
 def _build_player_card_html(player: Mapping[str, Any]) -> str:
@@ -5370,7 +5508,9 @@ def _build_player_card_html(player: Mapping[str, Any]) -> str:
 
 
 def _render_player_overview_content(
-    scouting: Optional[Mapping[str, Any]]
+    scouting: Optional[Mapping[str, Any]],
+    *,
+    league_totals: Optional[Mapping[str, Any]] = None,
 ) -> tuple[str, str, str]:
     default_meta = "Die Daten werden geladen…"
     default_table = '        <p class="empty-state">Noch keine Spielerinnendaten verfügbar.</p>'
@@ -5388,7 +5528,9 @@ def _render_player_overview_content(
         else f"{len(players)} Spielerinnen mit Statistikdaten."
     )
 
-    table_html_raw = _build_player_totals_table_html(players, scouting)
+    table_html_raw = _build_player_totals_table_html(
+        players, scouting, league_totals=league_totals
+    )
     table_html = (
         _indent_html(table_html_raw, 8) if table_html_raw else default_table
     )
@@ -5451,6 +5593,7 @@ def build_html_report(
     dresden_scouting: Optional[Mapping[str, Any]] = None,
     wiesbaden_scouting: Optional[Mapping[str, Any]] = None,
     erfurt_scouting: Optional[Mapping[str, Any]] = None,
+    league_scouting: Optional[Mapping[str, Any]] = None,
 ) -> str:
     """Generate a lightweight scouting landing page for USC Münster."""
 
@@ -5458,11 +5601,15 @@ def build_html_report(
     generated_label = format_generation_timestamp(generated_at)
     generated_iso = generated_at.astimezone(BERLIN_TZ).isoformat()
 
+    league_totals = _compute_league_totals(league_scouting)
+
     (
         player_meta_text,
         player_table_html,
         player_list_html,
-    ) = _render_player_overview_content(usc_scouting)
+    ) = _render_player_overview_content(
+        usc_scouting, league_totals=league_totals
+    )
 
     usc_team_label = "USC Münster"
     if usc_scouting and isinstance(usc_scouting.get("team"), str):
@@ -5577,6 +5724,9 @@ def build_html_report(
     }
     preloaded_overviews_json = json.dumps(preloaded_overviews_payload, ensure_ascii=False)
     preloaded_overviews_json = preloaded_overviews_json.replace("</", "<\\/")
+
+    league_totals_json = json.dumps(league_totals, ensure_ascii=False)
+    league_totals_json = league_totals_json.replace("</", "<\\/")
 
     page_title = f"Scouting {default_team_label}"
     page_intro_text = (
@@ -5824,6 +5974,10 @@ def build_html_report(
       background: rgba(15, 118, 110, 0.07);
     }}
 
+    .stats-table__league-total {{
+      background: rgba(15, 118, 110, 0.12);
+    }}
+
     .stats-table .numeric {{
       text-align: right;
       font-variant-numeric: tabular-nums;
@@ -5940,6 +6094,7 @@ def build_html_report(
   <script>
     const TEAM_CONFIGS = __TEAM_CONFIGS__;
     const PRELOADED_OVERVIEWS = __PRELOADED_OVERVIEWS__;
+    const LEAGUE_TOTALS = __LEAGUE_TOTALS__;
     const overviewCache = new Map();
     const pendingRequests = new Map();
     const fetchedFromNetwork = new Set();
@@ -6018,6 +6173,24 @@ def build_html_report(
     function formatPctOrDash(value) {{
       if (value === null || value === undefined || value === '') return '–';
       return String(value);
+    }}
+
+    function formatTotalsRow(columns, totals) {{
+      if (!totals || typeof totals !== 'object') return null;
+
+      const values = columns.slice(2).map(column => {{
+        if (!column.key) {{
+          return {{ value: '', numeric: !!column.numeric }};
+        }}
+        const raw = totals[column.key];
+        if (column.key.endsWith('_pct')) {{
+          return {{ value: formatPctOrDash(raw), numeric: !!column.numeric }};
+        }}
+        return {{ value: formatIntOrDash(raw), numeric: !!column.numeric }};
+      }});
+
+      const hasValues = values.some(cell => cell.value !== '–' && cell.value !== '');
+      return hasValues ? values : null;
     }}
 
     function getOpponentLabel(match) {{
@@ -6287,19 +6460,8 @@ def build_html_report(
         tbody.appendChild(row);
       }});
 
-      const totalsRowValues = columns.slice(2).map(column => {{
-        if (!column.key) {{
-          return {{ value: '', numeric: !!column.numeric }};
-        }}
-        const raw = totalsResult[column.key];
-        if (column.key.endsWith('_pct')) {{
-          return {{ value: formatPctOrDash(raw), numeric: true }};
-        }}
-        return {{ value: formatIntOrDash(raw), numeric: true }};
-      }});
-
-      const hasTotals = totalsRowValues.some(cell => cell.value !== '–' && cell.value !== '');
-      if (hasTotals) {{
+      const totalsRowValues = formatTotalsRow(columns, totalsResult);
+      if (totalsRowValues) {{
         const totalRow = document.createElement('tr');
         totalRow.className = 'stats-table__total';
         const headerCell = document.createElement('th');
@@ -6317,6 +6479,27 @@ def build_html_report(
           totalRow.appendChild(td);
         }});
         tbody.appendChild(totalRow);
+      }}
+
+      const leagueTotalsRow = formatTotalsRow(columns, LEAGUE_TOTALS);
+      if (leagueTotalsRow) {{
+        const leagueRow = document.createElement('tr');
+        leagueRow.className = 'stats-table__total stats-table__league-total';
+        const leagueHeader = document.createElement('th');
+        leagueHeader.scope = 'row';
+        leagueHeader.colSpan = 2;
+        leagueHeader.textContent = 'VBL';
+        leagueRow.appendChild(leagueHeader);
+        leagueTotalsRow.forEach((cell, index) => {{
+          const td = document.createElement('td');
+          const columnIndex = index + 2;
+          if (cell.numeric || (columns[columnIndex] && columns[columnIndex].numeric)) {{
+            td.className = columnIndex >= 2 ? 'numeric-center' : 'numeric';
+          }}
+          td.textContent = cell.value;
+          leagueRow.appendChild(td);
+        }});
+        tbody.appendChild(leagueRow);
       }}
 
       table.appendChild(tbody);
@@ -6683,6 +6866,7 @@ def build_html_report(
     ))
     html = html.replace("__TEAM_CONFIGS__", team_configs_json)
     html = html.replace("__PRELOADED_OVERVIEWS__", preloaded_overviews_json)
+    html = html.replace("__LEAGUE_TOTALS__", league_totals_json)
     html = html.replace("<<", "${").replace(">>", "}")
     return html
 

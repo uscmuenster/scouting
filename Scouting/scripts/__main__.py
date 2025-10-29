@@ -332,6 +332,7 @@ def main() -> int:
         dresden_scouting=dresden_stats_payload,
         wiesbaden_scouting=wiesbaden_stats_payload,
         erfurt_scouting=erfurt_stats_payload,
+        league_scouting=league_payload,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")
