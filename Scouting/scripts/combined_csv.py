@@ -63,12 +63,35 @@ BERLIN_TZ = ZoneInfo("Europe/Berlin")
 CSV_TOTAL_MARKER = "totals"
 
 
+DIFF_FIELD_ORDER = [
+    "match_id",
+    "match_number",
+    "kickoff",
+    "team",
+    "opponent",
+    "player_name",
+    "field",
+    "pdf_value",
+    "csv_value",
+]
+
+DIFF_EXCLUDED_FIELDS = {
+    "data_sources",
+    "kickoff_comparison",
+    "host_comparison",
+    "opponent_comparison",
+    "csv_path",
+    "stats_url",
+}
+
+
 def export_combined_player_stats(
     *,
     league_payload: Mapping[str, object],
     csv_payload: Mapping[str, object],
     csv_data_dir: Path,
     output_path: Path,
+    diff_output_path: Path | None = None,
 ) -> int:
     """Merge player level data from the PDF and CSV dashboards into one file."""
 
@@ -87,6 +110,9 @@ def export_combined_player_stats(
         writer.writeheader()
         for row in ordered_rows:
             writer.writerow(row)
+
+    if diff_output_path is not None:
+        _write_source_differences(rows.values(), diff_output_path)
 
     return len(ordered_rows)
 
@@ -267,6 +293,9 @@ def _format_kickoff_date(value: object) -> str:
     if dt.tzinfo is not None:
         dt = dt.astimezone(BERLIN_TZ)
     return dt.strftime("%d.%m.%Y")
+
+
+DIFF_FIELD_FORMATTERS = {"kickoff": _format_kickoff_date}
 
 
 def _iter_pdf_player_rows(payload: Mapping[str, object]) -> Iterator[Dict[str, object]]:
@@ -551,4 +580,66 @@ def _string_or_none(value: object) -> Optional[str]:
         return None
     text = str(value).strip()
     return text or None
+
+
+def _write_source_differences(states: Iterable[_RowState], output_path: Path) -> None:
+    difference_rows = list(_iter_source_differences(states))
+    difference_rows.sort(
+        key=lambda row: (
+            row.get("kickoff") or "",
+            row.get("match_number") or "",
+            row.get("match_id") or "",
+            (row.get("team") or "").lower(),
+            (row.get("player_name") or "").lower(),
+            row.get("field") or "",
+        )
+    )
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    with output_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=DIFF_FIELD_ORDER)
+        writer.writeheader()
+        for row in difference_rows:
+            writer.writerow(row)
+
+
+def _iter_source_differences(states: Iterable[_RowState]) -> Iterator[Dict[str, str]]:
+    for state in states:
+        if not {"pdf", "csv"}.issubset(state.data_sources):
+            continue
+
+        metadata = state.values
+        for field in state.field_values_by_source:
+            if field in DIFF_EXCLUDED_FIELDS:
+                continue
+
+            values_by_source = state.field_values_by_source.get(field, {})
+            pdf_value = values_by_source.get("pdf") if "pdf" in values_by_source else None
+            csv_value = values_by_source.get("csv") if "csv" in values_by_source else None
+
+            if pdf_value == csv_value:
+                continue
+            if pdf_value is None and csv_value is None:
+                continue
+
+            yield {
+                "match_id": _stringify_diff_value("match_id", metadata.get("match_id")),
+                "match_number": _stringify_diff_value(
+                    "match_number", metadata.get("match_number")
+                ),
+                "kickoff": _stringify_diff_value("kickoff", metadata.get("kickoff")),
+                "team": _stringify_diff_value("team", metadata.get("team")),
+                "opponent": _stringify_diff_value("opponent", metadata.get("opponent")),
+                "player_name": _stringify_diff_value(
+                    "player_name", metadata.get("player_name")
+                ),
+                "field": field,
+                "pdf_value": _stringify_diff_value(field, pdf_value),
+                "csv_value": _stringify_diff_value(field, csv_value),
+            }
+
+
+def _stringify_diff_value(field: str, value: object) -> str:
+    formatter = DIFF_FIELD_FORMATTERS.get(field)
+    return _format_comparison_value(value, formatter)
 
