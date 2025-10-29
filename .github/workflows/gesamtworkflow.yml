@@ -63,6 +63,7 @@ jobs:
           PYTHONPATH: Scouting
         run: |
           python -m scripts
+          test -f docs/index3.html
 
           # Cache-Busting: Commit-Hash und Zeitstempel in HTML einfügen
           COMMIT_HASH=$(git rev-parse --short HEAD)
