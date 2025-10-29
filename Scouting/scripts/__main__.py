@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+from .combined_csv import export_combined_player_stats
 from .report import (
     BERLIN_TZ,
     DEFAULT_SCHEDULE_URL,
@@ -108,6 +109,15 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=CSV_HTML_OUTPUT_PATH,
         help="Target HTML output for the CSV-based overview (default: docs/index2.html).",
+    )
+    parser.add_argument(
+        "--combined-player-csv-output",
+        type=Path,
+        default=Path("docs/data/combined_player_stats.csv"),
+        help=(
+            "Target CSV path for the merged player statistics overview (default: "
+            "docs/data/combined_player_stats.csv)."
+        ),
     )
     return parser
 
@@ -237,6 +247,24 @@ def main() -> int:
         print(
             "CSV scouting overview updated:",
             f"{csv_payload['team_count']} teams processed -> {csv_json_relative}",
+        )
+
+        combined_output = args.combined_player_csv_output
+        combined_count = export_combined_player_stats(
+            league_payload=league_payload,
+            csv_payload=csv_payload,
+            csv_data_dir=args.csv_data_dir,
+            output_path=combined_output,
+        )
+
+        try:
+            combined_relative = combined_output.relative_to(Path.cwd())
+        except ValueError:
+            combined_relative = combined_output
+
+        print(
+            "Combined player CSV generated:",
+            f"{combined_count} rows -> {combined_relative}",
         )
 
         if not args.skip_html:

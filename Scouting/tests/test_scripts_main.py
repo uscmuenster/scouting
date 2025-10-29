@@ -21,3 +21,10 @@ def test_build_parser_supports_skip_schedule_download_flag():
     parser = __main__.build_parser()
     args = parser.parse_args(["--skip-schedule-download"])
     assert args.skip_schedule_download is True
+
+
+def test_build_parser_accepts_combined_csv_output(tmp_path):
+    parser = __main__.build_parser()
+    target = tmp_path / "players.csv"
+    args = parser.parse_args(["--combined-player-csv-output", str(target)])
+    assert args.combined_player_csv_output == target
