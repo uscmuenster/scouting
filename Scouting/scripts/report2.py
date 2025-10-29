@@ -771,67 +771,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       font-size: clamp(1.35rem, 3vw, 1.8rem);
     }
 
-    .totals-table-wrapper {
-      overflow-x: auto;
-      border-radius: 1rem;
-      border: 1px solid var(--card-border);
-      background: var(--card-bg);
-      box-shadow: var(--shadow);
-      padding: clamp(0.6rem, 2vw, 1rem);
-    }
-
-    table.totals-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-      min-width: 32rem;
-    }
-
-    table.totals-table thead th {
-      text-align: left;
-      padding: 0.75rem 0.9rem;
-      background: var(--card-bg);
-      color: var(--accent);
-      font-weight: 600;
-      border-bottom: 1px solid var(--card-border);
-    }
-
-    table.totals-table thead th.numeric {
-      text-align: right;
-    }
-
-    table.totals-table tbody th,
-    table.totals-table tbody td {
-      padding: 0.65rem 0.9rem;
-      border-bottom: 1px solid rgba(15, 118, 110, 0.12);
-      vertical-align: top;
-    }
-
-    table.totals-table tbody th {
-      text-align: left;
-      font-weight: 600;
-      color: var(--accent);
-      min-width: 8rem;
-    }
-
-    table.totals-table tbody td {
-      color: var(--muted);
-    }
-
-    table.totals-table tbody td.numeric {
-      text-align: right;
-      font-variant-numeric: tabular-nums;
-    }
-
-    table.totals-table tbody tr:nth-child(odd) {
-      background: rgba(15, 118, 110, 0.05);
-    }
-
-    table.totals-table tbody tr:last-child th,
-    table.totals-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-
     .metric-card {
       background: var(--card-bg);
       border-radius: 0.9rem;
@@ -1022,11 +961,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       <p class=\"update-note\" data-generated>Stand: wird geladen …</p>
     </header>
 
-    <section aria-labelledby=\"totals-heading\" hidden data-section=\"totals\">
-      <h2 id=\"totals-heading\">Aggregierte Teamstatistiken</h2>
-      <div class=\"totals-table-wrapper\" data-totals></div>
-    </section>
-
     <section aria-labelledby=\"players-heading\" hidden data-section=\"players\">
       <h2 id=\"players-heading\">Spielerinnen</h2>
       <div class=\"player-table-wrapper\" data-player-table>
@@ -1046,39 +980,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
   <script>
     const DATA_URL = "__JSON_PATH__";
-    const METRIC_GROUPS = [
-      {
-        title: "Aufschlag",
-        items: [
-          { key: "serves_attempts", label: "Aufschläge" },
-          { key: "serves_errors", label: "Fehler" },
-          { key: "serves_points", label: "Asse" }
-        ]
-      },
-      {
-        title: "Annahme",
-        items: [
-          { key: "receptions_attempts", label: "Annahmen" },
-          { key: "receptions_errors", label: "Fehler" },
-          { key: "receptions_positive_pct", label: "Positiv" },
-          { key: "receptions_perfect_pct", label: "Perfekt" }
-        ]
-      },
-      {
-        title: "Angriff",
-        items: [
-          { key: "attacks_attempts", label: "Angriffe" },
-          { key: "attacks_errors", label: "Fehler" },
-          { key: "attacks_blocked", label: "Geblockt" },
-          { key: "attacks_points", label: "Punkte" },
-          { key: "attacks_success_pct", label: "Erfolgsquote" }
-        ]
-      },
-      {
-        title: "Block",
-        items: [{ key: "blocks_points", label: "Blockpunkte" }]
-      }
-    ];
 
     const MATCH_COLUMNS = [
       {
@@ -1327,12 +1228,10 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         heading.textContent = team?.team ? `Scouting ${team.team} (CSV)` : 'Scouting Übersicht (CSV)';
       }
       if (!team) {
-        renderTotals(null);
         renderPlayers(null);
         renderMatches([], {});
         return;
       }
-      renderTotals(team.totals);
       const players = Array.isArray(team.players) ? team.players : [];
       renderPlayers(players);
       renderMatches(
@@ -1357,88 +1256,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         timeStyle: 'short'
       });
       target.textContent = `Stand: ${formatted}`;
-    }
-
-    function renderTotals(totals) {
-      const section = document.querySelector('[data-section="totals"]');
-      const container = document.querySelector('[data-totals]');
-      if (!section || !container) return;
-      container.innerHTML = '';
-      if (!totals) {
-        section.hidden = false;
-        container.innerHTML = '<p class="empty-state">Noch keine Statistiken vorhanden.</p>';
-        return;
-      }
-      const table = document.createElement('table');
-      table.className = 'totals-table';
-
-      const thead = document.createElement('thead');
-      const headRow = document.createElement('tr');
-      [
-        { label: 'Bereich' },
-        { label: 'Metrik' },
-        { label: 'Wert', className: 'numeric' }
-      ].forEach(column => {
-        const th = document.createElement('th');
-        th.scope = 'col';
-        th.textContent = column.label;
-        if (column.className) th.classList.add(column.className);
-        headRow.append(th);
-      });
-      thead.append(headRow);
-      table.append(thead);
-
-      const tbody = document.createElement('tbody');
-
-      const isNumericValue = value => {
-        if (typeof value === 'number') {
-          return Number.isFinite(value);
-        }
-        if (typeof value === 'string') {
-          const trimmed = value.trim();
-          if (!trimmed) return false;
-          return /^-?\d+(?:[.,]\d+)?%?$/.test(trimmed);
-        }
-        return false;
-      };
-
-      for (const group of METRIC_GROUPS) {
-        const items = Array.isArray(group.items) ? group.items : [];
-        if (!items.length) continue;
-        items.forEach((item, index) => {
-          const row = document.createElement('tr');
-          if (index === 0) {
-            const groupCell = document.createElement('th');
-            groupCell.scope = 'rowgroup';
-            groupCell.rowSpan = items.length;
-            groupCell.textContent = group.title;
-            row.append(groupCell);
-          }
-          const metricCell = document.createElement('th');
-          metricCell.scope = 'row';
-          metricCell.textContent = item.label;
-          row.append(metricCell);
-
-          const valueCell = document.createElement('td');
-          const rawValue = totals[item.key];
-          if (isNumericValue(rawValue)) {
-            valueCell.classList.add('numeric');
-          }
-          valueCell.textContent = formatMetricValue(rawValue);
-          row.append(valueCell);
-          tbody.append(row);
-        });
-      }
-
-      if (!tbody.childElementCount) {
-        container.innerHTML = '<p class="empty-state">Noch keine Statistiken vorhanden.</p>';
-        section.hidden = false;
-        return;
-      }
-
-      table.append(tbody);
-      container.append(table);
-      section.hidden = false;
     }
 
     function renderPlayers(players) {
@@ -1622,7 +1439,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
       if (heading) {
         heading.textContent = 'Scouting Übersicht (CSV)';
       }
-      renderTotals(null);
       renderPlayers([]);
       renderMatches([], {});
     }
