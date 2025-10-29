@@ -202,6 +202,9 @@ def test_export_combined_player_stats_merges_sources(tmp_path):
     assert row["team"] == "Test Team"
     assert row["opponent"] == "Other Team"
     assert row["data_sources"] == "csv;pdf"
+    assert row["kickoff_comparison"] == "PDF, CSV: 01.10.2025"
+    assert row["host_comparison"] == "PDF, CSV: Test Team"
+    assert row["opponent_comparison"] == "PDF, CSV: Other Team"
     assert row["total_points"] == "11"
     assert row["serves_attempts"] == "6"
     assert row["csv_path"] == "data/csv/m1-test-team.csv"
@@ -370,3 +373,165 @@ def test_export_combined_player_stats_marks_matching_sources(tmp_path):
     assert len(rows) == 1
     row = rows[0]
     assert row["data_sources"] == "csv;pdf;match"
+
+
+def test_export_combined_player_stats_exposes_mismatched_values(tmp_path):
+    csv_dir = tmp_path / "csv"
+    csv_dir.mkdir()
+
+    csv_file = csv_dir / "m1-test-team.csv"
+    with csv_file.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(
+            [
+                "Match ID",
+                "Match Date",
+                "Home Team",
+                "Home Coach",
+                "Stadium",
+                "Number",
+                "Name",
+                "Total Points",
+                "Break Points",
+                "W-L",
+                "Total Serve",
+                "Serve Errors",
+                "Ace",
+                "Total Receptions",
+                "Reception Erros",
+                "Positive Pass Percentage",
+                "Excellent/ Perfect Pass Percentage",
+                "Total Attacks",
+                "Attack Erros",
+                "Blocked Attack",
+                "Attack Points (Exc.)",
+                "Attack Points Percentage (Exc.%)",
+                "Block Points",
+            ]
+        )
+        writer.writerow(
+            [
+                "M1",
+                "2025-10-01",
+                "csv host",
+                "",
+                "Test Arena",
+                "7",
+                "example player",
+                "11",
+                "4",
+                "3",
+                "6",
+                "2",
+                "1",
+                "12",
+                "2",
+                "50%",
+                "25%",
+                "14",
+                "3",
+                "1",
+                "6",
+                "43%",
+                "2",
+            ]
+        )
+
+    league_payload = {
+        "teams": [
+            {
+                "team": "Test Team",
+                "matches": [
+                    {
+                        "match_number": "M1",
+                        "match_id": "M1",
+                        "kickoff": "2025-10-02T18:00:00+02:00",
+                        "is_home": True,
+                        "opponent": "Alpha Opponent",
+                        "opponent_short": "Alpha",
+                        "host": "Test Team",
+                        "location": "Test Arena",
+                        "result": {"summary": "3:1"},
+                        "stats_url": "https://example.com/stats.pdf",
+                    }
+                ],
+                "players": [
+                    {
+                        "name": "Example Player",
+                        "jersey_number": 7,
+                        "matches": [
+                            {
+                                "match_number": "M1",
+                                "match_id": "M1",
+                                "kickoff": "2025-10-02T18:00:00+02:00",
+                                "is_home": True,
+                                "opponent": "Alpha Opponent",
+                                "opponent_short": "Alpha",
+                                "stats_url": "https://example.com/stats.pdf",
+                                "result": {"summary": "3:1"},
+                                "metrics": {
+                                    "serves_attempts": 6,
+                                    "serves_errors": 2,
+                                    "serves_points": 1,
+                                    "receptions_attempts": 12,
+                                    "receptions_errors": 2,
+                                    "receptions_positive": 6,
+                                    "receptions_perfect": 3,
+                                    "receptions_positive_pct": "50%",
+                                    "receptions_perfect_pct": "25%",
+                                    "attacks_attempts": 14,
+                                    "attacks_errors": 3,
+                                    "attacks_blocked": 1,
+                                    "attacks_points": 6,
+                                    "attacks_success_pct": "43%",
+                                    "blocks_points": 2,
+                                },
+                                "total_points": 11,
+                                "break_points": 4,
+                                "plus_minus": None,
+                            }
+                        ],
+                    }
+                ],
+            }
+        ]
+    }
+
+    csv_payload = {
+        "teams": [
+            {
+                "team": "Test Team",
+                "matches": [
+                    {
+                        "match_number": "M1",
+                        "match_id": "M1",
+                        "kickoff": "2025-10-01T18:00:00+02:00",
+                        "is_home": True,
+                        "opponent": "Beta Opponent",
+                        "opponent_short": "Beta",
+                        "host": "csv host",
+                        "location": "Test Arena",
+                        "result": {"summary": "3:1"},
+                        "csv_path": "data/csv/m1-test-team.csv",
+                    }
+                ],
+            }
+        ]
+    }
+
+    output_path = tmp_path / "combined.csv"
+    export_combined_player_stats(
+        league_payload=league_payload,
+        csv_payload=csv_payload,
+        csv_data_dir=csv_dir,
+        output_path=output_path,
+    )
+
+    with output_path.open(encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        rows = list(reader)
+
+    row = rows[0]
+    assert row["kickoff_comparison"] == "PDF: 02.10.2025 / CSV: 01.10.2025"
+    assert row["host_comparison"] == "PDF: Test Team / CSV: Csv Host"
+    assert row["opponent_comparison"] == "PDF: Alpha Opponent / CSV: Beta Opponent"
