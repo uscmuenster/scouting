@@ -1,0 +1,27 @@
+name: Extend CSV passing statistics
+
+on:
+  push:
+    paths:
+      - 'docs/data/csv/**'
+      - 'Scouting/scripts/extend_csv_passes.py'
+      - '.github/workflows/extend_csv.yml'
+  workflow_dispatch:
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Generate extended CSV files
+        run: python -m Scouting.scripts.extend_csv_passes
+
+      - name: Ensure generated CSV files are up to date
+        run: git diff --quiet
