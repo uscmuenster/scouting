@@ -700,11 +700,13 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     }
 
     main {
-      max-width: 58rem;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
+      margin: 0;
       padding: clamp(1.2rem, 3vw, 2.8rem) clamp(1rem, 4vw, 3.2rem);
       display: grid;
       gap: clamp(1.8rem, 4vw, 3rem);
+      box-sizing: border-box;
     }
 
     header.page-header {
