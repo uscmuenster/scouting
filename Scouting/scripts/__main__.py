@@ -26,11 +26,15 @@ from .stats import (
     AACHEN_OUTPUT_PATH,
     DRESDEN_CANONICAL_NAME,
     DRESDEN_OUTPUT_PATH,
+    ERFURT_CANONICAL_NAME,
+    ERFURT_OUTPUT_PATH,
     HAMBURG_CANONICAL_NAME,
     HAMBURG_OUTPUT_PATH,
     LEAGUE_STATS_OUTPUT_PATH,
     SCHWERIN_CANONICAL_NAME,
     SCHWERIN_OUTPUT_PATH,
+    WIESBADEN_CANONICAL_NAME,
+    WIESBADEN_OUTPUT_PATH,
     STATS_OUTPUT_PATH,
     build_league_stats_overview,
     build_stats_overview,
@@ -205,6 +209,36 @@ def main() -> int:
         f"{dresden_stats_payload['match_count']} matches processed -> {DRESDEN_OUTPUT_PATH}",
     )
 
+    wiesbaden_stats_payload = build_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=WIESBADEN_OUTPUT_PATH,
+        focus_team=WIESBADEN_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
+    )
+
+    print(
+        "Wiesbaden scouting overview updated:",
+        f"{wiesbaden_stats_payload['match_count']} matches processed -> {WIESBADEN_OUTPUT_PATH}",
+    )
+
+    erfurt_stats_payload = build_stats_overview(
+        matches=enriched_matches,
+        schedule_csv_url=args.schedule_url,
+        schedule_page_url=args.schedule_page_url,
+        schedule_path=args.schedule_path,
+        output_path=ERFURT_OUTPUT_PATH,
+        focus_team=ERFURT_CANONICAL_NAME,
+        stats_lookup=stats_lookup,
+    )
+
+    print(
+        "Erfurt scouting overview updated:",
+        f"{erfurt_stats_payload['match_count']} matches processed -> {ERFURT_OUTPUT_PATH}",
+    )
+
     league_payload = build_league_stats_overview(
         matches=enriched_matches,
         schedule_csv_url=args.schedule_url,
@@ -268,6 +302,8 @@ def main() -> int:
         aachen_scouting=aachen_stats_payload,
         schwerin_scouting=schwerin_stats_payload,
         dresden_scouting=dresden_stats_payload,
+        wiesbaden_scouting=wiesbaden_stats_payload,
+        erfurt_scouting=erfurt_stats_payload,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(html, encoding="utf-8")

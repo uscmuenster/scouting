@@ -76,6 +76,22 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--wiesbaden-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Wiesbaden-JSON-Datei (Standard: docs/data/wiesbaden_stats_overview.json)."
+        ),
+    )
+    parser.add_argument(
+        "--erfurt-output",
+        type=Path,
+        default=None,
+        help=(
+            "Zielpfad für die Erfurt-JSON-Datei (Standard: docs/data/erfurt_stats_overview.json)."
+        ),
+    )
+    parser.add_argument(
         "--league-output",
         type=Path,
         default=None,
@@ -100,11 +116,15 @@ def main() -> int:
         AACHEN_OUTPUT_PATH,
         DRESDEN_CANONICAL_NAME,
         DRESDEN_OUTPUT_PATH,
+        ERFURT_CANONICAL_NAME,
+        ERFURT_OUTPUT_PATH,
         HAMBURG_CANONICAL_NAME,
         HAMBURG_OUTPUT_PATH,
         LEAGUE_STATS_OUTPUT_PATH,
         SCHWERIN_CANONICAL_NAME,
         SCHWERIN_OUTPUT_PATH,
+        WIESBADEN_CANONICAL_NAME,
+        WIESBADEN_OUTPUT_PATH,
         STATS_OUTPUT_PATH,
     )
     from scripts.report import USC_CANONICAL_NAME
@@ -120,6 +140,8 @@ def main() -> int:
     aachen_output_path = args.aachen_output or AACHEN_OUTPUT_PATH
     schwerin_output_path = args.schwerin_output or SCHWERIN_OUTPUT_PATH
     dresden_output_path = args.dresden_output or DRESDEN_OUTPUT_PATH
+    wiesbaden_output_path = args.wiesbaden_output or WIESBADEN_OUTPUT_PATH
+    erfurt_output_path = args.erfurt_output or ERFURT_OUTPUT_PATH
     league_output_path = args.league_output or LEAGUE_STATS_OUTPUT_PATH
 
     build_kwargs = {
@@ -188,6 +210,30 @@ def main() -> int:
         "Dresden-Scouting-Übersicht aktualisiert:",
         f"{dresden_payload['match_count']} Spiele verarbeitet",
         f"-> {dresden_output_path}",
+    )
+
+    wiesbaden_payload = build_stats_overview(
+        output_path=wiesbaden_output_path,
+        focus_team=WIESBADEN_CANONICAL_NAME,
+        **build_kwargs,
+    )
+
+    print(
+        "Wiesbaden-Scouting-Übersicht aktualisiert:",
+        f"{wiesbaden_payload['match_count']} Spiele verarbeitet",
+        f"-> {wiesbaden_output_path}",
+    )
+
+    erfurt_payload = build_stats_overview(
+        output_path=erfurt_output_path,
+        focus_team=ERFURT_CANONICAL_NAME,
+        **build_kwargs,
+    )
+
+    print(
+        "Erfurt-Scouting-Übersicht aktualisiert:",
+        f"{erfurt_payload['match_count']} Spiele verarbeitet",
+        f"-> {erfurt_output_path}",
     )
 
     league_payload = build_league_stats_overview(

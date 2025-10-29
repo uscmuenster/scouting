@@ -59,6 +59,12 @@ SCHWERIN_OUTPUT_PATH = Path("docs/data/schwerin_stats_overview.json")
 DRESDEN_CANONICAL_NAME = "Dresdner SC"
 DRESDEN_OUTPUT_PATH = Path("docs/data/dresden_stats_overview.json")
 
+WIESBADEN_CANONICAL_NAME = "VC Wiesbaden"
+WIESBADEN_OUTPUT_PATH = Path("docs/data/wiesbaden_stats_overview.json")
+
+ERFURT_CANONICAL_NAME = "Schwarz-Weiß Erfurt"
+ERFURT_OUTPUT_PATH = Path("docs/data/erfurt_stats_overview.json")
+
 LEAGUE_STATS_OUTPUT_PATH = Path("docs/data/league_stats_overview.json")
 
 DEFAULT_ROSTER_DIR = Path("docs/data/rosters")
@@ -1143,6 +1149,10 @@ __all__ = [
     "DRESDEN_OUTPUT_PATH",
     "HAMBURG_CANONICAL_NAME",
     "HAMBURG_OUTPUT_PATH",
+    "WIESBADEN_CANONICAL_NAME",
+    "WIESBADEN_OUTPUT_PATH",
+    "ERFURT_CANONICAL_NAME",
+    "ERFURT_OUTPUT_PATH",
     "LEAGUE_STATS_OUTPUT_PATH",
     "SCHWERIN_CANONICAL_NAME",
     "SCHWERIN_OUTPUT_PATH",

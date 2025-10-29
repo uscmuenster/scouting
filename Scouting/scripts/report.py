@@ -5435,6 +5435,8 @@ def build_html_report(
     aachen_scouting: Optional[Mapping[str, Any]] = None,
     schwerin_scouting: Optional[Mapping[str, Any]] = None,
     dresden_scouting: Optional[Mapping[str, Any]] = None,
+    wiesbaden_scouting: Optional[Mapping[str, Any]] = None,
+    erfurt_scouting: Optional[Mapping[str, Any]] = None,
 ) -> str:
     """Generate a lightweight scouting landing page for USC Münster."""
 
@@ -5506,6 +5508,18 @@ def build_html_report(
         "Dresdner SC",
         "data/dresden_stats_overview.json",
         dresden_scouting,
+    )
+    _append_team_config(
+        "wiesbaden",
+        "VC Wiesbaden",
+        "data/wiesbaden_stats_overview.json",
+        wiesbaden_scouting,
+    )
+    _append_team_config(
+        "erfurt",
+        "Schwarz-Weiß Erfurt",
+        "data/erfurt_stats_overview.json",
+        erfurt_scouting,
     )
 
     default_team_label = team_configs[0]["label"] if team_configs else "Team"
