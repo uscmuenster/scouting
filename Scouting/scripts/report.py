@@ -4613,6 +4613,65 @@ def _format_season_results_section(
     if not data or not isinstance(data, Mapping):
         return ""
 
+    def _filter_direct_comparison_details(details: Sequence[Any]) -> List[str]:
+        """Return only the detail entries that describe the head-to-head score.
+
+        The upstream payload frequently provides many metrics (matches, wins,
+        losses, points, etc.).  For the direct-comparison card we only want a
+        single score line.  We therefore look for well-known labels such as
+        "Direkter Vergleich" or "Siege" and fall back to generic score
+        patterns (e.g. ``16:18``) if no explicit label is present.  Should all
+        heuristics fail we keep the very first entry so that the UI never ends
+        up empty.
+        """
+
+        if not details:
+            return []
+
+        preferred_labels = (
+            "direkter vergleich",
+            "direktes duell",
+            "direkte bilanz",
+            "direkter bilan",
+            "bilanz",
+            "spielstand",
+            "ergebnis",
+            "siege",
+        )
+        label_pattern = re.compile(r"^\s*([^:]+):\s*(.+)$")
+        score_pattern = re.compile(r"\d+\s*[\-:\u2013]\s*\d+")
+
+        parsed_entries: List[Tuple[str, str]] = []
+        numeric_entries: List[str] = []
+        cleaned_entries: List[str] = []
+
+        for raw in details:
+            text = str(raw).strip()
+            if not text:
+                continue
+            cleaned_entries.append(text)
+            match = label_pattern.match(text)
+            if match:
+                label = normalize_name(match.group(1))
+                parsed_entries.append((label, text))
+                if score_pattern.search(match.group(2)):
+                    numeric_entries.append(text)
+            elif score_pattern.search(text):
+                numeric_entries.append(text)
+
+        for candidate in preferred_labels:
+            for label, text in parsed_entries:
+                if label == candidate:
+                    return [text]
+
+        if numeric_entries:
+            return [numeric_entries[0]]
+
+        if cleaned_entries:
+            return [cleaned_entries[0]]
+
+        return []
+
     raw_title = data.get("title")
     if isinstance(raw_title, str) and raw_title.strip():
         title = raw_title.strip()
@@ -4683,7 +4742,7 @@ def _format_season_results_section(
         name = team.get("name")
         if not name:
             continue
-        details = [detail for detail in team.get("details", []) if detail]
+        details = _filter_direct_comparison_details(team.get("details", []))
         details_html = ""
         if details:
             detail_items = "".join(
