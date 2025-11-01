@@ -1,0 +1,2075 @@
+{
+  "generated": "2025-11-01T04:26:32.607095+00:00",
+  "team": "Schwarz-Weiß Erfurt",
+  "match_count": 3,
+  "matches": [
+    {
+      "match_number": "2006",
+      "match_id": "777479958",
+      "kickoff": "2025-10-11T18:30:00+02:00",
+      "is_home": true,
+      "opponent": "Binder Blaubären TSV Flacht",
+      "opponent_short": "Flacht",
+      "host": "Schwarz-Weiß Erfurt",
+      "location": "Riethsporthalle (99089 Erfurt)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/f4ea447f-f557-48a4-b57c-f7ecce9a00e3/2006",
+      "attendance": "818",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Respaut, Emilie",
+          "team": "Schwarz-Weiß Erfurt"
+        },
+        {
+          "medal": "Silber",
+          "name": "Neuhaus, Frauke",
+          "team": "Binder Blaubären TSV Flacht"
+        }
+      ],
+      "result": {
+        "score": "3:0",
+        "total_points": "75:47",
+        "sets": [
+          "25:18",
+          "25:15",
+          "25:14"
+        ],
+        "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+      },
+      "metrics": {
+        "serves_attempts": 23,
+        "serves_errors": 14,
+        "serves_points": 43,
+        "receptions_attempts": 48,
+        "receptions_errors": 3,
+        "receptions_positive_pct": "2%",
+        "receptions_perfect_pct": "2%",
+        "attacks_attempts": 7,
+        "attacks_errors": 36,
+        "attacks_blocked": 29,
+        "attacks_points": 48,
+        "attacks_success_pct": "686%",
+        "blocks_points": 3,
+        "receptions_positive": 1,
+        "receptions_perfect": 1
+      }
+    },
+    {
+      "match_number": "2018",
+      "match_id": "777480026",
+      "kickoff": "2025-10-25T16:45:00+02:00",
+      "is_home": true,
+      "opponent": "VfB Suhl LOTTO Thüringen",
+      "opponent_short": "Suhl",
+      "host": "Schwarz-Weiß Erfurt",
+      "location": "Riethsporthalle (99089 Erfurt)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/8022ebd1-c0c9-41e9-bcca-0d387944fd60/2018",
+      "attendance": "1176",
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Kovacic, Isabel",
+          "team": "Schwarz-Weiß Erfurt"
+        },
+        {
+          "medal": "Gold",
+          "name": "Nagels, Lara",
+          "team": "VfB Suhl LOTTO Thüringen"
+        }
+      ],
+      "result": {
+        "score": "0:3",
+        "total_points": "55:75",
+        "sets": [
+          "21:25",
+          "15:25",
+          "19:25"
+        ],
+        "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+      },
+      "metrics": {
+        "serves_attempts": 11,
+        "serves_errors": 45,
+        "serves_points": 8,
+        "receptions_attempts": 380,
+        "receptions_errors": 21,
+        "receptions_positive_pct": "4%",
+        "receptions_perfect_pct": "106%",
+        "attacks_attempts": 9,
+        "attacks_errors": 30,
+        "attacks_blocked": 3,
+        "attacks_points": 20,
+        "attacks_success_pct": "222%",
+        "blocks_points": 3,
+        "receptions_positive": 15,
+        "receptions_perfect": 404
+      }
+    },
+    {
+      "match_number": "2020",
+      "match_id": "777480100",
+      "kickoff": "2025-10-28T19:30:00+01:00",
+      "is_home": false,
+      "opponent": "VC Wiesbaden",
+      "opponent_short": "Wiesbaden",
+      "host": "VC Wiesbaden",
+      "location": "Sporthalle am Platz der Deutschen Einheit (65185 Wiesbaden)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/e256533d-6442-47cc-bfbc-7803ff4d4d41/2020",
+      "attendance": "1017",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "van der Pijl, Pleun",
+          "team": "VC Wiesbaden"
+        },
+        {
+          "medal": "Silber",
+          "name": "Kovacic, Isabel",
+          "team": "Schwarz-Weiß Erfurt"
+        }
+      ],
+      "result": {
+        "score": "2:3",
+        "total_points": "107:94",
+        "sets": [
+          "22:25",
+          "22:25",
+          "25:18",
+          "25:11",
+          "13:15"
+        ],
+        "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+      },
+      "metrics": {
+        "serves_attempts": 108,
+        "serves_errors": 9,
+        "serves_points": 5,
+        "receptions_attempts": 78,
+        "receptions_errors": 5,
+        "receptions_positive_pct": "41%",
+        "receptions_perfect_pct": "19%",
+        "attacks_attempts": 159,
+        "attacks_errors": 11,
+        "attacks_blocked": 9,
+        "attacks_points": 50,
+        "attacks_success_pct": "31%",
+        "blocks_points": 15,
+        "receptions_positive": 32,
+        "receptions_perfect": 15
+      }
+    }
+  ],
+  "totals": {
+    "serves_attempts": 142,
+    "serves_errors": 68,
+    "serves_points": 56,
+    "receptions_attempts": 506,
+    "receptions_errors": 29,
+    "receptions_positive": 48,
+    "receptions_perfect": 420,
+    "receptions_positive_pct": "9%",
+    "receptions_perfect_pct": "83%",
+    "attacks_attempts": 175,
+    "attacks_errors": 77,
+    "attacks_blocked": 41,
+    "attacks_points": 118,
+    "attacks_success_pct": "67%",
+    "blocks_points": 21
+  },
+  "player_count": 13,
+  "players": [
+    {
+      "name": "Alina Zellin",
+      "jersey_number": 1,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Zellin Alina",
+          "jersey_number": 1,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Zellin Alina",
+          "jersey_number": 1,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Zellin Alina",
+          "jersey_number": 1,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 11,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 5,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 2,
+            "attacks_success_pct": "40%",
+            "blocks_points": 3,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 6,
+          "break_points": 3,
+          "plus_minus": 5
+        }
+      ],
+      "totals": {
+        "serves_attempts": 11,
+        "serves_errors": 1,
+        "serves_points": 2,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 5,
+        "attacks_errors": 1,
+        "attacks_blocked": 0,
+        "attacks_points": 2,
+        "attacks_success_pct": "40%",
+        "blocks_points": 3
+      },
+      "total_points": 6,
+      "break_points_total": 3,
+      "plus_minus_total": 5
+    },
+    {
+      "name": "Elizabeth Sandbothe",
+      "jersey_number": 2,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Sandbothe Elizabeth",
+          "jersey_number": 2,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 3,
+            "serves_errors": 1,
+            "serves_points": 9,
+            "receptions_attempts": 21,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 8,
+            "attacks_blocked": 1,
+            "attacks_points": 24,
+            "attacks_success_pct": "50%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 444,
+          "break_points": 56,
+          "plus_minus": 6
+        },
+        {
+          "player": "Sandbothe Elizabeth",
+          "jersey_number": 2,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 5,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 9,
+            "attacks_errors": 2,
+            "attacks_blocked": 0,
+            "attacks_points": 4,
+            "attacks_success_pct": "44%",
+            "blocks_points": 3,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 7,
+          "break_points": 4,
+          "plus_minus": 3
+        },
+        {
+          "player": "Sandbothe Elizabeth",
+          "jersey_number": 2,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 17,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 6,
+            "attacks_success_pct": "35%",
+            "blocks_points": 3,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 9,
+          "break_points": 8,
+          "plus_minus": 7
+        }
+      ],
+      "totals": {
+        "serves_attempts": 17,
+        "serves_errors": 4,
+        "serves_points": 9,
+        "receptions_attempts": 21,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": "0%",
+        "receptions_perfect_pct": "0%",
+        "attacks_attempts": 26,
+        "attacks_errors": 11,
+        "attacks_blocked": 1,
+        "attacks_points": 34,
+        "attacks_success_pct": "131%",
+        "blocks_points": 7
+      },
+      "total_points": 460,
+      "break_points_total": 68,
+      "plus_minus_total": 16
+    },
+    {
+      "name": "Lotte Goertz",
+      "jersey_number": 4,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Goertz Lotte",
+          "jersey_number": 4,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 16,
+          "break_points": 1,
+          "plus_minus": 0
+        },
+        {
+          "player": "Goertz Lotte",
+          "jersey_number": 4,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Goertz Lotte",
+          "jersey_number": 4,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 27,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "41%",
+            "receptions_perfect_pct": "19%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 11,
+            "receptions_perfect": 5
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -2
+        }
+      ],
+      "totals": {
+        "serves_attempts": 0,
+        "serves_errors": 0,
+        "serves_points": 0,
+        "receptions_attempts": 27,
+        "receptions_errors": 2,
+        "receptions_positive": 11,
+        "receptions_perfect": 5,
+        "receptions_positive_pct": "41%",
+        "receptions_perfect_pct": "19%",
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": null,
+        "blocks_points": 0
+      },
+      "total_points": 16,
+      "break_points_total": 1,
+      "plus_minus_total": -2
+    },
+    {
+      "name": "Emilie Respaut",
+      "jersey_number": 5,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Respaut Emilie",
+          "jersey_number": 5,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 2,
+          "plus_minus": 0
+        },
+        {
+          "player": "Respaut Emilie",
+          "jersey_number": 5,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Respaut Emilie",
+          "jersey_number": 5,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 16,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "50%",
+            "blocks_points": 2,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 3,
+          "break_points": 2,
+          "plus_minus": 0
+        }
+      ],
+      "totals": {
+        "serves_attempts": 16,
+        "serves_errors": 3,
+        "serves_points": 0,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 2,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 1,
+        "attacks_success_pct": "50%",
+        "blocks_points": 2
+      },
+      "total_points": 3,
+      "break_points_total": 4,
+      "plus_minus_total": 0
+    },
+    {
+      "name": "Lena Linke",
+      "jersey_number": 6,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Linke Lena",
+          "jersey_number": 6,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 5,
+            "serves_errors": 5,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 6,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "6100%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 78,
+          "break_points": 6,
+          "plus_minus": 4
+        },
+        {
+          "player": "Linke Lena",
+          "jersey_number": 6,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 2,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 11,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 7,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "2%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 6,
+          "break_points": 3,
+          "plus_minus": 1
+        },
+        {
+          "player": "Linke Lena",
+          "jersey_number": 6,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 10,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 3,
+            "attacks_errors": 0,
+            "attacks_blocked": 1,
+            "attacks_points": 1,
+            "attacks_success_pct": "33%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 1,
+          "plus_minus": 0
+        }
+      ],
+      "totals": {
+        "serves_attempts": 17,
+        "serves_errors": 7,
+        "serves_points": 3,
+        "receptions_attempts": 11,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": "0%",
+        "receptions_perfect_pct": "0%",
+        "attacks_attempts": 3,
+        "attacks_errors": 13,
+        "attacks_blocked": 1,
+        "attacks_points": 1,
+        "attacks_success_pct": "33%",
+        "blocks_points": 0
+      },
+      "total_points": 86,
+      "break_points_total": 10,
+      "plus_minus_total": 5
+    },
+    {
+      "name": "Sina Siebert",
+      "jersey_number": 7,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Siebert Sina",
+          "jersey_number": 7,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Siebert Sina",
+          "jersey_number": 7,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Siebert Sina",
+          "jersey_number": 7,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        }
+      ],
+      "totals": {
+        "serves_attempts": 0,
+        "serves_errors": 0,
+        "serves_points": 0,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": null,
+        "blocks_points": 0
+      },
+      "total_points": 0,
+      "break_points_total": 0,
+      "plus_minus_total": 0
+    },
+    {
+      "name": "Lea Feistritzer",
+      "jersey_number": 8,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Feistritzer Lea",
+          "jersey_number": 8,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 3,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "33%",
+            "receptions_perfect_pct": "33%",
+            "attacks_attempts": 7,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 3,
+            "attacks_success_pct": "43%",
+            "blocks_points": 1,
+            "receptions_positive": 1,
+            "receptions_perfect": 1
+          },
+          "total_points": 5,
+          "break_points": 3,
+          "plus_minus": 4
+        },
+        {
+          "player": "Feistritzer Lea",
+          "jersey_number": 8,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 4,
+            "serves_errors": 4,
+            "serves_points": 2,
+            "receptions_attempts": 55,
+            "receptions_errors": 7,
+            "receptions_positive_pct": "17%",
+            "receptions_perfect_pct": "735%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 9,
+            "receptions_perfect": 404
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Feistritzer Lea",
+          "jersey_number": 8,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 19,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 21,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "19%",
+            "receptions_perfect_pct": "10%",
+            "attacks_attempts": 35,
+            "attacks_errors": 2,
+            "attacks_blocked": 1,
+            "attacks_points": 10,
+            "attacks_success_pct": "29%",
+            "blocks_points": 1,
+            "receptions_positive": 4,
+            "receptions_perfect": 2
+          },
+          "total_points": 11,
+          "break_points": 2,
+          "plus_minus": 6
+        }
+      ],
+      "totals": {
+        "serves_attempts": 29,
+        "serves_errors": 4,
+        "serves_points": 3,
+        "receptions_attempts": 79,
+        "receptions_errors": 9,
+        "receptions_positive": 14,
+        "receptions_perfect": 407,
+        "receptions_positive_pct": "18%",
+        "receptions_perfect_pct": "515%",
+        "attacks_attempts": 42,
+        "attacks_errors": 3,
+        "attacks_blocked": 1,
+        "attacks_points": 13,
+        "attacks_success_pct": "31%",
+        "blocks_points": 2
+      },
+      "total_points": 16,
+      "break_points_total": 5,
+      "plus_minus_total": 10
+    },
+    {
+      "name": "Antonia Greskamp",
+      "jersey_number": 9,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Greskamp Antonia",
+          "jersey_number": 9,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Greskamp Antonia",
+          "jersey_number": 9,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Greskamp Antonia",
+          "jersey_number": 9,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 1,
+          "plus_minus": 1
+        }
+      ],
+      "totals": {
+        "serves_attempts": 6,
+        "serves_errors": 0,
+        "serves_points": 1,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": null,
+        "blocks_points": 0
+      },
+      "total_points": 1,
+      "break_points_total": 1,
+      "plus_minus_total": 1
+    },
+    {
+      "name": "Kinga Szücs",
+      "jersey_number": 10,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Szücs Kinga",
+          "jersey_number": 10,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 2,
+            "serves_errors": 0,
+            "serves_points": 9,
+            "receptions_attempts": 3,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "7%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 18,
+            "attacks_points": 1,
+            "attacks_success_pct": "38%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 58,
+          "break_points": 9,
+          "plus_minus": 5
+        },
+        {
+          "player": "Szücs Kinga",
+          "jersey_number": 10,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 7,
+            "serves_points": 2,
+            "receptions_attempts": 0,
+            "receptions_errors": 14,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "36%",
+            "attacks_attempts": 0,
+            "attacks_errors": 21,
+            "attacks_blocked": 3,
+            "attacks_points": 16,
+            "attacks_success_pct": "29%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 55,
+          "break_points": 6,
+          "plus_minus": 1
+        },
+        {
+          "player": "Szücs Kinga",
+          "jersey_number": 10,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 14,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 30,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "57%",
+            "receptions_perfect_pct": "27%",
+            "attacks_attempts": 41,
+            "attacks_errors": 3,
+            "attacks_blocked": 3,
+            "attacks_points": 14,
+            "attacks_success_pct": "34%",
+            "blocks_points": 1,
+            "receptions_positive": 17,
+            "receptions_perfect": 8
+          },
+          "total_points": 15,
+          "break_points": 6,
+          "plus_minus": 7
+        }
+      ],
+      "totals": {
+        "serves_attempts": 16,
+        "serves_errors": 8,
+        "serves_points": 11,
+        "receptions_attempts": 33,
+        "receptions_errors": 15,
+        "receptions_positive": 17,
+        "receptions_perfect": 8,
+        "receptions_positive_pct": "52%",
+        "receptions_perfect_pct": "24%",
+        "attacks_attempts": 41,
+        "attacks_errors": 24,
+        "attacks_blocked": 24,
+        "attacks_points": 31,
+        "attacks_success_pct": "76%",
+        "blocks_points": 1
+      },
+      "total_points": 128,
+      "break_points_total": 21,
+      "plus_minus_total": 13
+    },
+    {
+      "name": "Isabel Kovacic",
+      "jersey_number": 11,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Kovacic Isabel",
+          "jersey_number": 11,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 7,
+            "serves_points": 13,
+            "receptions_attempts": 21,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 21,
+            "attacks_blocked": 0,
+            "attacks_points": 18,
+            "attacks_success_pct": "38%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 222,
+          "break_points": 6,
+          "plus_minus": 10
+        },
+        {
+          "player": "Kovacic Isabel",
+          "jersey_number": 11,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 31,
+            "serves_points": 3,
+            "receptions_attempts": 314,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "2%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 6,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Kovacic Isabel",
+          "jersey_number": 11,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 17,
+            "serves_errors": 2,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 49,
+            "attacks_errors": 3,
+            "attacks_blocked": 4,
+            "attacks_points": 14,
+            "attacks_success_pct": "29%",
+            "blocks_points": 5,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 20,
+          "break_points": 6,
+          "plus_minus": 11
+        }
+      ],
+      "totals": {
+        "serves_attempts": 23,
+        "serves_errors": 40,
+        "serves_points": 17,
+        "receptions_attempts": 335,
+        "receptions_errors": 0,
+        "receptions_positive": 6,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": "2%",
+        "receptions_perfect_pct": "0%",
+        "attacks_attempts": 49,
+        "attacks_errors": 24,
+        "attacks_blocked": 4,
+        "attacks_points": 32,
+        "attacks_success_pct": "65%",
+        "blocks_points": 6
+      },
+      "total_points": 242,
+      "break_points_total": 12,
+      "plus_minus_total": 21
+    },
+    {
+      "name": "Lydia Stemmler",
+      "jersey_number": 13,
+      "match_count": 1,
+      "matches": [
+        {
+          "player": "Stemmler Lydia",
+          "jersey_number": 13,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 9,
+            "receptions_attempts": 0,
+            "receptions_errors": 3,
+            "receptions_positive_pct": "7%",
+            "receptions_perfect_pct": "1%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 10,
+            "attacks_points": 2,
+            "attacks_success_pct": "23%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 55,
+          "break_points": 6,
+          "plus_minus": 3
+        }
+      ],
+      "totals": {
+        "serves_attempts": 1,
+        "serves_errors": 0,
+        "serves_points": 9,
+        "receptions_attempts": 0,
+        "receptions_errors": 3,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 10,
+        "attacks_points": 2,
+        "attacks_success_pct": null,
+        "blocks_points": 0
+      },
+      "total_points": 55,
+      "break_points_total": 6,
+      "plus_minus_total": 3
+    },
+    {
+      "name": "Alianza Darley",
+      "jersey_number": 14,
+      "match_count": 2,
+      "matches": [
+        {
+          "player": "Darley Alianza",
+          "jersey_number": 14,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Darley Alianza",
+          "jersey_number": 14,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 7,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 2,
+            "attacks_success_pct": "29%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 1,
+          "plus_minus": 1
+        }
+      ],
+      "totals": {
+        "serves_attempts": 0,
+        "serves_errors": 0,
+        "serves_points": 0,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 7,
+        "attacks_errors": 1,
+        "attacks_blocked": 0,
+        "attacks_points": 2,
+        "attacks_success_pct": "29%",
+        "blocks_points": 0
+      },
+      "total_points": 2,
+      "break_points_total": 1,
+      "plus_minus_total": 1
+    },
+    {
+      "name": "Mia Anna Stauß",
+      "jersey_number": 55,
+      "match_count": 3,
+      "matches": [
+        {
+          "player": "Stauß Mia Anna",
+          "jersey_number": 55,
+          "match_number": "2006",
+          "match_id": "777479958",
+          "kickoff": "2025-10-11T18:30:00+02:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479958&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/2546c0fb-6646-4f2e-a5e3-ebe60ab1802b",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:47",
+            "sets": [
+              "25:18",
+              "25:15",
+              "25:14"
+            ],
+            "summary": "3:0 / 75:47 (25:18 25:15 25:14)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Stauß Mia Anna",
+          "jersey_number": 55,
+          "match_number": "2018",
+          "match_id": "777480026",
+          "kickoff": "2025-10-25T16:45:00+02:00",
+          "is_home": true,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480026&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/67ff366f-751a-4817-a448-a88058e6018f",
+          "result": {
+            "score": "0:3",
+            "total_points": "55:75",
+            "sets": [
+              "21:25",
+              "15:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 55:75 (21:25 15:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Stauß Mia Anna",
+          "jersey_number": 55,
+          "match_number": "2020",
+          "match_id": "777480100",
+          "kickoff": "2025-10-28T19:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480100&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/c2f39379-5025-4def-a9f7-e872aa6e60f5",
+          "result": {
+            "score": "2:3",
+            "total_points": "107:94",
+            "sets": [
+              "22:25",
+              "22:25",
+              "25:18",
+              "25:11",
+              "13:15"
+            ],
+            "summary": "2:3 / 107:94 (22:25 22:25 25:18 25:11 13:15)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 1,
+          "plus_minus": 0
+        }
+      ],
+      "totals": {
+        "serves_attempts": 6,
+        "serves_errors": 1,
+        "serves_points": 1,
+        "receptions_attempts": 0,
+        "receptions_errors": 0,
+        "receptions_positive": 0,
+        "receptions_perfect": 0,
+        "receptions_positive_pct": null,
+        "receptions_perfect_pct": null,
+        "attacks_attempts": 0,
+        "attacks_errors": 0,
+        "attacks_blocked": 0,
+        "attacks_points": 0,
+        "attacks_success_pct": null,
+        "blocks_points": 0
+      },
+      "total_points": 3,
+      "break_points_total": 1,
+      "plus_minus_total": 0
+    }
+  ]
+}
