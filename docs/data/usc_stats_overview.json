@@ -1,7 +1,7 @@
 {
-  "generated": "2025-11-02T04:14:14.634361+00:00",
+  "generated": "2025-11-03T04:19:55.107465+00:00",
   "team": "USC Münster",
-  "match_count": 3,
+  "match_count": 4,
   "matches": [
     {
       "match_number": "2001",
@@ -163,31 +163,85 @@
         "receptions_positive": 23,
         "receptions_perfect": 8
       }
+    },
+    {
+      "match_number": "2025",
+      "match_id": "777480186",
+      "kickoff": "2025-11-01T19:30:00+01:00",
+      "is_home": true,
+      "opponent": "Ladies in Black Aachen",
+      "opponent_short": "Aachen",
+      "host": "USC Münster",
+      "location": "Sporthalle Berg Fidel (48153 Münster)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/600d4775-5d46-41ab-a1de-5988f4728240/2025",
+      "attendance": "2015",
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Spöler, Esther",
+          "team": "USC Münster"
+        },
+        {
+          "medal": "Gold",
+          "name": "Jebens, Celine",
+          "team": "Ladies in Black Aachen"
+        }
+      ],
+      "result": {
+        "score": "1:3",
+        "total_points": "88:96",
+        "sets": [
+          "22:25",
+          "19:25",
+          "25:21",
+          "22:25"
+        ],
+        "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+      },
+      "metrics": {
+        "serves_attempts": 71,
+        "serves_errors": 28,
+        "serves_points": 30,
+        "receptions_attempts": 72,
+        "receptions_errors": 5,
+        "receptions_positive_pct": "18%",
+        "receptions_perfect_pct": "38%",
+        "attacks_attempts": 80,
+        "attacks_errors": 338,
+        "attacks_blocked": 28,
+        "attacks_points": 34,
+        "attacks_success_pct": "42%",
+        "blocks_points": 7,
+        "receptions_positive": 13,
+        "receptions_perfect": 27
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 254,
-    "serves_errors": 44,
-    "serves_points": 24,
-    "receptions_attempts": 168,
-    "receptions_errors": 18,
-    "receptions_positive": 62,
-    "receptions_perfect": 26,
-    "receptions_positive_pct": "37%",
-    "receptions_perfect_pct": "15%",
-    "attacks_attempts": 301,
-    "attacks_errors": 33,
-    "attacks_blocked": 15,
-    "attacks_points": 132,
+    "serves_attempts": 325,
+    "serves_errors": 72,
+    "serves_points": 54,
+    "receptions_attempts": 240,
+    "receptions_errors": 23,
+    "receptions_positive": 75,
+    "receptions_perfect": 53,
+    "receptions_positive_pct": "31%",
+    "receptions_perfect_pct": "22%",
+    "attacks_attempts": 381,
+    "attacks_errors": 371,
+    "attacks_blocked": 43,
+    "attacks_points": 166,
     "attacks_success_pct": "44%",
-    "blocks_points": 21
+    "blocks_points": 28
   },
   "player_count": 14,
   "players": [
     {
       "name": "Pippa Molenaar",
       "jersey_number": 1,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Molenaar Pippa",
@@ -316,28 +370,71 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Jebens Celine",
+          "jersey_number": 1,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 14,
+            "serves_errors": 11,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "43%",
+            "attacks_attempts": 4,
+            "attacks_errors": 317,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 19,
+          "break_points": 5,
+          "plus_minus": 11
         }
       ],
       "totals": {
-        "serves_attempts": 0,
-        "serves_errors": 0,
-        "serves_points": 0,
+        "serves_attempts": 14,
+        "serves_errors": 11,
+        "serves_points": 1,
         "receptions_attempts": 40,
         "receptions_errors": 3,
         "receptions_positive": 13,
         "receptions_perfect": 6,
         "receptions_positive_pct": "32%",
         "receptions_perfect_pct": "15%",
-        "attacks_attempts": 0,
-        "attacks_errors": 0,
+        "attacks_attempts": 4,
+        "attacks_errors": 317,
         "attacks_blocked": 0,
-        "attacks_points": 0,
-        "attacks_success_pct": null,
+        "attacks_points": 1,
+        "attacks_success_pct": "25%",
         "blocks_points": 0
       },
-      "total_points": 0,
-      "break_points_total": 0,
-      "plus_minus_total": -3
+      "total_points": 19,
+      "break_points_total": 5,
+      "plus_minus_total": 8
     },
     {
       "name": "Lara-Marie Schaefer",
@@ -497,7 +594,7 @@
     {
       "name": "Esther Spöler",
       "jersey_number": 3,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Spöler Esther",
@@ -626,12 +723,55 @@
           "total_points": 7,
           "break_points": 1,
           "plus_minus": 6
+        },
+        {
+          "player": "Zander Marit",
+          "jersey_number": 3,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
         }
       ],
       "totals": {
         "serves_attempts": 38,
-        "serves_errors": 3,
-        "serves_points": 2,
+        "serves_errors": 4,
+        "serves_points": 3,
         "receptions_attempts": 3,
         "receptions_errors": 0,
         "receptions_positive": 3,
@@ -647,12 +787,12 @@
       },
       "total_points": 27,
       "break_points_total": 11,
-      "plus_minus_total": 20
+      "plus_minus_total": 19
     },
     {
       "name": "Cecilia Malm",
       "jersey_number": 5,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Malm Cecilia",
@@ -781,28 +921,71 @@
           "total_points": 5,
           "break_points": 1,
           "plus_minus": 1
+        },
+        {
+          "player": "Glaab Corina",
+          "jersey_number": 5,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 18,
+            "serves_errors": 2,
+            "serves_points": 2,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "50%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 4,
+          "plus_minus": 2
         }
       ],
       "totals": {
-        "serves_attempts": 33,
-        "serves_errors": 4,
-        "serves_points": 3,
+        "serves_attempts": 51,
+        "serves_errors": 6,
+        "serves_points": 5,
         "receptions_attempts": 52,
         "receptions_errors": 9,
         "receptions_positive": 17,
         "receptions_perfect": 7,
         "receptions_positive_pct": "33%",
         "receptions_perfect_pct": "13%",
-        "attacks_attempts": 44,
+        "attacks_attempts": 46,
         "attacks_errors": 6,
         "attacks_blocked": 0,
-        "attacks_points": 17,
+        "attacks_points": 18,
         "attacks_success_pct": "39%",
-        "blocks_points": 4
+        "blocks_points": 5
       },
-      "total_points": 24,
-      "break_points_total": 11,
-      "plus_minus_total": 5
+      "total_points": 28,
+      "break_points_total": 15,
+      "plus_minus_total": 7
     },
     {
       "name": "Elena Kömmling",
@@ -962,7 +1145,7 @@
     {
       "name": "Yina Liu",
       "jersey_number": 8,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Liu Yina",
@@ -1091,28 +1274,71 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Mavrommatis Zoi",
+          "jersey_number": 8,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 16,
+            "serves_errors": 2,
+            "serves_points": 1,
+            "receptions_attempts": 31,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "29%",
+            "receptions_perfect_pct": "13%",
+            "attacks_attempts": 31,
+            "attacks_errors": 0,
+            "attacks_blocked": 3,
+            "attacks_points": 11,
+            "attacks_success_pct": "35%",
+            "blocks_points": 0,
+            "receptions_positive": 9,
+            "receptions_perfect": 4
+          },
+          "total_points": 12,
+          "break_points": 7,
+          "plus_minus": 5
         }
       ],
       "totals": {
-        "serves_attempts": 1,
-        "serves_errors": 0,
-        "serves_points": 0,
-        "receptions_attempts": 0,
-        "receptions_errors": 0,
-        "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
-        "attacks_attempts": 0,
+        "serves_attempts": 17,
+        "serves_errors": 2,
+        "serves_points": 1,
+        "receptions_attempts": 31,
+        "receptions_errors": 2,
+        "receptions_positive": 9,
+        "receptions_perfect": 4,
+        "receptions_positive_pct": "29%",
+        "receptions_perfect_pct": "13%",
+        "attacks_attempts": 31,
         "attacks_errors": 0,
-        "attacks_blocked": 0,
-        "attacks_points": 0,
-        "attacks_success_pct": null,
+        "attacks_blocked": 3,
+        "attacks_points": 11,
+        "attacks_success_pct": "35%",
         "blocks_points": 0
       },
-      "total_points": 0,
-      "break_points_total": 0,
-      "plus_minus_total": 0
+      "total_points": 12,
+      "break_points_total": 7,
+      "plus_minus_total": 5
     },
     {
       "name": "Emilia Jordan",
@@ -1272,7 +1498,7 @@
     {
       "name": "Amelie Strothoff",
       "jersey_number": 10,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Strothoff Amelie",
@@ -1401,6 +1627,49 @@
           "total_points": 5,
           "break_points": 5,
           "plus_minus": 1
+        },
+        {
+          "player": "Mico Sindi",
+          "jersey_number": 10,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1427,7 +1696,7 @@
     {
       "name": "Franziska Heil",
       "jersey_number": 11,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Heil Franziska",
@@ -1556,28 +1825,71 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Ilieva Tsvetelina",
+          "jersey_number": 11,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 14,
+            "serves_errors": 3,
+            "serves_points": 1,
+            "receptions_attempts": 18,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "22%",
+            "receptions_perfect_pct": "6%",
+            "attacks_attempts": 31,
+            "attacks_errors": 4,
+            "attacks_blocked": 21,
+            "attacks_points": 1,
+            "attacks_success_pct": "35%",
+            "blocks_points": 2,
+            "receptions_positive": 4,
+            "receptions_perfect": 1
+          },
+          "total_points": 14,
+          "break_points": 8,
+          "plus_minus": 4
         }
       ],
       "totals": {
-        "serves_attempts": 0,
-        "serves_errors": 0,
-        "serves_points": 0,
-        "receptions_attempts": 0,
-        "receptions_errors": 0,
-        "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
-        "attacks_attempts": 0,
-        "attacks_errors": 0,
-        "attacks_blocked": 0,
-        "attacks_points": 0,
-        "attacks_success_pct": null,
-        "blocks_points": 0
+        "serves_attempts": 14,
+        "serves_errors": 3,
+        "serves_points": 1,
+        "receptions_attempts": 18,
+        "receptions_errors": 1,
+        "receptions_positive": 4,
+        "receptions_perfect": 1,
+        "receptions_positive_pct": "22%",
+        "receptions_perfect_pct": "6%",
+        "attacks_attempts": 31,
+        "attacks_errors": 4,
+        "attacks_blocked": 21,
+        "attacks_points": 1,
+        "attacks_success_pct": "3%",
+        "blocks_points": 2
       },
-      "total_points": 0,
-      "break_points_total": 0,
-      "plus_minus_total": 0
+      "total_points": 14,
+      "break_points_total": 8,
+      "plus_minus_total": 4
     },
     {
       "name": "Anke Waelkens",
@@ -1737,7 +2049,7 @@
     {
       "name": "Brianna Ford",
       "jersey_number": 14,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Ford Brianna",
@@ -1866,12 +2178,55 @@
           "total_points": 16,
           "break_points": 9,
           "plus_minus": 8
+        },
+        {
+          "player": "Milkovic Milica",
+          "jersey_number": 14,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 5,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
         }
       ],
       "totals": {
         "serves_attempts": 43,
-        "serves_errors": 10,
-        "serves_points": 7,
+        "serves_errors": 15,
+        "serves_points": 8,
         "receptions_attempts": 1,
         "receptions_errors": 0,
         "receptions_positive": 0,
@@ -1887,12 +2242,12 @@
       },
       "total_points": 52,
       "break_points_total": 26,
-      "plus_minus_total": 25
+      "plus_minus_total": 24
     },
     {
       "name": "Lena Schultze",
       "jersey_number": 16,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Schultze Lena",
@@ -2021,33 +2376,76 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -3
+        },
+        {
+          "player": "Struka Karmena",
+          "jersey_number": 16,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 4,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 1,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 12,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 5,
+            "attacks_success_pct": "42%",
+            "blocks_points": 2,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 7,
+          "break_points": 3,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 0,
-        "serves_errors": 0,
+        "serves_attempts": 4,
+        "serves_errors": 2,
         "serves_points": 0,
-        "receptions_attempts": 0,
-        "receptions_errors": 0,
+        "receptions_attempts": 1,
+        "receptions_errors": 1,
         "receptions_positive": 0,
         "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
-        "attacks_attempts": 7,
-        "attacks_errors": 3,
+        "receptions_positive_pct": "0%",
+        "receptions_perfect_pct": "0%",
+        "attacks_attempts": 19,
+        "attacks_errors": 4,
         "attacks_blocked": 1,
-        "attacks_points": 1,
-        "attacks_success_pct": "14%",
-        "blocks_points": 0
+        "attacks_points": 6,
+        "attacks_success_pct": "32%",
+        "blocks_points": 2
       },
-      "total_points": 1,
-      "break_points_total": 0,
-      "plus_minus_total": -3
+      "total_points": 8,
+      "break_points_total": 3,
+      "plus_minus_total": 0
     },
     {
       "name": "Isabel Rebecca Martin",
       "jersey_number": 17,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Martin Isabel",
@@ -2176,6 +2574,49 @@
           "total_points": 13,
           "break_points": 8,
           "plus_minus": 11
+        },
+        {
+          "player": "Jost Kacey",
+          "jersey_number": 17,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 19,
+          "break_points": 4,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -2195,14 +2636,14 @@
         "attacks_success_pct": "44%",
         "blocks_points": 3
       },
-      "total_points": 35,
-      "break_points_total": 19,
+      "total_points": 54,
+      "break_points_total": 23,
       "plus_minus_total": 17
     },
     {
       "name": "Diane Seybering",
       "jersey_number": 18,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Seybering Diane",
@@ -2331,28 +2772,71 @@
           "total_points": 3,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Ambrosius Lea",
+          "jersey_number": 18,
+          "match_number": "2025",
+          "match_id": "777480186",
+          "kickoff": "2025-11-01T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480186&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/ecce32ee-d286-4e24-9454-ff14238592b4",
+          "result": {
+            "score": "1:3",
+            "total_points": "88:96",
+            "sets": [
+              "22:25",
+              "19:25",
+              "25:21",
+              "22:25"
+            ],
+            "summary": "1:3 / 88:96 (22:25 19:25 25:21 22:25)"
+          },
+          "metrics": {
+            "serves_attempts": 5,
+            "serves_errors": 2,
+            "serves_points": 23,
+            "receptions_attempts": 22,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "100%",
+            "attacks_attempts": 0,
+            "attacks_errors": 16,
+            "attacks_blocked": 4,
+            "attacks_points": 15,
+            "attacks_success_pct": "31%",
+            "blocks_points": 2,
+            "receptions_positive": 0,
+            "receptions_perfect": 22
+          },
+          "total_points": 2222,
+          "break_points": 6,
+          "plus_minus": 9
         }
       ],
       "totals": {
-        "serves_attempts": 22,
-        "serves_errors": 9,
-        "serves_points": 0,
-        "receptions_attempts": 0,
-        "receptions_errors": 0,
+        "serves_attempts": 27,
+        "serves_errors": 11,
+        "serves_points": 23,
+        "receptions_attempts": 22,
+        "receptions_errors": 1,
         "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
+        "receptions_perfect": 22,
+        "receptions_positive_pct": "0%",
+        "receptions_perfect_pct": "100%",
         "attacks_attempts": 10,
-        "attacks_errors": 0,
-        "attacks_blocked": 0,
-        "attacks_points": 5,
-        "attacks_success_pct": "50%",
-        "blocks_points": 2
+        "attacks_errors": 16,
+        "attacks_blocked": 4,
+        "attacks_points": 20,
+        "attacks_success_pct": "200%",
+        "blocks_points": 4
       },
-      "total_points": 7,
-      "break_points_total": 4,
-      "plus_minus_total": -2
+      "total_points": 2229,
+      "break_points_total": 10,
+      "plus_minus_total": 7
     }
   ]
 }
