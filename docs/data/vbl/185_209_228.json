@@ -2322,23 +2322,128 @@
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 4,
       "away_team": "Allianz MTV Stuttgart",
       "club_id": "228",
       "competition_id": "185",
       "date": "02.11.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 2,
       "home_team": "Schwarz-Weiß Erfurt",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11868&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11868&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Zellin Alina",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Sandbothe Elizabeth",
+          "home_points": 6,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 15,
+          "duration": null,
+          "home_label": "Goertz Lotte (L)",
+          "home_points": -3,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Respaut Emilie",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Linke Lena",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Siebert Sina",
+          "home_points": 1,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Feistritzer Lea",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Greskamp Antonia",
+          "home_points": -1,
+          "set": 8
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Szücs Kinga",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Kovacic Isabel",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Darley Alianza",
+          "home_points": 2,
+          "set": 11
+        },
+        {
+          "away_label": "-",
+          "away_points": 14,
+          "duration": null,
+          "home_label": "Stauß Mia Anna (L)",
+          "home_points": -3,
+          "set": 12
+        },
+        {
+          "away_label": null,
+          "away_points": 1,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 12,
+          "set": 13
+        }
+      ],
       "match_id": "11868",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "0 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "3-3, 6-6, -3-15, 1-1, 6-3, 1-1, 2-2, -1-5, 5-5, 4-4, 2-4, -3-14, 12-1",
       "time": "16:00"
     },
     {
