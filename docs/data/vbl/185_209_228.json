@@ -2648,103 +2648,508 @@
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 1,
       "away_team": "Schwarz-Weiß Erfurt",
       "club_id": "228",
       "competition_id": "185",
       "date": "14.11.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 1,
       "home_team": "SSC Palmberg Schwerin",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11878&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11878&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 12,
+          "duration": null,
+          "home_label": "Reesink Florien (L)",
+          "home_points": -1,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "ten Brinke Marije",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Stuut Britte Mayke",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Grozer Leana",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Hölzig Annegret",
+          "home_points": 1,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Kohn Hannah",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Kirchhoff Mia",
+          "home_points": 1,
+          "set": 7
+        },
+        {
+          "away_label": ".",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Artyshuk Anna",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Kok Helena",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": null,
+          "away_points": 25,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 27,
+          "set": 10
+        }
+      ],
       "match_id": "11878",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "-1-12, 4-4, 1-1, 3-3, 1-1, 2-2, 1-1, 5-5, 6-6, 27-25",
       "time": "18:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 4,
       "away_team": "Binder Blaubären TSV Flacht",
       "club_id": "228",
       "competition_id": "185",
       "date": "15.11.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 8,
       "home_team": "Allianz MTV Stuttgart",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11882&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11882&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Gross Jasmine",
+          "home_points": 5,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 9,
+          "duration": null,
+          "home_label": "Bamba Yurika (L)",
+          "home_points": -1,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Grote Lydia",
+          "home_points": -1,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Stautz Antonia",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Holthaus Eleanor Joyce",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Koulberg Anna",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Martin Pauline",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Varela Lucia",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Shaffmaster Melani",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Mogensen Mikala",
+          "home_points": 3,
+          "set": 10
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "De Paula Viana Julia",
+          "home_points": 1,
+          "set": 11
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Steinhilber Marie",
+          "home_points": 3,
+          "set": 12
+        },
+        {
+          "away_label": null,
+          "away_points": 37,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 35,
+          "set": 13
+        }
+      ],
       "match_id": "11882",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "5-2, -1-9, -1-2, 1-6, 4-3, 2-1, 6-5, 5-4, 3-2, 3-1, 1-1, 3-1, 35-37",
       "time": "15:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 7,
       "away_team": "USC Münster",
       "club_id": "228",
       "competition_id": "185",
       "date": "15.11.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 2,
       "home_team": "VfB Suhl LOTTO Thüringen",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11883&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11883&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 0,
+          "duration": null,
+          "home_label": "Naujack Svea",
+          "home_points": 3,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Nagels Lara",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": ".",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Laakkonen Roosa",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 21,
+          "duration": null,
+          "home_label": "Sambale Emma (L)",
+          "home_points": -2,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Foley Mackenzie",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Dotson Sanaa",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Berger Laura",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": ".",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Brancuska Monika",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": null,
+          "away_points": 31,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 28,
+          "set": 9
+        }
+      ],
       "match_id": "11883",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "3-0, 5-6, 4-5, -2-21, 3-4, 6-1, 1-2, 2-3, 28-31",
       "time": "17:15"
     },
     {
-      "away_sets": null,
+      "away_sets": 3,
       "away_team": "Dresdner SC",
       "club_id": "228",
       "competition_id": "185",
       "date": "15.11.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 5,
       "home_team": "ETV Hamburger Volksbank Volleys",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11880&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11880&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 22,
+          "duration": null,
+          "home_label": "Stiriz Sarah (L)",
+          "home_points": -1,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Hartig Anna",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Körtzinger Leonie",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Konjer Zoe",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Frobel Svea",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Ammerman Hannah",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Thaden Alexa Sophie",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": null,
+          "away_points": 23,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 15,
+          "set": 8
+        }
+      ],
       "match_id": "11880",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "1 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "-1-22, 1-6, 5-4, 2-1, 6-5, 3-2, 4-3, 15-23",
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 3,
       "away_team": "Skurios Volleys Borken",
       "club_id": "228",
       "competition_id": "185",
       "date": "16.11.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 6,
       "home_team": "Ladies in Black Aachen",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11881&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11881&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Jebens Celine",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Glaab Corina",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Mavrommatis Zoi",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Mico Sindi",
+          "home_points": 3,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Ilieva Tsvetelina",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Freiynfeldova Hanna",
+          "home_points": 3,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Fallah Sophia",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 59,
+          "duration": null,
+          "home_label": "Jost Kacey (L)",
+          "home_points": 17,
+          "set": 8
+        },
+        {
+          "away_label": ".",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Ambrosius Lea",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": null,
+          "away_points": 28,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 24,
+          "set": 10
+        }
+      ],
       "match_id": "11881",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "5-4, 2-1, 6-5, 3-1, 3-2, 3-3, 4-3, 17-59, 1-6, 24-28",
       "time": "16:00"
     },
     {
@@ -3789,26 +4194,6 @@
     },
     {
       "away_sets": null,
-      "away_team": "VC Wiesbaden",
-      "club_id": "228",
-      "competition_id": "185",
-      "date": "21.02.2026",
-      "has_leg_data": false,
-      "home_sets": null,
-      "home_team": "USC Münster",
-      "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11949&ID=185&CID=228&PID=209&type=LegList",
-      "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11949&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
-      "match_id": "11949",
-      "match_number": null,
-      "phase_id": "209",
-      "result": "-",
-      "set_results": null,
-      "set_scores": null,
-      "time": "19:30"
-    },
-    {
-      "away_sets": null,
       "away_team": "ETV Hamburger Volksbank Volleys",
       "club_id": "228",
       "competition_id": "185",
@@ -3820,6 +4205,26 @@
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11944&ID=185&CID=228&PID=209&type=LegList",
       "legs": [],
       "match_id": "11944",
+      "match_number": null,
+      "phase_id": "209",
+      "result": "-",
+      "set_results": null,
+      "set_scores": null,
+      "time": "19:30"
+    },
+    {
+      "away_sets": null,
+      "away_team": "VC Wiesbaden",
+      "club_id": "228",
+      "competition_id": "185",
+      "date": "21.02.2026",
+      "has_leg_data": false,
+      "home_sets": null,
+      "home_team": "USC Münster",
+      "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11949&ID=185&CID=228&PID=209&type=LegList",
+      "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11949&ID=185&CID=228&PID=209&type=LegList",
+      "legs": [],
+      "match_id": "11949",
       "match_number": null,
       "phase_id": "209",
       "result": "-",
@@ -3909,26 +4314,6 @@
     },
     {
       "away_sets": null,
-      "away_team": "VC Wiesbaden",
-      "club_id": "228",
-      "competition_id": "185",
-      "date": "04.03.2026",
-      "has_leg_data": false,
-      "home_sets": null,
-      "home_team": "Allianz MTV Stuttgart",
-      "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11954&ID=185&CID=228&PID=209&type=LegList",
-      "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11954&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
-      "match_id": "11954",
-      "match_number": null,
-      "phase_id": "209",
-      "result": "-",
-      "set_results": null,
-      "set_scores": null,
-      "time": "19:30"
-    },
-    {
-      "away_sets": null,
       "away_team": "Schwarz-Weiß Erfurt",
       "club_id": "228",
       "competition_id": "185",
@@ -3940,6 +4325,26 @@
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11951&ID=185&CID=228&PID=209&type=LegList",
       "legs": [],
       "match_id": "11951",
+      "match_number": null,
+      "phase_id": "209",
+      "result": "-",
+      "set_results": null,
+      "set_scores": null,
+      "time": "19:30"
+    },
+    {
+      "away_sets": null,
+      "away_team": "VC Wiesbaden",
+      "club_id": "228",
+      "competition_id": "185",
+      "date": "04.03.2026",
+      "has_leg_data": false,
+      "home_sets": null,
+      "home_team": "Allianz MTV Stuttgart",
+      "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11954&ID=185&CID=228&PID=209&type=LegList",
+      "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11954&ID=185&CID=228&PID=209&type=LegList",
+      "legs": [],
+      "match_id": "11954",
       "match_number": null,
       "phase_id": "209",
       "result": "-",
