@@ -1,5 +1,5 @@
 {
-  "generated": "2025-11-17T04:19:08.605824+00:00",
+  "generated": "2025-11-18T04:15:33.331471+00:00",
   "team": "ETV Hamburger Volksbank Volleys",
   "match_count": 6,
   "matches": [
@@ -280,7 +280,7 @@
       "host": "ETV Hamburger Volksbank Volleys",
       "location": "CU Arena (21147 Hamburg)",
       "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-      "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
       "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/61d9640d-cda0-41b7-80e3-a341c9ce9bb9/2035",
       "attendance": "691",
       "mvps": [
@@ -307,40 +307,40 @@
         "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
       },
       "metrics": {
-        "serves_attempts": 84,
-        "serves_errors": 4,
-        "serves_points": 5,
-        "receptions_attempts": 87,
-        "receptions_errors": 8,
-        "receptions_positive_pct": "53%",
-        "receptions_perfect_pct": "3%",
-        "attacks_attempts": 128,
-        "attacks_errors": 9,
-        "attacks_blocked": 10,
-        "attacks_points": 42,
-        "attacks_success_pct": "33%",
-        "blocks_points": 7,
-        "receptions_positive": 46,
-        "receptions_perfect": 3
+        "serves_attempts": 95,
+        "serves_errors": 15,
+        "serves_points": 9,
+        "receptions_attempts": 86,
+        "receptions_errors": 7,
+        "receptions_positive_pct": "55%",
+        "receptions_perfect_pct": "22%",
+        "attacks_attempts": 148,
+        "attacks_errors": 10,
+        "attacks_blocked": 7,
+        "attacks_points": 73,
+        "attacks_success_pct": "49%",
+        "blocks_points": 9,
+        "receptions_positive": 47,
+        "receptions_perfect": 19
       }
     }
   ],
   "totals": {
-    "serves_attempts": 369,
-    "serves_errors": 46,
-    "serves_points": 18,
-    "receptions_attempts": 456,
-    "receptions_errors": 72,
-    "receptions_positive": 161,
-    "receptions_perfect": 47,
-    "receptions_positive_pct": "35%",
-    "receptions_perfect_pct": "10%",
-    "attacks_attempts": 626,
-    "attacks_errors": 54,
-    "attacks_blocked": 52,
-    "attacks_points": 192,
-    "attacks_success_pct": "31%",
-    "blocks_points": 29
+    "serves_attempts": 380,
+    "serves_errors": 57,
+    "serves_points": 22,
+    "receptions_attempts": 455,
+    "receptions_errors": 71,
+    "receptions_positive": 162,
+    "receptions_perfect": 63,
+    "receptions_positive_pct": "36%",
+    "receptions_perfect_pct": "14%",
+    "attacks_attempts": 646,
+    "attacks_errors": 55,
+    "attacks_blocked": 49,
+    "attacks_points": 223,
+    "attacks_success_pct": "35%",
+    "blocks_points": 31
   },
   "player_count": 15,
   "players": [
@@ -562,7 +562,7 @@
           "plus_minus": 0
         },
         {
-          "player": "Meiser Jana-Marie",
+          "player": "Nestler Patricia",
           "jersey_number": 1,
           "match_number": "2035",
           "match_id": "777480272",
@@ -571,7 +571,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -587,34 +587,34 @@
             "serves_attempts": 0,
             "serves_errors": 0,
             "serves_points": 0,
-            "receptions_attempts": 1,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
+            "receptions_attempts": 14,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "43%",
+            "receptions_perfect_pct": "14%",
             "attacks_attempts": 0,
             "attacks_errors": 0,
             "attacks_blocked": 0,
             "attacks_points": 0,
             "attacks_success_pct": "0%",
             "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
+            "receptions_positive": 6,
+            "receptions_perfect": 2
           },
           "total_points": 0,
           "break_points": 0,
-          "plus_minus": 0
+          "plus_minus": -1
         }
       ],
       "totals": {
         "serves_attempts": 0,
         "serves_errors": 0,
         "serves_points": 0,
-        "receptions_attempts": 52,
-        "receptions_errors": 4,
-        "receptions_positive": 18,
-        "receptions_perfect": 7,
-        "receptions_positive_pct": "35%",
-        "receptions_perfect_pct": "13%",
+        "receptions_attempts": 65,
+        "receptions_errors": 5,
+        "receptions_positive": 24,
+        "receptions_perfect": 9,
+        "receptions_positive_pct": "37%",
+        "receptions_perfect_pct": "14%",
         "attacks_attempts": 0,
         "attacks_errors": 0,
         "attacks_blocked": 0,
@@ -624,12 +624,12 @@
       },
       "total_points": 0,
       "break_points_total": 0,
-      "plus_minus_total": -4
+      "plus_minus_total": -5
     },
     {
       "name": "Feli Anne Clemann",
       "jersey_number": 2,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Clemann Feli Anne",
@@ -799,12 +799,55 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Winter Larissa",
+          "jersey_number": 2,
+          "match_number": "2035",
+          "match_id": "777480272",
+          "kickoff": "2025-11-15T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Dresdner SC",
+          "opponent_short": "Dresden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
+          "result": {
+            "score": "1:3",
+            "total_points": "83:106",
+            "sets": [
+              "17:25",
+              "19:25",
+              "33:31",
+              "14:25"
+            ],
+            "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 0,
+            "serves_points": 2,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 2,
+          "plus_minus": 2
         }
       ],
       "totals": {
-        "serves_attempts": 1,
+        "serves_attempts": 10,
         "serves_errors": 0,
-        "serves_points": 0,
+        "serves_points": 2,
         "receptions_attempts": 3,
         "receptions_errors": 0,
         "receptions_positive": 0,
@@ -818,14 +861,14 @@
         "attacks_success_pct": null,
         "blocks_points": 0
       },
-      "total_points": 0,
-      "break_points_total": 0,
-      "plus_minus_total": 0
+      "total_points": 2,
+      "break_points_total": 2,
+      "plus_minus_total": 2
     },
     {
       "name": "Lina Köster",
       "jersey_number": 3,
-      "match_count": 6,
+      "match_count": 5,
       "matches": [
         {
           "player": "Köster Lina",
@@ -1038,49 +1081,6 @@
           "total_points": 1,
           "break_points": 0,
           "plus_minus": -2
-        },
-        {
-          "player": "Köster Lina",
-          "jersey_number": 3,
-          "match_number": "2035",
-          "match_id": "777480272",
-          "kickoff": "2025-11-15T19:30:00+01:00",
-          "is_home": true,
-          "opponent": "Dresdner SC",
-          "opponent_short": "Dresden",
-          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
-          "result": {
-            "score": "1:3",
-            "total_points": "83:106",
-            "sets": [
-              "17:25",
-              "19:25",
-              "33:31",
-              "14:25"
-            ],
-            "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
-          },
-          "metrics": {
-            "serves_attempts": 0,
-            "serves_errors": 0,
-            "serves_points": 0,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 0,
-            "attacks_errors": 0,
-            "attacks_blocked": 0,
-            "attacks_points": 0,
-            "attacks_success_pct": "0%",
-            "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
-          },
-          "total_points": 0,
-          "break_points": 0,
-          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1280,7 +1280,7 @@
           "plus_minus": -2
         },
         {
-          "player": "Stiriz Sarah",
+          "player": "Grome Emma",
           "jersey_number": 4,
           "match_number": "2035",
           "match_id": "777480272",
@@ -1289,7 +1289,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -1302,37 +1302,37 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 0,
-            "serves_errors": 0,
-            "serves_points": 0,
-            "receptions_attempts": 21,
-            "receptions_errors": 1,
-            "receptions_positive_pct": "67%",
-            "receptions_perfect_pct": "10%",
+            "serves_attempts": 1,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 6,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
             "attacks_attempts": 0,
             "attacks_errors": 0,
             "attacks_blocked": 0,
             "attacks_points": 0,
             "attacks_success_pct": "0%",
             "blocks_points": 0,
-            "receptions_positive": 14,
-            "receptions_perfect": 2
+            "receptions_positive": 0,
+            "receptions_perfect": 0
           },
           "total_points": 0,
           "break_points": 0,
-          "plus_minus": -1
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 0,
-        "serves_errors": 0,
-        "serves_points": 0,
-        "receptions_attempts": 66,
-        "receptions_errors": 4,
-        "receptions_positive": 31,
-        "receptions_perfect": 12,
-        "receptions_positive_pct": "47%",
-        "receptions_perfect_pct": "18%",
+        "serves_attempts": 1,
+        "serves_errors": 1,
+        "serves_points": 1,
+        "receptions_attempts": 51,
+        "receptions_errors": 5,
+        "receptions_positive": 17,
+        "receptions_perfect": 10,
+        "receptions_positive_pct": "33%",
+        "receptions_perfect_pct": "20%",
         "attacks_attempts": 0,
         "attacks_errors": 0,
         "attacks_blocked": 0,
@@ -1342,7 +1342,7 @@
       },
       "total_points": 0,
       "break_points_total": 0,
-      "plus_minus_total": -4
+      "plus_minus_total": -3
     },
     {
       "name": "Anna Hartig",
@@ -1562,7 +1562,7 @@
           "plus_minus": 7
         },
         {
-          "player": "Hartig Anna",
+          "player": "Entius Rosa",
           "jersey_number": 5,
           "match_number": "2035",
           "match_id": "777480272",
@@ -1571,7 +1571,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -1584,30 +1584,30 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 7,
-            "serves_errors": 1,
+            "serves_attempts": 3,
+            "serves_errors": 2,
             "serves_points": 0,
             "receptions_attempts": 0,
             "receptions_errors": 0,
             "receptions_positive_pct": "0%",
             "receptions_perfect_pct": "0%",
             "attacks_attempts": 18,
-            "attacks_errors": 2,
-            "attacks_blocked": 0,
-            "attacks_points": 7,
-            "attacks_success_pct": "39%",
+            "attacks_errors": 4,
+            "attacks_blocked": 2,
+            "attacks_points": 10,
+            "attacks_success_pct": "56%",
             "blocks_points": 1,
             "receptions_positive": 0,
             "receptions_perfect": 0
           },
-          "total_points": 8,
-          "break_points": 3,
-          "plus_minus": 5
+          "total_points": 11,
+          "break_points": 4,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 39,
-        "serves_errors": 2,
+        "serves_attempts": 35,
+        "serves_errors": 3,
         "serves_points": 1,
         "receptions_attempts": 0,
         "receptions_errors": 11,
@@ -1616,20 +1616,20 @@
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
         "attacks_attempts": 72,
-        "attacks_errors": 3,
-        "attacks_blocked": 7,
-        "attacks_points": 29,
-        "attacks_success_pct": "40%",
+        "attacks_errors": 5,
+        "attacks_blocked": 9,
+        "attacks_points": 32,
+        "attacks_success_pct": "44%",
         "blocks_points": 7
       },
-      "total_points": 47,
-      "break_points_total": 13,
-      "plus_minus_total": 25
+      "total_points": 50,
+      "break_points_total": 14,
+      "plus_minus_total": 23
     },
     {
       "name": "Constanze von Meyenn",
       "jersey_number": 6,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "von Meyenn Constanze",
@@ -1736,6 +1736,49 @@
               "28:26"
             ],
             "summary": "3:1 / 92:91 (13:25 25:16 26:24 28:26)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Van der Werff Amelia",
+          "jersey_number": 6,
+          "match_number": "2035",
+          "match_id": "777480272",
+          "kickoff": "2025-11-15T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Dresdner SC",
+          "opponent_short": "Dresden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
+          "result": {
+            "score": "1:3",
+            "total_points": "83:106",
+            "sets": [
+              "17:25",
+              "19:25",
+              "33:31",
+              "14:25"
+            ],
+            "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
             "serves_attempts": 0,
@@ -1955,7 +1998,7 @@
           "plus_minus": 0
         },
         {
-          "player": "Körtzinger Leonie",
+          "player": "Ziegenbalg Teresa",
           "jersey_number": 7,
           "match_number": "2035",
           "match_id": "777480272",
@@ -1964,7 +2007,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -1977,30 +2020,30 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 13,
-            "serves_errors": 3,
+            "serves_attempts": 0,
+            "serves_errors": 0,
             "serves_points": 0,
             "receptions_attempts": 0,
             "receptions_errors": 0,
             "receptions_positive_pct": "0%",
             "receptions_perfect_pct": "0%",
-            "attacks_attempts": 34,
-            "attacks_errors": 2,
-            "attacks_blocked": 1,
-            "attacks_points": 14,
-            "attacks_success_pct": "41%",
-            "blocks_points": 2,
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
             "receptions_positive": 0,
             "receptions_perfect": 0
           },
-          "total_points": 16,
-          "break_points": 3,
-          "plus_minus": 10
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 46,
-        "serves_errors": 9,
+        "serves_attempts": 33,
+        "serves_errors": 6,
         "serves_points": 4,
         "receptions_attempts": 0,
         "receptions_errors": 11,
@@ -2008,16 +2051,16 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 88,
-        "attacks_errors": 7,
-        "attacks_blocked": 3,
-        "attacks_points": 27,
-        "attacks_success_pct": "31%",
-        "blocks_points": 3
+        "attacks_attempts": 54,
+        "attacks_errors": 5,
+        "attacks_blocked": 2,
+        "attacks_points": 13,
+        "attacks_success_pct": "24%",
+        "blocks_points": 1
       },
-      "total_points": 41,
-      "break_points_total": 10,
-      "plus_minus_total": 15
+      "total_points": 25,
+      "break_points_total": 7,
+      "plus_minus_total": 5
     },
     {
       "name": "Zoe Konjer",
@@ -2237,7 +2280,7 @@
           "plus_minus": 0
         },
         {
-          "player": "Konjer Zoe",
+          "player": "Kuipers Jette",
           "jersey_number": 8,
           "match_number": "2035",
           "match_id": "777480272",
@@ -2246,7 +2289,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -2259,52 +2302,52 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 19,
+            "serves_attempts": 23,
             "serves_errors": 0,
-            "serves_points": 1,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 3,
-            "attacks_errors": 0,
-            "attacks_blocked": 0,
-            "attacks_points": 1,
-            "attacks_success_pct": "33%",
+            "serves_points": 2,
+            "receptions_attempts": 18,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "67%",
+            "receptions_perfect_pct": "28%",
+            "attacks_attempts": 30,
+            "attacks_errors": 2,
+            "attacks_blocked": 1,
+            "attacks_points": 13,
+            "attacks_success_pct": "43%",
             "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
+            "receptions_positive": 12,
+            "receptions_perfect": 5
           },
-          "total_points": 2,
-          "break_points": 1,
-          "plus_minus": 2
+          "total_points": 15,
+          "break_points": 8,
+          "plus_minus": 11
         }
       ],
       "totals": {
-        "serves_attempts": 27,
+        "serves_attempts": 31,
         "serves_errors": 1,
-        "serves_points": 2,
-        "receptions_attempts": 1,
-        "receptions_errors": 1,
-        "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": "0%",
-        "receptions_perfect_pct": "0%",
-        "attacks_attempts": 5,
-        "attacks_errors": 1,
-        "attacks_blocked": 0,
-        "attacks_points": 1,
-        "attacks_success_pct": "20%",
+        "serves_points": 3,
+        "receptions_attempts": 19,
+        "receptions_errors": 2,
+        "receptions_positive": 12,
+        "receptions_perfect": 5,
+        "receptions_positive_pct": "63%",
+        "receptions_perfect_pct": "26%",
+        "attacks_attempts": 32,
+        "attacks_errors": 3,
+        "attacks_blocked": 1,
+        "attacks_points": 13,
+        "attacks_success_pct": "41%",
         "blocks_points": 0
       },
-      "total_points": 3,
-      "break_points_total": 2,
-      "plus_minus_total": 0
+      "total_points": 16,
+      "break_points_total": 9,
+      "plus_minus_total": 9
     },
     {
       "name": "Luise Klein",
       "jersey_number": 9,
-      "match_count": 6,
+      "match_count": 5,
       "matches": [
         {
           "player": "Klein Luise",
@@ -2516,49 +2559,6 @@
           },
           "total_points": 4,
           "break_points": 3,
-          "plus_minus": 0
-        },
-        {
-          "player": "Klein Luise",
-          "jersey_number": 9,
-          "match_number": "2035",
-          "match_id": "777480272",
-          "kickoff": "2025-11-15T19:30:00+01:00",
-          "is_home": true,
-          "opponent": "Dresdner SC",
-          "opponent_short": "Dresden",
-          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
-          "result": {
-            "score": "1:3",
-            "total_points": "83:106",
-            "sets": [
-              "17:25",
-              "19:25",
-              "33:31",
-              "14:25"
-            ],
-            "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
-          },
-          "metrics": {
-            "serves_attempts": 0,
-            "serves_errors": 0,
-            "serves_points": 0,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 0,
-            "attacks_errors": 0,
-            "attacks_blocked": 0,
-            "attacks_points": 0,
-            "attacks_success_pct": "0%",
-            "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
-          },
-          "total_points": 0,
-          "break_points": 0,
           "plus_minus": 0
         }
       ],
@@ -2801,7 +2801,7 @@
           "plus_minus": 0
         },
         {
-          "player": "Liegert Lena",
+          "player": "Akimoto Miku",
           "jersey_number": 10,
           "match_number": "2035",
           "match_id": "777480272",
@@ -2810,7 +2810,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -2823,47 +2823,47 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 0,
-            "serves_errors": 0,
-            "serves_points": 0,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 0,
-            "attacks_errors": 0,
-            "attacks_blocked": 0,
-            "attacks_points": 0,
-            "attacks_success_pct": "0%",
+            "serves_attempts": 18,
+            "serves_errors": 7,
+            "serves_points": 3,
+            "receptions_attempts": 48,
+            "receptions_errors": 3,
+            "receptions_positive_pct": "60%",
+            "receptions_perfect_pct": "25%",
+            "attacks_attempts": 43,
+            "attacks_errors": 3,
+            "attacks_blocked": 1,
+            "attacks_points": 20,
+            "attacks_success_pct": "47%",
             "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
+            "receptions_positive": 29,
+            "receptions_perfect": 12
           },
-          "total_points": 0,
-          "break_points": 0,
-          "plus_minus": 0
+          "total_points": 23,
+          "break_points": 9,
+          "plus_minus": 9
         }
       ],
       "totals": {
-        "serves_attempts": 5,
-        "serves_errors": 1,
-        "serves_points": 0,
-        "receptions_attempts": 0,
-        "receptions_errors": 0,
-        "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
-        "attacks_attempts": 0,
-        "attacks_errors": 0,
-        "attacks_blocked": 0,
-        "attacks_points": 0,
-        "attacks_success_pct": null,
+        "serves_attempts": 23,
+        "serves_errors": 8,
+        "serves_points": 3,
+        "receptions_attempts": 48,
+        "receptions_errors": 3,
+        "receptions_positive": 29,
+        "receptions_perfect": 12,
+        "receptions_positive_pct": "60%",
+        "receptions_perfect_pct": "25%",
+        "attacks_attempts": 43,
+        "attacks_errors": 3,
+        "attacks_blocked": 1,
+        "attacks_points": 20,
+        "attacks_success_pct": "47%",
         "blocks_points": 0
       },
-      "total_points": 0,
-      "break_points_total": 0,
-      "plus_minus_total": -1
+      "total_points": 23,
+      "break_points_total": 9,
+      "plus_minus_total": 8
     },
     {
       "name": "Svea Frobel",
@@ -3083,7 +3083,7 @@
           "plus_minus": 10
         },
         {
-          "player": "Frobel Svea",
+          "player": "Siksna Amanda",
           "jersey_number": 11,
           "match_number": "2035",
           "match_id": "777480272",
@@ -3092,7 +3092,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -3105,47 +3105,47 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 11,
-            "serves_errors": 0,
+            "serves_attempts": 10,
+            "serves_errors": 2,
             "serves_points": 0,
-            "receptions_attempts": 26,
-            "receptions_errors": 2,
-            "receptions_positive_pct": "58%",
-            "receptions_perfect_pct": "4%",
-            "attacks_attempts": 36,
-            "attacks_errors": 4,
-            "attacks_blocked": 6,
-            "attacks_points": 10,
-            "attacks_success_pct": "28%",
-            "blocks_points": 2,
-            "receptions_positive": 15,
-            "receptions_perfect": 1
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 12,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 7,
+            "attacks_success_pct": "58%",
+            "blocks_points": 3,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
           },
-          "total_points": 12,
-          "break_points": 1,
-          "plus_minus": 0
+          "total_points": 10,
+          "break_points": 5,
+          "plus_minus": 8
         }
       ],
       "totals": {
-        "serves_attempts": 53,
-        "serves_errors": 3,
+        "serves_attempts": 52,
+        "serves_errors": 5,
         "serves_points": 1,
-        "receptions_attempts": 178,
-        "receptions_errors": 20,
-        "receptions_positive": 67,
-        "receptions_perfect": 20,
-        "receptions_positive_pct": "38%",
-        "receptions_perfect_pct": "11%",
-        "attacks_attempts": 198,
-        "attacks_errors": 21,
-        "attacks_blocked": 20,
-        "attacks_points": 60,
-        "attacks_success_pct": "30%",
-        "blocks_points": 7
+        "receptions_attempts": 152,
+        "receptions_errors": 18,
+        "receptions_positive": 52,
+        "receptions_perfect": 19,
+        "receptions_positive_pct": "34%",
+        "receptions_perfect_pct": "12%",
+        "attacks_attempts": 174,
+        "attacks_errors": 17,
+        "attacks_blocked": 14,
+        "attacks_points": 57,
+        "attacks_success_pct": "33%",
+        "blocks_points": 8
       },
-      "total_points": 68,
-      "break_points_total": 22,
-      "plus_minus_total": 4
+      "total_points": 66,
+      "break_points_total": 26,
+      "plus_minus_total": 12
     },
     {
       "name": "Hannah Ammerman",
@@ -3365,7 +3365,7 @@
           "plus_minus": 6
         },
         {
-          "player": "Ammerman Hannah",
+          "player": "Pfeffer Mette Marleen",
           "jersey_number": 12,
           "match_number": "2035",
           "match_id": "777480272",
@@ -3374,7 +3374,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -3387,52 +3387,52 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 20,
-            "serves_errors": 0,
-            "serves_points": 4,
-            "receptions_attempts": 39,
-            "receptions_errors": 5,
-            "receptions_positive_pct": "44%",
+            "serves_attempts": 23,
+            "serves_errors": 3,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
             "receptions_perfect_pct": "0%",
-            "attacks_attempts": 30,
-            "attacks_errors": 1,
-            "attacks_blocked": 2,
-            "attacks_points": 8,
-            "attacks_success_pct": "27%",
+            "attacks_attempts": 6,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 3,
+            "attacks_success_pct": "50%",
             "blocks_points": 2,
-            "receptions_positive": 17,
+            "receptions_positive": 0,
             "receptions_perfect": 0
           },
-          "total_points": 14,
-          "break_points": 6,
-          "plus_minus": 6
+          "total_points": 6,
+          "break_points": 2,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 62,
-        "serves_errors": 3,
-        "serves_points": 4,
-        "receptions_attempts": 112,
-        "receptions_errors": 13,
-        "receptions_positive": 36,
+        "serves_attempts": 65,
+        "serves_errors": 6,
+        "serves_points": 1,
+        "receptions_attempts": 73,
+        "receptions_errors": 8,
+        "receptions_positive": 19,
         "receptions_perfect": 6,
-        "receptions_positive_pct": "32%",
-        "receptions_perfect_pct": "5%",
-        "attacks_attempts": 131,
-        "attacks_errors": 7,
-        "attacks_blocked": 8,
-        "attacks_points": 41,
-        "attacks_success_pct": "31%",
+        "receptions_positive_pct": "26%",
+        "receptions_perfect_pct": "8%",
+        "attacks_attempts": 107,
+        "attacks_errors": 6,
+        "attacks_blocked": 6,
+        "attacks_points": 36,
+        "attacks_success_pct": "34%",
         "blocks_points": 4
       },
-      "total_points": 49,
-      "break_points_total": 16,
-      "plus_minus_total": 18
+      "total_points": 41,
+      "break_points_total": 12,
+      "plus_minus_total": 15
     },
     {
       "name": "Fiona Dittmann",
       "jersey_number": 14,
-      "match_count": 6,
+      "match_count": 5,
       "matches": [
         {
           "player": "Dittmann Fiona",
@@ -3624,49 +3624,6 @@
               "28:26"
             ],
             "summary": "3:1 / 92:91 (13:25 25:16 26:24 28:26)"
-          },
-          "metrics": {
-            "serves_attempts": 0,
-            "serves_errors": 0,
-            "serves_points": 0,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 0,
-            "attacks_errors": 0,
-            "attacks_blocked": 0,
-            "attacks_points": 0,
-            "attacks_success_pct": "0%",
-            "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
-          },
-          "total_points": 0,
-          "break_points": 0,
-          "plus_minus": 0
-        },
-        {
-          "player": "Dittmann Fiona",
-          "jersey_number": 14,
-          "match_number": "2035",
-          "match_id": "777480272",
-          "kickoff": "2025-11-15T19:30:00+01:00",
-          "is_home": true,
-          "opponent": "Dresdner SC",
-          "opponent_short": "Dresden",
-          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
-          "result": {
-            "score": "1:3",
-            "total_points": "83:106",
-            "sets": [
-              "17:25",
-              "19:25",
-              "33:31",
-              "14:25"
-            ],
-            "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
             "serves_attempts": 0,
@@ -3929,7 +3886,7 @@
           "plus_minus": 4
         },
         {
-          "player": "Thaden Alexa Sophie",
+          "player": "Levinska Marta Kameﬂlij",
           "jersey_number": 15,
           "match_number": "2035",
           "match_id": "777480272",
@@ -3938,7 +3895,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -3951,29 +3908,29 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 11,
+            "serves_attempts": 8,
             "serves_errors": 0,
             "serves_points": 0,
             "receptions_attempts": 0,
             "receptions_errors": 0,
             "receptions_positive_pct": "0%",
             "receptions_perfect_pct": "0%",
-            "attacks_attempts": 7,
-            "attacks_errors": 0,
-            "attacks_blocked": 1,
-            "attacks_points": 2,
-            "attacks_success_pct": "29%",
-            "blocks_points": 0,
+            "attacks_attempts": 39,
+            "attacks_errors": 1,
+            "attacks_blocked": 3,
+            "attacks_points": 20,
+            "attacks_success_pct": "51%",
+            "blocks_points": 3,
             "receptions_positive": 0,
             "receptions_perfect": 0
           },
-          "total_points": 2,
-          "break_points": 1,
-          "plus_minus": 1
+          "total_points": 23,
+          "break_points": 7,
+          "plus_minus": 19
         }
       ],
       "totals": {
-        "serves_attempts": 49,
+        "serves_attempts": 46,
         "serves_errors": 8,
         "serves_points": 2,
         "receptions_attempts": 0,
@@ -3982,16 +3939,16 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 42,
-        "attacks_errors": 2,
-        "attacks_blocked": 6,
-        "attacks_points": 15,
-        "attacks_success_pct": "36%",
-        "blocks_points": 3
+        "attacks_attempts": 74,
+        "attacks_errors": 3,
+        "attacks_blocked": 8,
+        "attacks_points": 33,
+        "attacks_success_pct": "45%",
+        "blocks_points": 6
       },
-      "total_points": 20,
-      "break_points_total": 11,
-      "plus_minus_total": 4
+      "total_points": 41,
+      "break_points_total": 17,
+      "plus_minus_total": 22
     },
     {
       "name": "Louisa Krams",
@@ -4169,7 +4126,7 @@
           "plus_minus": 0
         },
         {
-          "player": "Krams Louisa",
+          "player": "Lorber Fijok Lorena",
           "jersey_number": 17,
           "match_number": "2035",
           "match_id": "777480272",
@@ -4178,7 +4135,7 @@
           "opponent": "Dresdner SC",
           "opponent_short": "Dresden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480272&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2035.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/44faf9b6-14d6-4816-aa95-f1db9b1d770b",
           "result": {
             "score": "1:3",
             "total_points": "83:106",
@@ -4191,7 +4148,7 @@
             "summary": "1:3 / 83:106 (17:25 19:25 33:31 14:25)"
           },
           "metrics": {
-            "serves_attempts": 3,
+            "serves_attempts": 0,
             "serves_errors": 0,
             "serves_points": 0,
             "receptions_attempts": 0,
@@ -4213,7 +4170,7 @@
         }
       ],
       "totals": {
-        "serves_attempts": 17,
+        "serves_attempts": 14,
         "serves_errors": 3,
         "serves_points": 0,
         "receptions_attempts": 1,
