@@ -1,7 +1,7 @@
 {
-  "generated": "2025-12-01T04:51:57.649479+00:00",
+  "generated": "2025-12-02T04:22:00.645946+00:00",
   "team": "USC Münster",
-  "match_count": 5,
+  "match_count": 6,
   "matches": [
     {
       "match_number": "2001",
@@ -270,31 +270,84 @@
         "receptions_positive": 27,
         "receptions_perfect": 15
       }
+    },
+    {
+      "match_number": "2037",
+      "match_id": "777480285",
+      "kickoff": "2025-11-29T17:15:00+01:00",
+      "is_home": true,
+      "opponent": "Skurios Volleys Borken",
+      "opponent_short": "Borken",
+      "host": "USC Münster",
+      "location": "Sporthalle Berg Fidel (48153 Münster)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/a71fa209-7a52-4da2-aa8f-7f86ddf0b086/2037",
+      "attendance": "1923",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Strothoff, Amelie",
+          "team": "USC Münster"
+        },
+        {
+          "medal": "Silber",
+          "name": "Hansen, Ditte Kjær",
+          "team": "Skurios Volleys Borken"
+        }
+      ],
+      "result": {
+        "score": "3:0",
+        "total_points": "80:66",
+        "sets": [
+          "30:28",
+          "25:18",
+          "25:20"
+        ],
+        "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+      },
+      "metrics": {
+        "serves_attempts": 65,
+        "serves_errors": 32,
+        "serves_points": 4,
+        "receptions_attempts": 52,
+        "receptions_errors": 3,
+        "receptions_positive_pct": "15%",
+        "receptions_perfect_pct": "6%",
+        "attacks_attempts": 88,
+        "attacks_errors": 5,
+        "attacks_blocked": 4,
+        "attacks_points": 41,
+        "attacks_success_pct": "47%",
+        "blocks_points": 8,
+        "receptions_positive": 8,
+        "receptions_perfect": 3
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 387,
-    "serves_errors": 78,
-    "serves_points": 60,
-    "receptions_attempts": 302,
-    "receptions_errors": 26,
-    "receptions_positive": 102,
-    "receptions_perfect": 68,
-    "receptions_positive_pct": "34%",
-    "receptions_perfect_pct": "23%",
-    "attacks_attempts": 476,
-    "attacks_errors": 379,
-    "attacks_blocked": 56,
-    "attacks_points": 192,
-    "attacks_success_pct": "40%",
-    "blocks_points": 33
+    "serves_attempts": 452,
+    "serves_errors": 110,
+    "serves_points": 64,
+    "receptions_attempts": 354,
+    "receptions_errors": 29,
+    "receptions_positive": 110,
+    "receptions_perfect": 71,
+    "receptions_positive_pct": "31%",
+    "receptions_perfect_pct": "20%",
+    "attacks_attempts": 564,
+    "attacks_errors": 384,
+    "attacks_blocked": 60,
+    "attacks_points": 233,
+    "attacks_success_pct": "41%",
+    "blocks_points": 41
   },
   "player_count": 14,
   "players": [
     {
       "name": "Pippa Molenaar",
       "jersey_number": 1,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Molenaar Pippa",
@@ -508,6 +561,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Molenaar Pippa",
+          "jersey_number": 1,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 12,
+          "break_points": 1,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -527,14 +622,14 @@
         "attacks_success_pct": "25%",
         "blocks_points": 0
       },
-      "total_points": 19,
-      "break_points_total": 5,
+      "total_points": 31,
+      "break_points_total": 6,
       "plus_minus_total": 8
     },
     {
       "name": "Lara-Marie Schaefer",
       "jersey_number": 2,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Schaefer Lara-Marie",
@@ -705,6 +800,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Schaefer Lara-Marie",
+          "jersey_number": 2,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -731,7 +868,7 @@
     {
       "name": "Esther Spöler",
       "jersey_number": 3,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Spöler Esther",
@@ -945,33 +1082,75 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Spöler Esther",
+          "jersey_number": 3,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 7,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 1,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "100%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 16,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 9,
+            "attacks_success_pct": "56%",
+            "blocks_points": 5,
+            "receptions_positive": 1,
+            "receptions_perfect": 0
+          },
+          "total_points": 14,
+          "break_points": 7,
+          "plus_minus": 12
         }
       ],
       "totals": {
-        "serves_attempts": 38,
-        "serves_errors": 4,
+        "serves_attempts": 45,
+        "serves_errors": 6,
         "serves_points": 3,
-        "receptions_attempts": 3,
+        "receptions_attempts": 4,
         "receptions_errors": 0,
-        "receptions_positive": 3,
+        "receptions_positive": 4,
         "receptions_perfect": 0,
         "receptions_positive_pct": "100%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 39,
+        "attacks_attempts": 55,
         "attacks_errors": 2,
         "attacks_blocked": 2,
-        "attacks_points": 20,
-        "attacks_success_pct": "51%",
-        "blocks_points": 5
+        "attacks_points": 29,
+        "attacks_success_pct": "53%",
+        "blocks_points": 10
       },
-      "total_points": 27,
-      "break_points_total": 11,
-      "plus_minus_total": 19
+      "total_points": 41,
+      "break_points_total": 18,
+      "plus_minus_total": 31
     },
     {
       "name": "Cecilia Malm",
       "jersey_number": 5,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Malm Cecilia",
@@ -1185,33 +1364,75 @@
           "total_points": 4,
           "break_points": 1,
           "plus_minus": 1
+        },
+        {
+          "player": "Malm Cecilia",
+          "jersey_number": 5,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 10,
+            "serves_errors": 3,
+            "serves_points": 1,
+            "receptions_attempts": 23,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "30%",
+            "receptions_perfect_pct": "13%",
+            "attacks_attempts": 25,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 8,
+            "attacks_success_pct": "32%",
+            "blocks_points": 2,
+            "receptions_positive": 7,
+            "receptions_perfect": 3
+          },
+          "total_points": 11,
+          "break_points": 6,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 58,
-        "serves_errors": 6,
-        "serves_points": 6,
-        "receptions_attempts": 68,
-        "receptions_errors": 9,
-        "receptions_positive": 24,
-        "receptions_perfect": 11,
-        "receptions_positive_pct": "35%",
-        "receptions_perfect_pct": "16%",
-        "attacks_attempts": 64,
-        "attacks_errors": 6,
+        "serves_attempts": 68,
+        "serves_errors": 9,
+        "serves_points": 7,
+        "receptions_attempts": 91,
+        "receptions_errors": 10,
+        "receptions_positive": 31,
+        "receptions_perfect": 14,
+        "receptions_positive_pct": "34%",
+        "receptions_perfect_pct": "15%",
+        "attacks_attempts": 89,
+        "attacks_errors": 7,
         "attacks_blocked": 3,
-        "attacks_points": 21,
+        "attacks_points": 29,
         "attacks_success_pct": "33%",
-        "blocks_points": 5
+        "blocks_points": 7
       },
-      "total_points": 32,
-      "break_points_total": 16,
-      "plus_minus_total": 8
+      "total_points": 43,
+      "break_points_total": 22,
+      "plus_minus_total": 14
     },
     {
       "name": "Elena Kömmling",
       "jersey_number": 7,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Kömmling Elena",
@@ -1382,18 +1603,60 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Kömmling Elena",
+          "jersey_number": 7,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 18,
+            "serves_points": 1,
+            "receptions_attempts": 27,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "1%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 24,
+          "break_points": 4,
+          "plus_minus": 0
         }
       ],
       "totals": {
         "serves_attempts": 0,
-        "serves_errors": 0,
-        "serves_points": 0,
-        "receptions_attempts": 0,
+        "serves_errors": 18,
+        "serves_points": 1,
+        "receptions_attempts": 27,
         "receptions_errors": 0,
         "receptions_positive": 0,
         "receptions_perfect": 0,
-        "receptions_positive_pct": null,
-        "receptions_perfect_pct": null,
+        "receptions_positive_pct": "1%",
+        "receptions_perfect_pct": "0%",
         "attacks_attempts": 0,
         "attacks_errors": 0,
         "attacks_blocked": 0,
@@ -1401,14 +1664,14 @@
         "attacks_success_pct": null,
         "blocks_points": 0
       },
-      "total_points": 0,
-      "break_points_total": 0,
+      "total_points": 24,
+      "break_points_total": 4,
       "plus_minus_total": 0
     },
     {
       "name": "Yina Liu",
       "jersey_number": 8,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Liu Yina",
@@ -1622,6 +1885,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Liu Yina",
+          "jersey_number": 8,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1648,7 +1953,7 @@
     {
       "name": "Emilia Jordan",
       "jersey_number": 9,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Jordan Emilia",
@@ -1819,33 +2124,75 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -3
+        },
+        {
+          "player": "Jordan Emilia",
+          "jersey_number": 9,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 15,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 1,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 5,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "20%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 1,
+          "plus_minus": -2
         }
       ],
       "totals": {
-        "serves_attempts": 42,
-        "serves_errors": 9,
+        "serves_attempts": 57,
+        "serves_errors": 11,
         "serves_points": 2,
-        "receptions_attempts": 2,
-        "receptions_errors": 1,
+        "receptions_attempts": 3,
+        "receptions_errors": 2,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 11,
-        "attacks_errors": 0,
+        "attacks_attempts": 16,
+        "attacks_errors": 1,
         "attacks_blocked": 0,
-        "attacks_points": 5,
-        "attacks_success_pct": "45%",
-        "blocks_points": 1
+        "attacks_points": 6,
+        "attacks_success_pct": "38%",
+        "blocks_points": 2
       },
-      "total_points": 8,
-      "break_points_total": 6,
-      "plus_minus_total": -2
+      "total_points": 10,
+      "break_points_total": 7,
+      "plus_minus_total": -4
     },
     {
       "name": "Amelie Strothoff",
       "jersey_number": 10,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Strothoff Amelie",
@@ -2059,33 +2406,75 @@
           "total_points": 4,
           "break_points": 2,
           "plus_minus": -1
+        },
+        {
+          "player": "Strothoff Amelie",
+          "jersey_number": 10,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 18,
+            "serves_errors": 3,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 30,
+            "attacks_errors": 2,
+            "attacks_blocked": 3,
+            "attacks_points": 16,
+            "attacks_success_pct": "53%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 17,
+          "break_points": 6,
+          "plus_minus": 9
         }
       ],
       "totals": {
-        "serves_attempts": 26,
-        "serves_errors": 2,
-        "serves_points": 3,
+        "serves_attempts": 44,
+        "serves_errors": 5,
+        "serves_points": 4,
         "receptions_attempts": 35,
         "receptions_errors": 1,
         "receptions_positive": 14,
         "receptions_perfect": 8,
         "receptions_positive_pct": "40%",
         "receptions_perfect_pct": "23%",
-        "attacks_attempts": 25,
-        "attacks_errors": 6,
-        "attacks_blocked": 4,
-        "attacks_points": 7,
-        "attacks_success_pct": "28%",
+        "attacks_attempts": 55,
+        "attacks_errors": 8,
+        "attacks_blocked": 7,
+        "attacks_points": 23,
+        "attacks_success_pct": "42%",
         "blocks_points": 1
       },
-      "total_points": 11,
-      "break_points_total": 8,
-      "plus_minus_total": -2
+      "total_points": 28,
+      "break_points_total": 14,
+      "plus_minus_total": 7
     },
     {
       "name": "Franziska Heil",
       "jersey_number": 11,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Heil Franziska",
@@ -2257,6 +2646,48 @@
           "total_points": 14,
           "break_points": 8,
           "plus_minus": 4
+        },
+        {
+          "player": "Heil Franziska",
+          "jersey_number": 11,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -2283,7 +2714,7 @@
     {
       "name": "Anke Waelkens",
       "jersey_number": 12,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Waelkens Anke",
@@ -2454,11 +2885,53 @@
           "total_points": 7,
           "break_points": 3,
           "plus_minus": 5
+        },
+        {
+          "player": "Waelkens Anke",
+          "jersey_number": 12,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 3,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 7,
+            "attacks_errors": 1,
+            "attacks_blocked": 1,
+            "attacks_points": 4,
+            "attacks_success_pct": "57%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 1,
+          "plus_minus": 1
         }
       ],
       "totals": {
-        "serves_attempts": 27,
-        "serves_errors": 7,
+        "serves_attempts": 30,
+        "serves_errors": 8,
         "serves_points": 4,
         "receptions_attempts": 0,
         "receptions_errors": 0,
@@ -2466,21 +2939,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 26,
-        "attacks_errors": 2,
-        "attacks_blocked": 1,
-        "attacks_points": 13,
-        "attacks_success_pct": "50%",
+        "attacks_attempts": 33,
+        "attacks_errors": 3,
+        "attacks_blocked": 2,
+        "attacks_points": 17,
+        "attacks_success_pct": "52%",
         "blocks_points": 6
       },
-      "total_points": 23,
-      "break_points_total": 11,
-      "plus_minus_total": 13
+      "total_points": 27,
+      "break_points_total": 12,
+      "plus_minus_total": 14
     },
     {
       "name": "Brianna Ford",
       "jersey_number": 14,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Ford Brianna",
@@ -2694,14 +3167,56 @@
           "total_points": 9,
           "break_points": 4,
           "plus_minus": 2
+        },
+        {
+          "player": "Ford Brianna",
+          "jersey_number": 14,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "33%",
+            "receptions_perfect_pct": "1%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
         "serves_attempts": 55,
-        "serves_errors": 15,
+        "serves_errors": 18,
         "serves_points": 10,
         "receptions_attempts": 1,
-        "receptions_errors": 0,
+        "receptions_errors": 1,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
@@ -3200,7 +3715,7 @@
     {
       "name": "Diane Seybering",
       "jersey_number": 18,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "Seybering Diane",
@@ -3414,28 +3929,70 @@
           "total_points": 5,
           "break_points": 3,
           "plus_minus": 3
+        },
+        {
+          "player": "Seybering Diane",
+          "jersey_number": 18,
+          "match_number": "2037",
+          "match_id": "777480285",
+          "kickoff": "2025-11-29T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "Skurios Volleys Borken",
+          "opponent_short": "Borken",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480285&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/783a3b10-dbe0-4bd7-93eb-a921d4e8569a",
+          "result": {
+            "score": "3:0",
+            "total_points": "80:66",
+            "sets": [
+              "30:28",
+              "25:18",
+              "25:20"
+            ],
+            "summary": "3:0 / 80:66 (30:28 25:18 25:20)"
+          },
+          "metrics": {
+            "serves_attempts": 12,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 5,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 3,
+            "attacks_success_pct": "60%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 2,
+          "plus_minus": 4
         }
       ],
       "totals": {
-        "serves_attempts": 39,
+        "serves_attempts": 51,
         "serves_errors": 11,
-        "serves_points": 25,
+        "serves_points": 26,
         "receptions_attempts": 22,
         "receptions_errors": 1,
         "receptions_positive": 0,
         "receptions_perfect": 22,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "100%",
-        "attacks_attempts": 20,
+        "attacks_attempts": 25,
         "attacks_errors": 18,
         "attacks_blocked": 4,
-        "attacks_points": 23,
-        "attacks_success_pct": "115%",
+        "attacks_points": 26,
+        "attacks_success_pct": "104%",
         "blocks_points": 4
       },
-      "total_points": 2234,
-      "break_points_total": 13,
-      "plus_minus_total": 10
+      "total_points": 2238,
+      "break_points_total": 15,
+      "plus_minus_total": 14
     }
   ]
 }
