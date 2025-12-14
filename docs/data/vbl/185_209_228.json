@@ -4081,23 +4081,104 @@
       "time": "15:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 4,
       "away_team": "Allianz MTV Stuttgart",
       "club_id": "228",
       "competition_id": "185",
       "date": "12.12.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 5,
       "home_team": "VC Wiesbaden",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11896&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11896&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "López Rey Cayetana",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 7,
+          "duration": null,
+          "home_label": "Dordevic Jovana",
+          "home_points": 6,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 13,
+          "duration": null,
+          "home_label": "Sain Rene (L)",
+          "home_points": -1,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Broekstra Laura",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Konijnenberg Sanne",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Boom Dagmar",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Bietau Lilly",
+          "home_points": -1,
+          "set": 7
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Clayton Hannah",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Fernandez Gayoso Jimena",
+          "home_points": 4,
+          "set": 9
+        },
+        {
+          "away_label": null,
+          "away_points": 14,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 15,
+          "set": 10
+        }
+      ],
       "match_id": "11896",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "0 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "3-2, 6-7, -1-13, 4-3, 2-1, 6-5, -1-1, 1-6, 4-4, 15-14",
       "time": "18:30"
     },
     {
@@ -4121,23 +4202,96 @@
       "time": "17:35"
     },
     {
-      "away_sets": null,
+      "away_sets": 2,
       "away_team": "Skurios Volleys Borken",
       "club_id": "228",
       "competition_id": "185",
       "date": "13.12.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 1,
       "home_team": "Schwarz-Weiß Erfurt",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11897&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11897&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Zellin Alina",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 14,
+          "duration": null,
+          "home_label": "Goertz Lotte (L)",
+          "home_points": -1,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Respaut Emilie",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Linke Lena",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Feistritzer Lea",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Szücs Kinga",
+          "home_points": 5,
+          "set": 6
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Kovacic Isabel",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Darley Alianza",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": null,
+          "away_points": 32,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 29,
+          "set": 9
+        }
+      ],
       "match_id": "11897",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "6-6, -1-14, 1-1, 3-3, 2-2, 5-3, 4-4, 5-5, 29-32",
       "time": "18:00"
     },
     {
@@ -4742,26 +4896,6 @@
     },
     {
       "away_sets": null,
-      "away_team": "VfB Suhl LOTTO Thüringen",
-      "club_id": "228",
-      "competition_id": "185",
-      "date": "07.02.2026",
-      "has_leg_data": false,
-      "home_sets": null,
-      "home_team": "USC Münster",
-      "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11932&ID=185&CID=228&PID=209&type=LegList",
-      "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11932&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
-      "match_id": "11932",
-      "match_number": null,
-      "phase_id": "209",
-      "result": "-",
-      "set_results": null,
-      "set_scores": null,
-      "time": "19:30"
-    },
-    {
-      "away_sets": null,
       "away_team": "Allianz MTV Stuttgart",
       "club_id": "228",
       "competition_id": "185",
@@ -4773,6 +4907,26 @@
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11934&ID=185&CID=228&PID=209&type=LegList",
       "legs": [],
       "match_id": "11934",
+      "match_number": null,
+      "phase_id": "209",
+      "result": "-",
+      "set_results": null,
+      "set_scores": null,
+      "time": "19:30"
+    },
+    {
+      "away_sets": null,
+      "away_team": "VfB Suhl LOTTO Thüringen",
+      "club_id": "228",
+      "competition_id": "185",
+      "date": "07.02.2026",
+      "has_leg_data": false,
+      "home_sets": null,
+      "home_team": "USC Münster",
+      "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11932&ID=185&CID=228&PID=209&type=LegList",
+      "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11932&ID=185&CID=228&PID=209&type=LegList",
+      "legs": [],
+      "match_id": "11932",
       "match_number": null,
       "phase_id": "209",
       "result": "-",
