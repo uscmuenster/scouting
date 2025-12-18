@@ -4408,23 +4408,96 @@
       "time": "16:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 2,
       "away_team": "USC Münster",
       "club_id": "228",
       "competition_id": "185",
       "date": "17.12.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 0,
       "home_team": "SSC Palmberg Schwerin",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11906&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11906&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 22,
+          "duration": null,
+          "home_label": "Reesink Florien (L)",
+          "home_points": -2,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "ten Brinke Marije",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Stuut Britte Mayke",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Hölzig Annegret",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Kirchhoff Mia",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Jaksetic Vedrana",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Artyshuk Anna",
+          "home_points": 2,
+          "set": 7
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Kok Helena",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": null,
+          "away_points": 30,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 26,
+          "set": 9
+        }
+      ],
       "match_id": "11906",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "-2-22, 3-3, 6-6, 2-2, 4-4, 1-1, 2-2, 5-5, 26-30",
       "time": "17:30"
     },
     {
