@@ -1,7 +1,7 @@
 {
-  "generated": "2025-12-21T04:29:10.948512+00:00",
+  "generated": "2025-12-22T04:32:43.322234+00:00",
   "team": "USC Münster",
-  "match_count": 9,
+  "match_count": 10,
   "matches": [
     {
       "match_number": "2001",
@@ -475,31 +475,85 @@
         "receptions_positive": 0,
         "receptions_perfect": 0
       }
+    },
+    {
+      "match_number": "2055",
+      "match_id": "777480445",
+      "kickoff": "2025-12-20T19:30:00+01:00",
+      "is_home": true,
+      "opponent": "Allianz MTV Stuttgart",
+      "opponent_short": "Stuttgart",
+      "host": "USC Münster",
+      "location": "Sporthalle Berg Fidel (48153 Münster)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/9f5772bf-d49d-42c2-9dc5-fffd99e5ed16/2055",
+      "attendance": "1709",
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Heil, Franziska",
+          "team": "USC Münster"
+        },
+        {
+          "medal": "Gold",
+          "name": "Varela, Lucia",
+          "team": "Allianz MTV Stuttgart"
+        }
+      ],
+      "result": {
+        "score": "1:3",
+        "total_points": "86:99",
+        "sets": [
+          "17:25",
+          "19:25",
+          "25:22",
+          "25:27"
+        ],
+        "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+      },
+      "metrics": {
+        "serves_attempts": 87,
+        "serves_errors": 20,
+        "serves_points": 3,
+        "receptions_attempts": 88,
+        "receptions_errors": 9,
+        "receptions_positive_pct": "33%",
+        "receptions_perfect_pct": "14%",
+        "attacks_attempts": 135,
+        "attacks_errors": 10,
+        "attacks_blocked": 8,
+        "attacks_points": 54,
+        "attacks_success_pct": "40%",
+        "blocks_points": 8,
+        "receptions_positive": 29,
+        "receptions_perfect": 12
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 680,
-    "serves_errors": 173,
-    "serves_points": 136,
-    "receptions_attempts": 539,
-    "receptions_errors": 58,
-    "receptions_positive": 183,
-    "receptions_perfect": 107,
+    "serves_attempts": 767,
+    "serves_errors": 193,
+    "serves_points": 139,
+    "receptions_attempts": 627,
+    "receptions_errors": 67,
+    "receptions_positive": 212,
+    "receptions_perfect": 119,
     "receptions_positive_pct": "34%",
-    "receptions_perfect_pct": "20%",
-    "attacks_attempts": 861,
-    "attacks_errors": 436,
-    "attacks_blocked": 133,
-    "attacks_points": 376,
-    "attacks_success_pct": "44%",
-    "blocks_points": 70
+    "receptions_perfect_pct": "19%",
+    "attacks_attempts": 996,
+    "attacks_errors": 446,
+    "attacks_blocked": 141,
+    "attacks_points": 430,
+    "attacks_success_pct": "43%",
+    "blocks_points": 78
   },
   "player_count": 14,
   "players": [
     {
       "name": "Pippa Molenaar",
       "jersey_number": 1,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Molenaar Pippa",
@@ -885,18 +939,61 @@
           "total_points": 7,
           "break_points": 3,
           "plus_minus": 0
+        },
+        {
+          "player": "Molenaar Pippa",
+          "jersey_number": 1,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 27,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "37%",
+            "receptions_perfect_pct": "15%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 10,
+            "receptions_perfect": 4
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
         }
       ],
       "totals": {
         "serves_attempts": 14,
         "serves_errors": 11,
         "serves_points": 1,
-        "receptions_attempts": 126,
-        "receptions_errors": 9,
-        "receptions_positive": 50,
-        "receptions_perfect": 26,
-        "receptions_positive_pct": "40%",
-        "receptions_perfect_pct": "21%",
+        "receptions_attempts": 153,
+        "receptions_errors": 10,
+        "receptions_positive": 60,
+        "receptions_perfect": 30,
+        "receptions_positive_pct": "39%",
+        "receptions_perfect_pct": "20%",
         "attacks_attempts": 4,
         "attacks_errors": 317,
         "attacks_blocked": 0,
@@ -906,12 +1003,12 @@
       },
       "total_points": 38,
       "break_points_total": 9,
-      "plus_minus_total": 2
+      "plus_minus_total": 1
     },
     {
       "name": "Lara-Marie Schaefer",
       "jersey_number": 2,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Schaefer Lara-Marie",
@@ -1254,6 +1351,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Schaefer Lara-Marie",
+          "jersey_number": 2,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1280,7 +1420,7 @@
     {
       "name": "Esther Spöler",
       "jersey_number": 3,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Spöler Esther",
@@ -1622,11 +1762,54 @@
           "total_points": 555,
           "break_points": 55,
           "plus_minus": 6
+        },
+        {
+          "player": "Spöler Esther",
+          "jersey_number": 3,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 14,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 23,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 11,
+            "attacks_success_pct": "48%",
+            "blocks_points": 2,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 13,
+          "break_points": 6,
+          "plus_minus": 9
         }
       ],
       "totals": {
-        "serves_attempts": 59,
-        "serves_errors": 8,
+        "serves_attempts": 73,
+        "serves_errors": 11,
         "serves_points": 15,
         "receptions_attempts": 15,
         "receptions_errors": 0,
@@ -1634,21 +1817,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": "27%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 83,
-        "attacks_errors": 19,
+        "attacks_attempts": 106,
+        "attacks_errors": 20,
         "attacks_blocked": 5,
-        "attacks_points": 54,
-        "attacks_success_pct": "65%",
-        "blocks_points": 16
+        "attacks_points": 65,
+        "attacks_success_pct": "61%",
+        "blocks_points": 18
       },
-      "total_points": 613,
-      "break_points_total": 80,
-      "plus_minus_total": 50
+      "total_points": 626,
+      "break_points_total": 86,
+      "plus_minus_total": 59
     },
     {
       "name": "Cecilia Malm",
       "jersey_number": 5,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Malm Cecilia",
@@ -2034,33 +2217,76 @@
           "total_points": 10,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Malm Cecilia",
+          "jersey_number": 5,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 2,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 13,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "15%",
+            "receptions_perfect_pct": "8%",
+            "attacks_attempts": 5,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "20%",
+            "blocks_points": 0,
+            "receptions_positive": 2,
+            "receptions_perfect": 1
+          },
+          "total_points": 1,
+          "break_points": 0,
+          "plus_minus": -2
         }
       ],
       "totals": {
-        "serves_attempts": 83,
+        "serves_attempts": 85,
         "serves_errors": 17,
         "serves_points": 9,
-        "receptions_attempts": 103,
-        "receptions_errors": 16,
-        "receptions_positive": 36,
-        "receptions_perfect": 15,
-        "receptions_positive_pct": "35%",
-        "receptions_perfect_pct": "15%",
-        "attacks_attempts": 103,
-        "attacks_errors": 8,
+        "receptions_attempts": 116,
+        "receptions_errors": 18,
+        "receptions_positive": 38,
+        "receptions_perfect": 16,
+        "receptions_positive_pct": "33%",
+        "receptions_perfect_pct": "14%",
+        "attacks_attempts": 108,
+        "attacks_errors": 9,
         "attacks_blocked": 4,
-        "attacks_points": 33,
-        "attacks_success_pct": "32%",
+        "attacks_points": 34,
+        "attacks_success_pct": "31%",
         "blocks_points": 7
       },
-      "total_points": 58,
+      "total_points": 59,
       "break_points_total": 24,
-      "plus_minus_total": 13
+      "plus_minus_total": 11
     },
     {
       "name": "Elena Kömmling",
       "jersey_number": 7,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Kömmling Elena",
@@ -2403,33 +2629,76 @@
           "total_points": 55,
           "break_points": 3,
           "plus_minus": 2
+        },
+        {
+          "player": "Kömmling Elena",
+          "jersey_number": 7,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 19,
+            "serves_errors": 3,
+            "serves_points": 2,
+            "receptions_attempts": 36,
+            "receptions_errors": 4,
+            "receptions_positive_pct": "31%",
+            "receptions_perfect_pct": "11%",
+            "attacks_attempts": 18,
+            "attacks_errors": 0,
+            "attacks_blocked": 2,
+            "attacks_points": 6,
+            "attacks_success_pct": "33%",
+            "blocks_points": 1,
+            "receptions_positive": 11,
+            "receptions_perfect": 4
+          },
+          "total_points": 9,
+          "break_points": 5,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 12,
-        "serves_errors": 27,
-        "serves_points": 3,
-        "receptions_attempts": 52,
-        "receptions_errors": 11,
-        "receptions_positive": 11,
-        "receptions_perfect": 6,
-        "receptions_positive_pct": "21%",
-        "receptions_perfect_pct": "12%",
-        "attacks_attempts": 26,
+        "serves_attempts": 31,
+        "serves_errors": 30,
+        "serves_points": 5,
+        "receptions_attempts": 88,
+        "receptions_errors": 15,
+        "receptions_positive": 22,
+        "receptions_perfect": 10,
+        "receptions_positive_pct": "25%",
+        "receptions_perfect_pct": "11%",
+        "attacks_attempts": 44,
         "attacks_errors": 17,
-        "attacks_blocked": 1,
-        "attacks_points": 19,
-        "attacks_success_pct": "73%",
-        "blocks_points": 1
+        "attacks_blocked": 3,
+        "attacks_points": 25,
+        "attacks_success_pct": "57%",
+        "blocks_points": 2
       },
-      "total_points": 87,
-      "break_points_total": 8,
+      "total_points": 96,
+      "break_points_total": 13,
       "plus_minus_total": 8
     },
     {
       "name": "Yina Liu",
       "jersey_number": 8,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Liu Yina",
@@ -2815,6 +3084,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Liu Yina",
+          "jersey_number": 8,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -2841,7 +3153,7 @@
     {
       "name": "Emilia Jordan",
       "jersey_number": 9,
-      "match_count": 7,
+      "match_count": 8,
       "matches": [
         {
           "player": "Jordan Emilia",
@@ -3140,11 +3452,54 @@
           "total_points": 49,
           "break_points": 5,
           "plus_minus": 4
+        },
+        {
+          "player": "Jordan Emilia",
+          "jersey_number": 9,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 11,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "50%",
+            "blocks_points": 3,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 2,
+          "plus_minus": 2
         }
       ],
       "totals": {
-        "serves_attempts": 68,
-        "serves_errors": 25,
+        "serves_attempts": 79,
+        "serves_errors": 27,
         "serves_points": 34,
         "receptions_attempts": 4,
         "receptions_errors": 3,
@@ -3152,21 +3507,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 26,
+        "attacks_attempts": 28,
         "attacks_errors": 2,
         "attacks_blocked": 0,
-        "attacks_points": 9,
-        "attacks_success_pct": "35%",
-        "blocks_points": 6
+        "attacks_points": 10,
+        "attacks_success_pct": "36%",
+        "blocks_points": 9
       },
-      "total_points": 63,
-      "break_points_total": 14,
-      "plus_minus_total": 2
+      "total_points": 67,
+      "break_points_total": 16,
+      "plus_minus_total": 4
     },
     {
       "name": "Amelie Strothoff",
       "jersey_number": 10,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Strothoff Amelie",
@@ -3552,33 +3907,76 @@
           "total_points": 56,
           "break_points": 8,
           "plus_minus": 4
+        },
+        {
+          "player": "Strothoff Amelie",
+          "jersey_number": 10,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 12,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 11,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "55%",
+            "receptions_perfect_pct": "27%",
+            "attacks_attempts": 34,
+            "attacks_errors": 2,
+            "attacks_blocked": 2,
+            "attacks_points": 11,
+            "attacks_success_pct": "32%",
+            "blocks_points": 1,
+            "receptions_positive": 6,
+            "receptions_perfect": 3
+          },
+          "total_points": 12,
+          "break_points": 3,
+          "plus_minus": 4
         }
       ],
       "totals": {
-        "serves_attempts": 71,
-        "serves_errors": 9,
+        "serves_attempts": 83,
+        "serves_errors": 12,
         "serves_points": 13,
-        "receptions_attempts": 62,
-        "receptions_errors": 2,
-        "receptions_positive": 26,
-        "receptions_perfect": 12,
-        "receptions_positive_pct": "42%",
-        "receptions_perfect_pct": "19%",
-        "attacks_attempts": 111,
-        "attacks_errors": 14,
-        "attacks_blocked": 32,
-        "attacks_points": 39,
-        "attacks_success_pct": "35%",
-        "blocks_points": 2
+        "receptions_attempts": 73,
+        "receptions_errors": 3,
+        "receptions_positive": 32,
+        "receptions_perfect": 15,
+        "receptions_positive_pct": "44%",
+        "receptions_perfect_pct": "21%",
+        "attacks_attempts": 145,
+        "attacks_errors": 16,
+        "attacks_blocked": 34,
+        "attacks_points": 50,
+        "attacks_success_pct": "34%",
+        "blocks_points": 3
       },
-      "total_points": 100,
-      "break_points_total": 30,
-      "plus_minus_total": 9
+      "total_points": 112,
+      "break_points_total": 33,
+      "plus_minus_total": 13
     },
     {
       "name": "Franziska Heil",
       "jersey_number": 11,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Heil Franziska",
@@ -3922,11 +4320,54 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Heil Franziska",
+          "jersey_number": 11,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 10,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 24,
+            "attacks_errors": 2,
+            "attacks_blocked": 2,
+            "attacks_points": 16,
+            "attacks_success_pct": "67%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 16,
+          "break_points": 3,
+          "plus_minus": 10
         }
       ],
       "totals": {
-        "serves_attempts": 19,
-        "serves_errors": 4,
+        "serves_attempts": 29,
+        "serves_errors": 6,
         "serves_points": 1,
         "receptions_attempts": 18,
         "receptions_errors": 1,
@@ -3934,21 +4375,21 @@
         "receptions_perfect": 1,
         "receptions_positive_pct": "22%",
         "receptions_perfect_pct": "6%",
-        "attacks_attempts": 37,
-        "attacks_errors": 4,
-        "attacks_blocked": 21,
-        "attacks_points": 5,
-        "attacks_success_pct": "14%",
+        "attacks_attempts": 61,
+        "attacks_errors": 6,
+        "attacks_blocked": 23,
+        "attacks_points": 21,
+        "attacks_success_pct": "34%",
         "blocks_points": 3
       },
-      "total_points": 19,
-      "break_points_total": 10,
-      "plus_minus_total": 8
+      "total_points": 35,
+      "break_points_total": 13,
+      "plus_minus_total": 18
     },
     {
       "name": "Anke Waelkens",
       "jersey_number": 12,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Waelkens Anke",
@@ -4291,6 +4732,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Waelkens Anke",
+          "jersey_number": 12,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -4317,7 +4801,7 @@
     {
       "name": "Brianna Ford",
       "jersey_number": 14,
-      "match_count": 7,
+      "match_count": 8,
       "matches": [
         {
           "player": "Ford Brianna",
@@ -4615,33 +5099,76 @@
           "total_points": 56,
           "break_points": 14,
           "plus_minus": 5
+        },
+        {
+          "player": "Ford Brianna",
+          "jersey_number": 14,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 4,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 1,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 18,
+            "attacks_errors": 3,
+            "attacks_blocked": 2,
+            "attacks_points": 3,
+            "attacks_success_pct": "17%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 2,
+          "plus_minus": -4
         }
       ],
       "totals": {
-        "serves_attempts": 62,
-        "serves_errors": 18,
+        "serves_attempts": 66,
+        "serves_errors": 20,
         "serves_points": 18,
-        "receptions_attempts": 2,
-        "receptions_errors": 1,
+        "receptions_attempts": 3,
+        "receptions_errors": 2,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 126,
-        "attacks_errors": 13,
-        "attacks_blocked": 43,
-        "attacks_points": 52,
-        "attacks_success_pct": "41%",
-        "blocks_points": 3
+        "attacks_attempts": 144,
+        "attacks_errors": 16,
+        "attacks_blocked": 45,
+        "attacks_points": 55,
+        "attacks_success_pct": "38%",
+        "blocks_points": 4
       },
-      "total_points": 117,
-      "break_points_total": 44,
-      "plus_minus_total": 31
+      "total_points": 121,
+      "break_points_total": 46,
+      "plus_minus_total": 27
     },
     {
       "name": "Lena Schultze",
       "jersey_number": 16,
-      "match_count": 6,
+      "match_count": 7,
       "matches": [
         {
           "player": "Schultze Lena",
@@ -4880,6 +5407,49 @@
           "metrics": {
             "serves_attempts": 0,
             "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "Schultze Lena",
+          "jersey_number": 16,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
             "serves_points": 0,
             "receptions_attempts": 0,
             "receptions_errors": 0,
@@ -5251,7 +5821,7 @@
     {
       "name": "Diane Seybering",
       "jersey_number": 18,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Seybering Diane",
@@ -5593,27 +6163,70 @@
           "total_points": 4,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Seybering Diane",
+          "jersey_number": 18,
+          "match_number": "2055",
+          "match_id": "777480445",
+          "kickoff": "2025-12-20T19:30:00+01:00",
+          "is_home": true,
+          "opponent": "Allianz MTV Stuttgart",
+          "opponent_short": "Stuttgart",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480445&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/18ecb36b-7789-4c9b-8165-cdda09b6c58f",
+          "result": {
+            "score": "1:3",
+            "total_points": "86:99",
+            "sets": [
+              "17:25",
+              "19:25",
+              "25:22",
+              "25:27"
+            ],
+            "summary": "1:3 / 86:99 (17:25 19:25 25:22 25:27)"
+          },
+          "metrics": {
+            "serves_attempts": 15,
+            "serves_errors": 5,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 11,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 5,
+            "attacks_success_pct": "45%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 6,
+          "break_points": 3,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 76,
-        "serves_errors": 18,
-        "serves_points": 28,
+        "serves_attempts": 91,
+        "serves_errors": 23,
+        "serves_points": 29,
         "receptions_attempts": 23,
         "receptions_errors": 2,
         "receptions_positive": 0,
         "receptions_perfect": 22,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "96%",
-        "attacks_attempts": 36,
-        "attacks_errors": 19,
+        "attacks_attempts": 47,
+        "attacks_errors": 20,
         "attacks_blocked": 5,
-        "attacks_points": 32,
-        "attacks_success_pct": "89%",
+        "attacks_points": 37,
+        "attacks_success_pct": "79%",
         "blocks_points": 6
       },
-      "total_points": 2248,
-      "break_points_total": 18,
+      "total_points": 2254,
+      "break_points_total": 21,
       "plus_minus_total": 14
     }
   ]
