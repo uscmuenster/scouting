@@ -4964,23 +4964,104 @@
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 3,
       "away_team": "ETV Hamburger Volksbank Volleys",
       "club_id": "228",
       "competition_id": "185",
       "date": "21.12.2025",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 1,
       "home_team": "VfB Suhl LOTTO Thüringen",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11916&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11916&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Naujack Svea",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Ramos Mencia Irene del Carmen",
+          "home_points": -1,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Nagels Lara",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Laakkonen Roosa",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Hartmann Hannah",
+          "home_points": 2,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 50,
+          "duration": null,
+          "home_label": "Sambale Emma (L)",
+          "home_points": 10,
+          "set": 6
+        },
+        {
+          "away_label": null,
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Foley Mackenzie",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Nasin Alina",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Brancuska Monika",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": null,
+          "away_points": 30,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 27,
+          "set": 10
+        }
+      ],
       "match_id": "11916",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "2-2, -1-1, 1-1, 6-6, 2-1, 10-50, 5-5, 3-3, 4-4, 27-30",
       "time": "14:00"
     },
     {
