@@ -1,7 +1,7 @@
 {
-  "generated": "2025-12-27T04:35:51.946857+00:00",
+  "generated": "2025-12-28T04:37:48.012483+00:00",
   "team": "ETV Hamburger Volksbank Volleys",
-  "match_count": 9,
+  "match_count": 10,
   "matches": [
     {
       "match_number": "2005",
@@ -484,31 +484,84 @@
         "receptions_positive": 24,
         "receptions_perfect": 13
       }
+    },
+    {
+      "match_number": "2062",
+      "match_id": "777480519",
+      "kickoff": "2025-12-27T18:30:00+01:00",
+      "is_home": false,
+      "opponent": "VC Wiesbaden",
+      "opponent_short": "Wiesbaden",
+      "host": "VC Wiesbaden",
+      "location": "Sporthalle am Platz der Deutschen Einheit (65185 Wiesbaden)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+      "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/6b6f0101-6ae1-432d-add9-05748baa884d/2062",
+      "attendance": "1643",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Sain, Rene",
+          "team": "VC Wiesbaden"
+        },
+        {
+          "medal": "Silber",
+          "name": "Hartig, Anna",
+          "team": "ETV Hamburger Volksbank Volleys"
+        }
+      ],
+      "result": {
+        "score": "0:3",
+        "total_points": "60:76",
+        "sets": [
+          "16:25",
+          "20:25",
+          "24:26"
+        ],
+        "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+      },
+      "metrics": {
+        "serves_attempts": 61,
+        "serves_errors": 6,
+        "serves_points": 5,
+        "receptions_attempts": 68,
+        "receptions_errors": 7,
+        "receptions_positive_pct": "37%",
+        "receptions_perfect_pct": "13%",
+        "attacks_attempts": 97,
+        "attacks_errors": 14,
+        "attacks_blocked": 7,
+        "attacks_points": 31,
+        "attacks_success_pct": "32%",
+        "blocks_points": 4,
+        "receptions_positive": 25,
+        "receptions_perfect": 9
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 600,
-    "serves_errors": 76,
-    "serves_points": 33,
-    "receptions_attempts": 669,
-    "receptions_errors": 104,
-    "receptions_positive": 239,
-    "receptions_perfect": 101,
+    "serves_attempts": 661,
+    "serves_errors": 82,
+    "serves_points": 38,
+    "receptions_attempts": 737,
+    "receptions_errors": 111,
+    "receptions_positive": 264,
+    "receptions_perfect": 110,
     "receptions_positive_pct": "36%",
     "receptions_perfect_pct": "15%",
-    "attacks_attempts": 979,
-    "attacks_errors": 85,
-    "attacks_blocked": 81,
-    "attacks_points": 318,
+    "attacks_attempts": 1076,
+    "attacks_errors": 99,
+    "attacks_blocked": 88,
+    "attacks_points": 349,
     "attacks_success_pct": "32%",
-    "blocks_points": 58
+    "blocks_points": 62
   },
   "player_count": 16,
   "players": [
     {
       "name": "Jana-Marie Meiser",
       "jersey_number": 1,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Meiser Jana-Marie",
@@ -892,17 +945,59 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Meiser Jana-Marie",
+          "jersey_number": 1,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 33,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "42%",
+            "receptions_perfect_pct": "15%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 14,
+            "receptions_perfect": 5
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -2
         }
       ],
       "totals": {
         "serves_attempts": 0,
         "serves_errors": 0,
         "serves_points": 0,
-        "receptions_attempts": 74,
-        "receptions_errors": 7,
-        "receptions_positive": 27,
-        "receptions_perfect": 10,
-        "receptions_positive_pct": "36%",
+        "receptions_attempts": 107,
+        "receptions_errors": 9,
+        "receptions_positive": 41,
+        "receptions_perfect": 15,
+        "receptions_positive_pct": "38%",
         "receptions_perfect_pct": "14%",
         "attacks_attempts": 1,
         "attacks_errors": 0,
@@ -913,12 +1008,12 @@
       },
       "total_points": 1,
       "break_points_total": 0,
-      "plus_minus_total": -5
+      "plus_minus_total": -7
     },
     {
       "name": "Feli Anne Clemann",
       "jersey_number": 2,
-      "match_count": 6,
+      "match_count": 7,
       "matches": [
         {
           "player": "Clemann Feli Anne",
@@ -1173,6 +1268,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Clemann Feli Anne",
+          "jersey_number": 2,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1199,7 +1336,7 @@
     {
       "name": "Lina Köster",
       "jersey_number": 3,
-      "match_count": 7,
+      "match_count": 8,
       "matches": [
         {
           "player": "Köster Lina",
@@ -1497,28 +1634,70 @@
           "total_points": 6,
           "break_points": 1,
           "plus_minus": -1
+        },
+        {
+          "player": "Köster Lina",
+          "jersey_number": 3,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 18,
+            "attacks_errors": 2,
+            "attacks_blocked": 2,
+            "attacks_points": 6,
+            "attacks_success_pct": "33%",
+            "blocks_points": 2,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 9,
+          "break_points": 3,
+          "plus_minus": 4
         }
       ],
       "totals": {
-        "serves_attempts": 39,
-        "serves_errors": 8,
-        "serves_points": 2,
+        "serves_attempts": 45,
+        "serves_errors": 9,
+        "serves_points": 3,
         "receptions_attempts": 39,
         "receptions_errors": 7,
         "receptions_positive": 7,
         "receptions_perfect": 2,
         "receptions_positive_pct": "18%",
         "receptions_perfect_pct": "5%",
-        "attacks_attempts": 87,
-        "attacks_errors": 14,
-        "attacks_blocked": 11,
-        "attacks_points": 17,
-        "attacks_success_pct": "20%",
-        "blocks_points": 4
+        "attacks_attempts": 105,
+        "attacks_errors": 16,
+        "attacks_blocked": 13,
+        "attacks_points": 23,
+        "attacks_success_pct": "22%",
+        "blocks_points": 6
       },
-      "total_points": 23,
-      "break_points_total": 8,
-      "plus_minus_total": -17
+      "total_points": 32,
+      "break_points_total": 11,
+      "plus_minus_total": -13
     },
     {
       "name": "Sarah Stiriz",
@@ -1891,7 +2070,7 @@
     {
       "name": "Anna Hartig",
       "jersey_number": 5,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Hartig Anna",
@@ -2275,10 +2454,52 @@
           "total_points": 6,
           "break_points": 1,
           "plus_minus": 4
+        },
+        {
+          "player": "Hartig Anna",
+          "jersey_number": 5,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 7,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 9,
+            "attacks_errors": 2,
+            "attacks_blocked": 0,
+            "attacks_points": 5,
+            "attacks_success_pct": "56%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 6,
+          "break_points": 2,
+          "plus_minus": 4
         }
       ],
       "totals": {
-        "serves_attempts": 48,
+        "serves_attempts": 55,
         "serves_errors": 3,
         "serves_points": 1,
         "receptions_attempts": 0,
@@ -2287,16 +2508,16 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 89,
-        "attacks_errors": 9,
+        "attacks_attempts": 98,
+        "attacks_errors": 11,
         "attacks_blocked": 10,
-        "attacks_points": 38,
-        "attacks_success_pct": "43%",
-        "blocks_points": 10
+        "attacks_points": 43,
+        "attacks_success_pct": "44%",
+        "blocks_points": 11
       },
-      "total_points": 59,
-      "break_points_total": 16,
-      "plus_minus_total": 27
+      "total_points": 65,
+      "break_points_total": 18,
+      "plus_minus_total": 31
     },
     {
       "name": "Constanze von Meyenn",
@@ -2540,7 +2761,7 @@
     {
       "name": "Leonie Körtzinger",
       "jersey_number": 7,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Körtzinger Leonie",
@@ -2881,6 +3102,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Körtzinger Leonie",
+          "jersey_number": 7,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 5,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "20%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -2893,21 +3156,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 81,
-        "attacks_errors": 11,
+        "attacks_attempts": 86,
+        "attacks_errors": 12,
         "attacks_blocked": 7,
-        "attacks_points": 19,
+        "attacks_points": 20,
         "attacks_success_pct": "23%",
         "blocks_points": 7
       },
-      "total_points": 37,
+      "total_points": 38,
       "break_points_total": 12,
       "plus_minus_total": 5
     },
     {
       "name": "Zoe Konjer",
       "jersey_number": 8,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Konjer Zoe",
@@ -3291,10 +3554,52 @@
           "total_points": 1,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Konjer Zoe",
+          "jersey_number": 8,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 64,
+        "serves_attempts": 70,
         "serves_errors": 2,
         "serves_points": 6,
         "receptions_attempts": 31,
@@ -3317,7 +3622,7 @@
     {
       "name": "Luise Klein",
       "jersey_number": 9,
-      "match_count": 6,
+      "match_count": 7,
       "matches": [
         {
           "player": "Klein Luise",
@@ -3573,6 +3878,48 @@
           "total_points": 5,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Klein Luise",
+          "jersey_number": 9,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -3599,7 +3946,7 @@
     {
       "name": "Lena Liegert",
       "jersey_number": 10,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Liegert Lena",
@@ -3983,6 +4330,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -2
+        },
+        {
+          "player": "Liegert Lena",
+          "jersey_number": 10,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -4009,7 +4398,7 @@
     {
       "name": "Svea Frobel",
       "jersey_number": 11,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Frobel Svea",
@@ -4393,33 +4782,75 @@
           "total_points": 7,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Frobel Svea",
+          "jersey_number": 11,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 8,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 11,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "36%",
+            "receptions_perfect_pct": "9%",
+            "attacks_attempts": 28,
+            "attacks_errors": 3,
+            "attacks_blocked": 4,
+            "attacks_points": 10,
+            "attacks_success_pct": "36%",
+            "blocks_points": 0,
+            "receptions_positive": 4,
+            "receptions_perfect": 1
+          },
+          "total_points": 10,
+          "break_points": 0,
+          "plus_minus": -1
         }
       ],
       "totals": {
-        "serves_attempts": 86,
-        "serves_errors": 9,
+        "serves_attempts": 94,
+        "serves_errors": 11,
         "serves_points": 4,
-        "receptions_attempts": 206,
-        "receptions_errors": 23,
-        "receptions_positive": 74,
-        "receptions_perfect": 27,
+        "receptions_attempts": 217,
+        "receptions_errors": 25,
+        "receptions_positive": 78,
+        "receptions_perfect": 28,
         "receptions_positive_pct": "36%",
         "receptions_perfect_pct": "13%",
-        "attacks_attempts": 276,
-        "attacks_errors": 24,
-        "attacks_blocked": 26,
-        "attacks_points": 89,
-        "attacks_success_pct": "32%",
+        "attacks_attempts": 304,
+        "attacks_errors": 27,
+        "attacks_blocked": 30,
+        "attacks_points": 99,
+        "attacks_success_pct": "33%",
         "blocks_points": 12
       },
-      "total_points": 105,
+      "total_points": 115,
       "break_points_total": 40,
-      "plus_minus_total": 23
+      "plus_minus_total": 22
     },
     {
       "name": "Hannah Ammerman",
       "jersey_number": 12,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Ammerman Hannah ***",
@@ -4760,33 +5191,75 @@
           "total_points": 3,
           "break_points": 2,
           "plus_minus": -2
+        },
+        {
+          "player": "Ammerman Hannah",
+          "jersey_number": 12,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 8,
+            "serves_errors": 1,
+            "serves_points": 1,
+            "receptions_attempts": 16,
+            "receptions_errors": 3,
+            "receptions_positive_pct": "31%",
+            "receptions_perfect_pct": "12%",
+            "attacks_attempts": 24,
+            "attacks_errors": 4,
+            "attacks_blocked": 1,
+            "attacks_points": 4,
+            "attacks_success_pct": "17%",
+            "blocks_points": 0,
+            "receptions_positive": 5,
+            "receptions_perfect": 2
+          },
+          "total_points": 5,
+          "break_points": 3,
+          "plus_minus": -4
         }
       ],
       "totals": {
-        "serves_attempts": 78,
-        "serves_errors": 7,
-        "serves_points": 1,
-        "receptions_attempts": 109,
-        "receptions_errors": 9,
-        "receptions_positive": 32,
-        "receptions_perfect": 14,
-        "receptions_positive_pct": "29%",
+        "serves_attempts": 86,
+        "serves_errors": 8,
+        "serves_points": 2,
+        "receptions_attempts": 125,
+        "receptions_errors": 12,
+        "receptions_positive": 37,
+        "receptions_perfect": 16,
+        "receptions_positive_pct": "30%",
         "receptions_perfect_pct": "13%",
-        "attacks_attempts": 160,
-        "attacks_errors": 11,
-        "attacks_blocked": 11,
-        "attacks_points": 48,
-        "attacks_success_pct": "30%",
+        "attacks_attempts": 184,
+        "attacks_errors": 15,
+        "attacks_blocked": 12,
+        "attacks_points": 52,
+        "attacks_success_pct": "28%",
         "blocks_points": 8
       },
-      "total_points": 57,
-      "break_points_total": 18,
-      "plus_minus_total": 19
+      "total_points": 62,
+      "break_points_total": 21,
+      "plus_minus_total": 15
     },
     {
       "name": "Kathleen Weiß",
       "jersey_number": 13,
-      "match_count": 3,
+      "match_count": 4,
       "matches": [
         {
           "player": "Olliges Lena",
@@ -4916,10 +5389,52 @@
           "total_points": 7,
           "break_points": 3,
           "plus_minus": 6
+        },
+        {
+          "player": "Weißß Kathleen",
+          "jersey_number": 13,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 7,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "50%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 0,
+          "plus_minus": 1
         }
       ],
       "totals": {
-        "serves_attempts": 12,
+        "serves_attempts": 19,
         "serves_errors": 1,
         "serves_points": 0,
         "receptions_attempts": 0,
@@ -4928,21 +5443,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 7,
+        "attacks_attempts": 9,
         "attacks_errors": 0,
         "attacks_blocked": 0,
-        "attacks_points": 4,
-        "attacks_success_pct": "57%",
+        "attacks_points": 5,
+        "attacks_success_pct": "56%",
         "blocks_points": 3
       },
-      "total_points": 7,
+      "total_points": 8,
       "break_points_total": 3,
-      "plus_minus_total": 6
+      "plus_minus_total": 7
     },
     {
       "name": "Fiona Dittmann",
       "jersey_number": 14,
-      "match_count": 7,
+      "match_count": 8,
       "matches": [
         {
           "player": "Dittmann Fiona",
@@ -5240,33 +5755,75 @@
           "total_points": 3,
           "break_points": 1,
           "plus_minus": 2
+        },
+        {
+          "player": "Dittmann Fiona",
+          "jersey_number": 14,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 5,
+            "serves_errors": 2,
+            "serves_points": 1,
+            "receptions_attempts": 8,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "25%",
+            "receptions_perfect_pct": "12%",
+            "attacks_attempts": 5,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 2,
+            "attacks_success_pct": "40%",
+            "blocks_points": 0,
+            "receptions_positive": 2,
+            "receptions_perfect": 1
+          },
+          "total_points": 3,
+          "break_points": 1,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 7,
-        "serves_errors": 4,
-        "serves_points": 1,
-        "receptions_attempts": 10,
+        "serves_attempts": 12,
+        "serves_errors": 6,
+        "serves_points": 2,
+        "receptions_attempts": 18,
         "receptions_errors": 1,
-        "receptions_positive": 3,
-        "receptions_perfect": 1,
-        "receptions_positive_pct": "30%",
-        "receptions_perfect_pct": "10%",
-        "attacks_attempts": 18,
-        "attacks_errors": 2,
+        "receptions_positive": 5,
+        "receptions_perfect": 2,
+        "receptions_positive_pct": "28%",
+        "receptions_perfect_pct": "11%",
+        "attacks_attempts": 23,
+        "attacks_errors": 3,
         "attacks_blocked": 1,
-        "attacks_points": 2,
-        "attacks_success_pct": "11%",
+        "attacks_points": 4,
+        "attacks_success_pct": "17%",
         "blocks_points": 1
       },
-      "total_points": 4,
-      "break_points_total": 2,
+      "total_points": 7,
+      "break_points_total": 3,
       "plus_minus_total": -4
     },
     {
       "name": "Alexa Sophie Thaden",
       "jersey_number": 15,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Thaden Alexa Sophie",
@@ -5650,33 +6207,75 @@
           "total_points": 2,
           "break_points": 1,
           "plus_minus": 2
+        },
+        {
+          "player": "Thaden Alexa Sophie",
+          "jersey_number": 15,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 13,
+            "serves_errors": 0,
+            "serves_points": 2,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 6,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 2,
+            "attacks_success_pct": "33%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 5,
+          "break_points": 4,
+          "plus_minus": 4
         }
       ],
       "totals": {
-        "serves_attempts": 86,
+        "serves_attempts": 99,
         "serves_errors": 8,
-        "serves_points": 6,
+        "serves_points": 8,
         "receptions_attempts": 1,
         "receptions_errors": 0,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 97,
-        "attacks_errors": 5,
+        "attacks_attempts": 103,
+        "attacks_errors": 6,
         "attacks_blocked": 8,
-        "attacks_points": 41,
+        "attacks_points": 43,
         "attacks_success_pct": "42%",
-        "blocks_points": 10
+        "blocks_points": 11
       },
-      "total_points": 57,
-      "break_points_total": 29,
-      "plus_minus_total": 36
+      "total_points": 62,
+      "break_points_total": 33,
+      "plus_minus_total": 40
     },
     {
       "name": "Louisa Krams",
       "jersey_number": 17,
-      "match_count": 6,
+      "match_count": 7,
       "matches": [
         {
           "player": "Krams Louisa",
@@ -5933,10 +6532,52 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -3
+        },
+        {
+          "player": "Krams Louisa",
+          "jersey_number": 17,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 24,
+        "serves_attempts": 25,
         "serves_errors": 4,
         "serves_points": 0,
         "receptions_attempts": 1,
