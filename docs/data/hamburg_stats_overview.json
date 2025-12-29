@@ -1,5 +1,5 @@
 {
-  "generated": "2025-12-28T04:47:03.797494+00:00",
+  "generated": "2025-12-29T04:42:17.733542+00:00",
   "team": "ETV Hamburger Volksbank Volleys",
   "match_count": 10,
   "matches": [
@@ -495,7 +495,7 @@
       "host": "VC Wiesbaden",
       "location": "Sporthalle am Platz der Deutschen Einheit (65185 Wiesbaden)",
       "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-      "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
       "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/6b6f0101-6ae1-432d-add9-05748baa884d/2062",
       "attendance": "1643",
       "mvps": [
@@ -528,11 +528,11 @@
         "receptions_errors": 7,
         "receptions_positive_pct": "37%",
         "receptions_perfect_pct": "13%",
-        "attacks_attempts": 97,
+        "attacks_attempts": 98,
         "attacks_errors": 14,
         "attacks_blocked": 7,
-        "attacks_points": 31,
-        "attacks_success_pct": "32%",
+        "attacks_points": 33,
+        "attacks_success_pct": "34%",
         "blocks_points": 4,
         "receptions_positive": 25,
         "receptions_perfect": 9
@@ -549,11 +549,11 @@
     "receptions_perfect": 110,
     "receptions_positive_pct": "36%",
     "receptions_perfect_pct": "15%",
-    "attacks_attempts": 1076,
+    "attacks_attempts": 1077,
     "attacks_errors": 99,
     "attacks_blocked": 88,
-    "attacks_points": 349,
-    "attacks_success_pct": "32%",
+    "attacks_points": 351,
+    "attacks_success_pct": "33%",
     "blocks_points": 62
   },
   "player_count": 16,
@@ -956,7 +956,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -975,7 +975,7 @@
             "receptions_errors": 2,
             "receptions_positive_pct": "42%",
             "receptions_perfect_pct": "15%",
-            "attacks_attempts": 0,
+            "attacks_attempts": 1,
             "attacks_errors": 0,
             "attacks_blocked": 0,
             "attacks_points": 0,
@@ -984,9 +984,9 @@
             "receptions_positive": 14,
             "receptions_perfect": 5
           },
-          "total_points": 0,
+          "total_points": 1,
           "break_points": 0,
-          "plus_minus": -2
+          "plus_minus": -1
         }
       ],
       "totals": {
@@ -999,16 +999,16 @@
         "receptions_perfect": 15,
         "receptions_positive_pct": "38%",
         "receptions_perfect_pct": "14%",
-        "attacks_attempts": 1,
+        "attacks_attempts": 2,
         "attacks_errors": 0,
         "attacks_blocked": 0,
         "attacks_points": 0,
         "attacks_success_pct": "0%",
         "blocks_points": 0
       },
-      "total_points": 1,
+      "total_points": 2,
       "break_points_total": 0,
-      "plus_minus_total": -7
+      "plus_minus_total": -6
     },
     {
       "name": "Feli Anne Clemann",
@@ -1279,7 +1279,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -1645,7 +1645,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -1667,15 +1667,15 @@
             "attacks_attempts": 18,
             "attacks_errors": 2,
             "attacks_blocked": 2,
-            "attacks_points": 6,
-            "attacks_success_pct": "33%",
+            "attacks_points": 8,
+            "attacks_success_pct": "44%",
             "blocks_points": 2,
             "receptions_positive": 0,
             "receptions_perfect": 0
           },
-          "total_points": 9,
+          "total_points": 11,
           "break_points": 3,
-          "plus_minus": 4
+          "plus_minus": 6
         }
       ],
       "totals": {
@@ -1691,13 +1691,13 @@
         "attacks_attempts": 105,
         "attacks_errors": 16,
         "attacks_blocked": 13,
-        "attacks_points": 23,
-        "attacks_success_pct": "22%",
+        "attacks_points": 25,
+        "attacks_success_pct": "24%",
         "blocks_points": 6
       },
-      "total_points": 32,
+      "total_points": 34,
       "break_points_total": 11,
-      "plus_minus_total": -13
+      "plus_minus_total": -11
     },
     {
       "name": "Sarah Stiriz",
@@ -2465,7 +2465,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -2522,7 +2522,7 @@
     {
       "name": "Constanze von Meyenn",
       "jersey_number": 6,
-      "match_count": 5,
+      "match_count": 6,
       "matches": [
         {
           "player": "von Meyenn Constanze",
@@ -2714,6 +2714,48 @@
               "19:25"
             ],
             "summary": "0:3 / 48:75 (13:25 16:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "von Meyenn Constanze",
+          "jersey_number": 6,
+          "match_number": "2062",
+          "match_id": "777480519",
+          "kickoff": "2025-12-27T18:30:00+01:00",
+          "is_home": false,
+          "opponent": "VC Wiesbaden",
+          "opponent_short": "Wiesbaden",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
+          "result": {
+            "score": "0:3",
+            "total_points": "60:76",
+            "sets": [
+              "16:25",
+              "20:25",
+              "24:26"
+            ],
+            "summary": "0:3 / 60:76 (16:25 20:25 24:26)"
           },
           "metrics": {
             "serves_attempts": 0,
@@ -3113,7 +3155,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -3565,7 +3607,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -3889,7 +3931,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -4341,7 +4383,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -4793,7 +4835,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -5202,7 +5244,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -5391,7 +5433,7 @@
           "plus_minus": 6
         },
         {
-          "player": "Weißß Kathleen",
+          "player": "Weißß Kathleen **",
           "jersey_number": 13,
           "match_number": "2062",
           "match_id": "777480519",
@@ -5400,7 +5442,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -5766,7 +5808,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -6218,7 +6260,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
@@ -6543,7 +6585,7 @@
           "opponent": "VC Wiesbaden",
           "opponent_short": "Wiesbaden",
           "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480519&hideHistoryBackButton=true",
-          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2062.pdf",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/011bb888-8bb8-49d0-a45a-eeaa55716d96",
           "result": {
             "score": "0:3",
             "total_points": "60:76",
