@@ -1,7 +1,7 @@
 {
-  "generated": "2026-01-17T04:24:30.265710+00:00",
+  "generated": "2026-01-18T04:35:40.783010+00:00",
   "team": "ETV Hamburger Volksbank Volleys",
-  "match_count": 11,
+  "match_count": 12,
   "matches": [
     {
       "match_number": "2005",
@@ -590,31 +590,85 @@
         "receptions_positive": 20,
         "receptions_perfect": 6
       }
+    },
+    {
+      "match_number": "2078",
+      "match_id": "777480544",
+      "kickoff": "2026-01-17T17:15:00+01:00",
+      "is_home": true,
+      "opponent": "SSC Palmberg Schwerin",
+      "opponent_short": "Schwerin",
+      "host": "ETV Hamburger Volksbank Volleys",
+      "location": "CU Arena (21147 Hamburg)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+      "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/20c14c88-7261-4d0c-a5b6-4fc112b26745/2078",
+      "attendance": "1408",
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Weiß, Kathleen",
+          "team": "ETV Hamburger Volksbank Volleys"
+        },
+        {
+          "medal": "Gold",
+          "name": "Frommann, Finnja",
+          "team": "SSC Palmberg Schwerin"
+        }
+      ],
+      "result": {
+        "score": "1:3",
+        "total_points": "73:95",
+        "sets": [
+          "16:25",
+          "21:25",
+          "25:20",
+          "11:25"
+        ],
+        "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+      },
+      "metrics": {
+        "serves_attempts": 85,
+        "serves_errors": 8,
+        "serves_points": 8,
+        "receptions_attempts": 89,
+        "receptions_errors": 6,
+        "receptions_positive_pct": "45%",
+        "receptions_perfect_pct": "2%",
+        "attacks_attempts": 141,
+        "attacks_errors": 10,
+        "attacks_blocked": 16,
+        "attacks_points": 54,
+        "attacks_success_pct": "38%",
+        "blocks_points": 7,
+        "receptions_positive": 40,
+        "receptions_perfect": 2
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 708,
-    "serves_errors": 88,
-    "serves_points": 40,
-    "receptions_attempts": 802,
-    "receptions_errors": 118,
-    "receptions_positive": 284,
-    "receptions_perfect": 116,
-    "receptions_positive_pct": "35%",
-    "receptions_perfect_pct": "14%",
-    "attacks_attempts": 1182,
-    "attacks_errors": 112,
-    "attacks_blocked": 94,
-    "attacks_points": 377,
-    "attacks_success_pct": "32%",
-    "blocks_points": 64
+    "serves_attempts": 793,
+    "serves_errors": 96,
+    "serves_points": 48,
+    "receptions_attempts": 891,
+    "receptions_errors": 124,
+    "receptions_positive": 324,
+    "receptions_perfect": 118,
+    "receptions_positive_pct": "36%",
+    "receptions_perfect_pct": "13%",
+    "attacks_attempts": 1323,
+    "attacks_errors": 122,
+    "attacks_blocked": 110,
+    "attacks_points": 431,
+    "attacks_success_pct": "33%",
+    "blocks_points": 71
   },
   "player_count": 16,
   "players": [
     {
       "name": "Jana-Marie Meiser",
       "jersey_number": 1,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Meiser Jana-Marie",
@@ -1040,6 +1094,49 @@
           "total_points": 1,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Meiser Jana-Marie",
+          "jersey_number": 1,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1066,7 +1163,7 @@
     {
       "name": "Feli Anne Clemann",
       "jersey_number": 2,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Clemann Feli Anne",
@@ -1405,6 +1502,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Clemann Feli Anne",
+          "jersey_number": 19,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1431,7 +1571,7 @@
     {
       "name": "Lina Köster",
       "jersey_number": 3,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Köster Lina",
@@ -1813,11 +1953,54 @@
           "total_points": 2,
           "break_points": 1,
           "plus_minus": -4
+        },
+        {
+          "player": "Köster Lina",
+          "jersey_number": 3,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 8,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 33,
+            "attacks_errors": 3,
+            "attacks_blocked": 2,
+            "attacks_points": 16,
+            "attacks_success_pct": "48%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 16,
+          "break_points": 2,
+          "plus_minus": 10
         }
       ],
       "totals": {
-        "serves_attempts": 48,
-        "serves_errors": 10,
+        "serves_attempts": 56,
+        "serves_errors": 11,
         "serves_points": 3,
         "receptions_attempts": 40,
         "receptions_errors": 7,
@@ -1825,21 +2008,21 @@
         "receptions_perfect": 2,
         "receptions_positive_pct": "18%",
         "receptions_perfect_pct": "5%",
-        "attacks_attempts": 122,
-        "attacks_errors": 19,
-        "attacks_blocked": 15,
-        "attacks_points": 27,
-        "attacks_success_pct": "22%",
+        "attacks_attempts": 155,
+        "attacks_errors": 22,
+        "attacks_blocked": 17,
+        "attacks_points": 43,
+        "attacks_success_pct": "28%",
         "blocks_points": 6
       },
-      "total_points": 36,
-      "break_points_total": 12,
-      "plus_minus_total": -15
+      "total_points": 52,
+      "break_points_total": 14,
+      "plus_minus_total": -5
     },
     {
       "name": "Sarah Stiriz",
       "jersey_number": 4,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Stiriz Sarah",
@@ -2223,18 +2406,61 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Stiriz Sarah",
+          "jersey_number": 4,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 20,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "60%",
+            "receptions_perfect_pct": "5%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 12,
+            "receptions_perfect": 1
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
         }
       ],
       "totals": {
         "serves_attempts": 1,
         "serves_errors": 1,
         "serves_points": 1,
-        "receptions_attempts": 108,
-        "receptions_errors": 11,
-        "receptions_positive": 33,
-        "receptions_perfect": 18,
-        "receptions_positive_pct": "31%",
-        "receptions_perfect_pct": "17%",
+        "receptions_attempts": 128,
+        "receptions_errors": 12,
+        "receptions_positive": 45,
+        "receptions_perfect": 19,
+        "receptions_positive_pct": "35%",
+        "receptions_perfect_pct": "15%",
         "attacks_attempts": 0,
         "attacks_errors": 0,
         "attacks_blocked": 0,
@@ -2244,12 +2470,12 @@
       },
       "total_points": 0,
       "break_points_total": 0,
-      "plus_minus_total": -9
+      "plus_minus_total": -10
     },
     {
       "name": "Anna Hartig",
       "jersey_number": 5,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Hartig Anna",
@@ -2717,28 +2943,71 @@
           "total_points": 5,
           "break_points": 0,
           "plus_minus": 3
+        },
+        {
+          "player": "Hartig Anna",
+          "jersey_number": 5,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 13,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 13,
+            "attacks_errors": 0,
+            "attacks_blocked": 2,
+            "attacks_points": 5,
+            "attacks_success_pct": "38%",
+            "blocks_points": 4,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 10,
+          "break_points": 5,
+          "plus_minus": 8
         }
       ],
       "totals": {
-        "serves_attempts": 62,
+        "serves_attempts": 75,
         "serves_errors": 3,
-        "serves_points": 1,
+        "serves_points": 2,
         "receptions_attempts": 0,
         "receptions_errors": 11,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 109,
+        "attacks_attempts": 122,
         "attacks_errors": 12,
-        "attacks_blocked": 11,
-        "attacks_points": 48,
-        "attacks_success_pct": "44%",
-        "blocks_points": 11
+        "attacks_blocked": 13,
+        "attacks_points": 53,
+        "attacks_success_pct": "43%",
+        "blocks_points": 15
       },
-      "total_points": 70,
-      "break_points_total": 18,
-      "plus_minus_total": 34
+      "total_points": 80,
+      "break_points_total": 23,
+      "plus_minus_total": 42
     },
     {
       "name": "Constanze von Meyenn",
@@ -3475,7 +3744,7 @@
     {
       "name": "Zoe Konjer",
       "jersey_number": 8,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Konjer Zoe",
@@ -3943,12 +4212,55 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Konjer Zoe",
+          "jersey_number": 8,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 10,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 1,
+          "plus_minus": 1
         }
       ],
       "totals": {
-        "serves_attempts": 77,
+        "serves_attempts": 87,
         "serves_errors": 3,
-        "serves_points": 6,
+        "serves_points": 7,
         "receptions_attempts": 31,
         "receptions_errors": 2,
         "receptions_positive": 17,
@@ -3962,9 +4274,9 @@
         "attacks_success_pct": "37%",
         "blocks_points": 1
       },
-      "total_points": 28,
-      "break_points_total": 13,
-      "plus_minus_total": 18
+      "total_points": 29,
+      "break_points_total": 14,
+      "plus_minus_total": 19
     },
     {
       "name": "Luise Klein",
@@ -4293,7 +4605,7 @@
     {
       "name": "Lena Liegert",
       "jersey_number": 10,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Liegert Lena",
@@ -4719,6 +5031,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Liegert Lena",
+          "jersey_number": 10,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -4745,7 +5100,7 @@
     {
       "name": "Svea Frobel",
       "jersey_number": 11,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Frobel Svea",
@@ -5213,33 +5568,76 @@
           "total_points": 8,
           "break_points": 4,
           "plus_minus": -2
+        },
+        {
+          "player": "Frobel Svea",
+          "jersey_number": 11,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 10,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 31,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "45%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 41,
+            "attacks_errors": 3,
+            "attacks_blocked": 6,
+            "attacks_points": 14,
+            "attacks_success_pct": "34%",
+            "blocks_points": 1,
+            "receptions_positive": 14,
+            "receptions_perfect": 0
+          },
+          "total_points": 15,
+          "break_points": 5,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 100,
-        "serves_errors": 13,
+        "serves_attempts": 110,
+        "serves_errors": 14,
         "serves_points": 4,
-        "receptions_attempts": 237,
-        "receptions_errors": 28,
-        "receptions_positive": 86,
+        "receptions_attempts": 268,
+        "receptions_errors": 30,
+        "receptions_positive": 100,
         "receptions_perfect": 31,
-        "receptions_positive_pct": "36%",
-        "receptions_perfect_pct": "13%",
-        "attacks_attempts": 333,
-        "attacks_errors": 31,
-        "attacks_blocked": 31,
-        "attacks_points": 107,
+        "receptions_positive_pct": "37%",
+        "receptions_perfect_pct": "12%",
+        "attacks_attempts": 374,
+        "attacks_errors": 34,
+        "attacks_blocked": 37,
+        "attacks_points": 121,
         "attacks_success_pct": "32%",
-        "blocks_points": 12
+        "blocks_points": 13
       },
-      "total_points": 123,
-      "break_points_total": 44,
-      "plus_minus_total": 20
+      "total_points": 138,
+      "break_points_total": 49,
+      "plus_minus_total": 23
     },
     {
       "name": "Hannah Ammerman",
       "jersey_number": 12,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Ammerman Hannah ***",
@@ -5664,33 +6062,76 @@
           "total_points": 4,
           "break_points": 3,
           "plus_minus": -2
+        },
+        {
+          "player": "Ammerman Hannah",
+          "jersey_number": 12,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 15,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 35,
+            "receptions_errors": 3,
+            "receptions_positive_pct": "37%",
+            "receptions_perfect_pct": "3%",
+            "attacks_attempts": 43,
+            "attacks_errors": 3,
+            "attacks_blocked": 3,
+            "attacks_points": 15,
+            "attacks_success_pct": "35%",
+            "blocks_points": 2,
+            "receptions_positive": 13,
+            "receptions_perfect": 1
+          },
+          "total_points": 17,
+          "break_points": 4,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 92,
-        "serves_errors": 8,
+        "serves_attempts": 107,
+        "serves_errors": 10,
         "serves_points": 2,
-        "receptions_attempts": 146,
-        "receptions_errors": 14,
-        "receptions_positive": 44,
-        "receptions_perfect": 18,
-        "receptions_positive_pct": "30%",
-        "receptions_perfect_pct": "12%",
-        "attacks_attempts": 208,
-        "attacks_errors": 18,
-        "attacks_blocked": 13,
-        "attacks_points": 55,
-        "attacks_success_pct": "26%",
-        "blocks_points": 9
+        "receptions_attempts": 181,
+        "receptions_errors": 17,
+        "receptions_positive": 57,
+        "receptions_perfect": 19,
+        "receptions_positive_pct": "31%",
+        "receptions_perfect_pct": "10%",
+        "attacks_attempts": 251,
+        "attacks_errors": 21,
+        "attacks_blocked": 16,
+        "attacks_points": 70,
+        "attacks_success_pct": "28%",
+        "blocks_points": 11
       },
-      "total_points": 66,
-      "break_points_total": 24,
-      "plus_minus_total": 13
+      "total_points": 83,
+      "break_points_total": 28,
+      "plus_minus_total": 19
     },
     {
       "name": "Kathleen Weiß",
       "jersey_number": 13,
-      "match_count": 4,
+      "match_count": 5,
       "matches": [
         {
           "player": "Olliges Lena",
@@ -5862,12 +6303,55 @@
           "total_points": 1,
           "break_points": 0,
           "plus_minus": 1
+        },
+        {
+          "player": "Weißss Kathleen",
+          "jersey_number": 13,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 12,
+            "serves_errors": 1,
+            "serves_points": 4,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 4,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 19,
-        "serves_errors": 1,
-        "serves_points": 0,
+        "serves_attempts": 31,
+        "serves_errors": 2,
+        "serves_points": 4,
         "receptions_attempts": 0,
         "receptions_errors": 0,
         "receptions_positive": 0,
@@ -5881,14 +6365,14 @@
         "attacks_success_pct": "56%",
         "blocks_points": 3
       },
-      "total_points": 8,
-      "break_points_total": 3,
-      "plus_minus_total": 7
+      "total_points": 12,
+      "break_points_total": 7,
+      "plus_minus_total": 10
     },
     {
       "name": "Fiona Dittmann",
       "jersey_number": 14,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Dittmann Fiona",
@@ -6270,33 +6754,76 @@
           "total_points": 1,
           "break_points": 0,
           "plus_minus": -2
+        },
+        {
+          "player": "Dittmann Fiona",
+          "jersey_number": 14,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "50%",
+            "attacks_attempts": 0,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "1100%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 1,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 15,
+        "serves_attempts": 16,
         "serves_errors": 7,
         "serves_points": 2,
         "receptions_attempts": 27,
-        "receptions_errors": 2,
+        "receptions_errors": 4,
         "receptions_positive": 6,
         "receptions_perfect": 2,
         "receptions_positive_pct": "22%",
         "receptions_perfect_pct": "7%",
         "attacks_attempts": 26,
-        "attacks_errors": 3,
+        "attacks_errors": 4,
         "attacks_blocked": 2,
         "attacks_points": 5,
         "attacks_success_pct": "19%",
         "blocks_points": 1
       },
       "total_points": 8,
-      "break_points_total": 3,
+      "break_points_total": 4,
       "plus_minus_total": -6
     },
     {
       "name": "Alexa Sophie Thaden",
       "jersey_number": 15,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Thaden Alexa Sophie",
@@ -6764,33 +7291,76 @@
           "total_points": 4,
           "break_points": 1,
           "plus_minus": 3
+        },
+        {
+          "player": "Thaden Alexa Sophie",
+          "jersey_number": 15,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 13,
+            "serves_errors": 3,
+            "serves_points": 1,
+            "receptions_attempts": 1,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 5,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 2,
+            "attacks_success_pct": "40%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 3,
+          "break_points": 2,
+          "plus_minus": -1
         }
       ],
       "totals": {
-        "serves_attempts": 107,
-        "serves_errors": 9,
-        "serves_points": 9,
-        "receptions_attempts": 2,
+        "serves_attempts": 120,
+        "serves_errors": 12,
+        "serves_points": 10,
+        "receptions_attempts": 3,
         "receptions_errors": 0,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 108,
-        "attacks_errors": 6,
+        "attacks_attempts": 113,
+        "attacks_errors": 7,
         "attacks_blocked": 8,
-        "attacks_points": 45,
+        "attacks_points": 47,
         "attacks_success_pct": "42%",
         "blocks_points": 12
       },
-      "total_points": 66,
-      "break_points_total": 34,
-      "plus_minus_total": 43
+      "total_points": 69,
+      "break_points_total": 36,
+      "plus_minus_total": 42
     },
     {
       "name": "Louisa Krams",
       "jersey_number": 17,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Krams Louisa",
@@ -7131,27 +7701,70 @@
           "total_points": 2,
           "break_points": 1,
           "plus_minus": 2
+        },
+        {
+          "player": "Krams Louisa",
+          "jersey_number": 17,
+          "match_number": "2078",
+          "match_id": "777480544",
+          "kickoff": "2026-01-17T17:15:00+01:00",
+          "is_home": true,
+          "opponent": "SSC Palmberg Schwerin",
+          "opponent_short": "Schwerin",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480544&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2078.pdf",
+          "result": {
+            "score": "1:3",
+            "total_points": "73:95",
+            "sets": [
+              "16:25",
+              "21:25",
+              "25:20",
+              "11:25"
+            ],
+            "summary": "1:3 / 73:95 (16:25 21:25 25:20 11:25)"
+          },
+          "metrics": {
+            "serves_attempts": 4,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 4,
+            "attacks_errors": 0,
+            "attacks_blocked": 2,
+            "attacks_points": 1,
+            "attacks_success_pct": "25%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 2,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 30,
+        "serves_attempts": 34,
         "serves_errors": 4,
-        "serves_points": 1,
+        "serves_points": 2,
         "receptions_attempts": 1,
         "receptions_errors": 0,
         "receptions_positive": 1,
         "receptions_perfect": 0,
         "receptions_positive_pct": "100%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 14,
+        "attacks_attempts": 18,
         "attacks_errors": 0,
-        "attacks_blocked": 3,
-        "attacks_points": 4,
-        "attacks_success_pct": "29%",
+        "attacks_blocked": 5,
+        "attacks_points": 5,
+        "attacks_success_pct": "28%",
         "blocks_points": 1
       },
-      "total_points": 6,
-      "break_points_total": 2,
+      "total_points": 8,
+      "break_points_total": 4,
       "plus_minus_total": -1
     }
   ]
