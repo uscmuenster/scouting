@@ -6260,23 +6260,144 @@
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 6,
       "away_team": "VC Wiesbaden",
       "club_id": "228",
       "competition_id": "185",
       "date": "18.01.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 8,
       "home_team": "Skurios Volleys Borken",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11930&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11930&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Bernhard Lena",
+          "home_points": 2,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 11,
+          "duration": null,
+          "home_label": "Demirer Melisa Nafia (L)",
+          "home_points": -4,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Luther Doreen",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 21,
+          "duration": null,
+          "home_label": "Hansen Ditte Kjær (L)",
+          "home_points": -4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Loker Marika",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Kretschmer Lara",
+          "home_points": 5,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": -2,
+          "duration": null,
+          "home_label": "Hövels Sandra",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Gesquiere Amber",
+          "home_points": 3,
+          "set": 8
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Rudde Hannah",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Konjer Chaine",
+          "home_points": 6,
+          "set": 10
+        },
+        {
+          "away_label": "-",
+          "away_points": -2,
+          "duration": null,
+          "home_label": "Mohr Pia",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Coenders Fabienne",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Piest Madleen",
+          "home_points": 4,
+          "set": 13
+        },
+        {
+          "away_label": "-",
+          "away_points": 9,
+          "duration": null,
+          "home_label": "Kastrup Liza",
+          "home_points": 4,
+          "set": 14
+        },
+        {
+          "away_label": null,
+          "away_points": -4,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 9,
+          "set": 15
+        }
+      ],
       "match_id": "11930",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "0 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "2-1, -4-11, 3-2, -4-21, 4-3, 5-6, 6--2, 3-3, 1-3, 6-1, 5--2, 2-1, 4-5, 4-9, 9--4",
       "time": "15:30"
     },
     {
