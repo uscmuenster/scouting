@@ -1,7 +1,7 @@
 {
-  "generated": "2026-01-19T04:43:52.854844+00:00",
+  "generated": "2026-01-20T04:37:22.481968+00:00",
   "team": "USC Münster",
-  "match_count": 11,
+  "match_count": 12,
   "matches": [
     {
       "match_number": "2001",
@@ -582,31 +582,85 @@
         "receptions_positive": 11,
         "receptions_perfect": 4
       }
+    },
+    {
+      "match_number": "2077",
+      "match_id": "777480568",
+      "kickoff": "2026-01-18T16:00:00+01:00",
+      "is_home": true,
+      "opponent": "Binder Blaubären TSV Flacht",
+      "opponent_short": "Flacht",
+      "host": "USC Münster",
+      "location": "Sporthalle Berg Fidel (48153 Münster)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/25a55001-5bbc-4da6-8bcb-15b24f2dbb6a/2077",
+      "attendance": "2234",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Schultze, Lena",
+          "team": "USC Münster"
+        },
+        {
+          "medal": "Silber",
+          "name": "Binkau, Hanne",
+          "team": "Binder Blaubären TSV Flacht"
+        }
+      ],
+      "result": {
+        "score": "3:1",
+        "total_points": "97:83",
+        "sets": [
+          "21:25",
+          "26:24",
+          "25:18",
+          "25:16"
+        ],
+        "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+      },
+      "metrics": {
+        "serves_attempts": 95,
+        "serves_errors": 17,
+        "serves_points": 5,
+        "receptions_attempts": 74,
+        "receptions_errors": 5,
+        "receptions_positive_pct": "54%",
+        "receptions_perfect_pct": "22%",
+        "attacks_attempts": 134,
+        "attacks_errors": 16,
+        "attacks_blocked": 10,
+        "attacks_points": 62,
+        "attacks_success_pct": "46%",
+        "blocks_points": 9,
+        "receptions_positive": 40,
+        "receptions_perfect": 16
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 833,
-    "serves_errors": 200,
-    "serves_points": 144,
-    "receptions_attempts": 664,
-    "receptions_errors": 79,
-    "receptions_positive": 223,
-    "receptions_perfect": 123,
-    "receptions_positive_pct": "34%",
+    "serves_attempts": 928,
+    "serves_errors": 217,
+    "serves_points": 149,
+    "receptions_attempts": 738,
+    "receptions_errors": 84,
+    "receptions_positive": 263,
+    "receptions_perfect": 139,
+    "receptions_positive_pct": "36%",
     "receptions_perfect_pct": "19%",
-    "attacks_attempts": 1087,
-    "attacks_errors": 456,
-    "attacks_blocked": 149,
-    "attacks_points": 469,
+    "attacks_attempts": 1221,
+    "attacks_errors": 472,
+    "attacks_blocked": 159,
+    "attacks_points": 531,
     "attacks_success_pct": "43%",
-    "blocks_points": 86
+    "blocks_points": 95
   },
   "player_count": 14,
   "players": [
     {
       "name": "Pippa Molenaar",
       "jersey_number": 1,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Molenaar Pippa",
@@ -1077,18 +1131,61 @@
           "total_points": 0,
           "break_points": 1,
           "plus_minus": 1
+        },
+        {
+          "player": "Molenaar Pippa",
+          "jersey_number": 1,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 31,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "52%",
+            "receptions_perfect_pct": "32%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 16,
+            "receptions_perfect": 10
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -2
         }
       ],
       "totals": {
         "serves_attempts": 15,
         "serves_errors": 11,
         "serves_points": 1,
-        "receptions_attempts": 153,
-        "receptions_errors": 18,
-        "receptions_positive": 60,
-        "receptions_perfect": 30,
-        "receptions_positive_pct": "39%",
-        "receptions_perfect_pct": "20%",
+        "receptions_attempts": 184,
+        "receptions_errors": 20,
+        "receptions_positive": 76,
+        "receptions_perfect": 40,
+        "receptions_positive_pct": "41%",
+        "receptions_perfect_pct": "22%",
         "attacks_attempts": 4,
         "attacks_errors": 318,
         "attacks_blocked": 0,
@@ -1098,12 +1195,12 @@
       },
       "total_points": 38,
       "break_points_total": 10,
-      "plus_minus_total": 2
+      "plus_minus_total": 0
     },
     {
       "name": "Lara-Marie Schaefer",
       "jersey_number": 2,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Schaefer Lara-Marie",
@@ -1531,6 +1628,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Schaefer Lara-Marie",
+          "jersey_number": 2,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1557,7 +1697,7 @@
     {
       "name": "Esther Spöler",
       "jersey_number": 3,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Spöler Esther",
@@ -1984,33 +2124,76 @@
           "total_points": 10,
           "break_points": 5,
           "plus_minus": 9
+        },
+        {
+          "player": "Spöler Esther",
+          "jersey_number": 3,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 14,
+            "serves_errors": 4,
+            "serves_points": 2,
+            "receptions_attempts": 2,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 19,
+            "attacks_errors": 3,
+            "attacks_blocked": 2,
+            "attacks_points": 9,
+            "attacks_success_pct": "47%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 12,
+          "break_points": 3,
+          "plus_minus": 2
         }
       ],
       "totals": {
-        "serves_attempts": 90,
-        "serves_errors": 12,
-        "serves_points": 16,
-        "receptions_attempts": 15,
-        "receptions_errors": 0,
+        "serves_attempts": 104,
+        "serves_errors": 16,
+        "serves_points": 18,
+        "receptions_attempts": 17,
+        "receptions_errors": 1,
         "receptions_positive": 4,
         "receptions_perfect": 0,
-        "receptions_positive_pct": "27%",
+        "receptions_positive_pct": "24%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 117,
-        "attacks_errors": 20,
-        "attacks_blocked": 5,
-        "attacks_points": 73,
-        "attacks_success_pct": "62%",
-        "blocks_points": 19
+        "attacks_attempts": 136,
+        "attacks_errors": 23,
+        "attacks_blocked": 7,
+        "attacks_points": 82,
+        "attacks_success_pct": "60%",
+        "blocks_points": 20
       },
-      "total_points": 636,
-      "break_points_total": 91,
-      "plus_minus_total": 68
+      "total_points": 648,
+      "break_points_total": 94,
+      "plus_minus_total": 70
     },
     {
       "name": "Cecilia Malm",
       "jersey_number": 5,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Malm Cecilia",
@@ -2481,33 +2664,76 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Malm Cecilia",
+          "jersey_number": 5,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 15,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "47%",
+            "receptions_perfect_pct": "27%",
+            "attacks_attempts": 13,
+            "attacks_errors": 0,
+            "attacks_blocked": 1,
+            "attacks_points": 7,
+            "attacks_success_pct": "54%",
+            "blocks_points": 1,
+            "receptions_positive": 7,
+            "receptions_perfect": 4
+          },
+          "total_points": 8,
+          "break_points": 2,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 86,
-        "serves_errors": 18,
+        "serves_attempts": 95,
+        "serves_errors": 19,
         "serves_points": 9,
-        "receptions_attempts": 119,
+        "receptions_attempts": 134,
         "receptions_errors": 18,
-        "receptions_positive": 39,
-        "receptions_perfect": 17,
-        "receptions_positive_pct": "33%",
-        "receptions_perfect_pct": "14%",
-        "attacks_attempts": 110,
+        "receptions_positive": 46,
+        "receptions_perfect": 21,
+        "receptions_positive_pct": "34%",
+        "receptions_perfect_pct": "16%",
+        "attacks_attempts": 123,
         "attacks_errors": 9,
-        "attacks_blocked": 4,
-        "attacks_points": 34,
-        "attacks_success_pct": "31%",
-        "blocks_points": 7
+        "attacks_blocked": 5,
+        "attacks_points": 41,
+        "attacks_success_pct": "33%",
+        "blocks_points": 8
       },
-      "total_points": 59,
-      "break_points_total": 24,
-      "plus_minus_total": 10
+      "total_points": 67,
+      "break_points_total": 26,
+      "plus_minus_total": 16
     },
     {
       "name": "Elena Kömmling",
       "jersey_number": 7,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Kömmling Elena",
@@ -2935,33 +3161,76 @@
           "total_points": 8,
           "break_points": 1,
           "plus_minus": 5
+        },
+        {
+          "player": "Kömmling Elena",
+          "jersey_number": 7,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 15,
+            "serves_errors": 2,
+            "serves_points": 1,
+            "receptions_attempts": 15,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "73%",
+            "receptions_perfect_pct": "7%",
+            "attacks_attempts": 28,
+            "attacks_errors": 1,
+            "attacks_blocked": 3,
+            "attacks_points": 10,
+            "attacks_success_pct": "36%",
+            "blocks_points": 2,
+            "receptions_positive": 11,
+            "receptions_perfect": 1
+          },
+          "total_points": 13,
+          "break_points": 5,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 47,
-        "serves_errors": 31,
-        "serves_points": 5,
-        "receptions_attempts": 106,
-        "receptions_errors": 15,
-        "receptions_positive": 25,
-        "receptions_perfect": 11,
-        "receptions_positive_pct": "24%",
+        "serves_attempts": 62,
+        "serves_errors": 33,
+        "serves_points": 6,
+        "receptions_attempts": 121,
+        "receptions_errors": 16,
+        "receptions_positive": 36,
+        "receptions_perfect": 12,
+        "receptions_positive_pct": "30%",
         "receptions_perfect_pct": "10%",
-        "attacks_attempts": 65,
-        "attacks_errors": 19,
-        "attacks_blocked": 3,
-        "attacks_points": 33,
-        "attacks_success_pct": "51%",
-        "blocks_points": 2
+        "attacks_attempts": 93,
+        "attacks_errors": 20,
+        "attacks_blocked": 6,
+        "attacks_points": 43,
+        "attacks_success_pct": "46%",
+        "blocks_points": 4
       },
-      "total_points": 104,
-      "break_points_total": 14,
-      "plus_minus_total": 13
+      "total_points": 117,
+      "break_points_total": 19,
+      "plus_minus_total": 19
     },
     {
       "name": "Yina Liu",
       "jersey_number": 8,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Liu Yina",
@@ -3432,10 +3701,53 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Liu Yina",
+          "jersey_number": 8,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 32,
+        "serves_attempts": 33,
         "serves_errors": 3,
         "serves_points": 1,
         "receptions_attempts": 47,
@@ -3458,7 +3770,7 @@
     {
       "name": "Emilia Jordan",
       "jersey_number": 9,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Jordan Emilia",
@@ -3842,33 +4154,76 @@
           "total_points": 71,
           "break_points": 6,
           "plus_minus": 5
+        },
+        {
+          "player": "Jordan Emilia",
+          "jersey_number": 9,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 23,
+            "serves_errors": 4,
+            "serves_points": 2,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 3,
+            "attacks_errors": 0,
+            "attacks_blocked": 1,
+            "attacks_points": 1,
+            "attacks_success_pct": "33%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 3,
+          "break_points": 2,
+          "plus_minus": -2
         }
       ],
       "totals": {
-        "serves_attempts": 83,
-        "serves_errors": 28,
-        "serves_points": 37,
+        "serves_attempts": 106,
+        "serves_errors": 32,
+        "serves_points": 39,
         "receptions_attempts": 6,
         "receptions_errors": 6,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 28,
+        "attacks_attempts": 31,
         "attacks_errors": 2,
-        "attacks_blocked": 3,
-        "attacks_points": 10,
-        "attacks_success_pct": "36%",
+        "attacks_blocked": 4,
+        "attacks_points": 11,
+        "attacks_success_pct": "35%",
         "blocks_points": 9
       },
-      "total_points": 138,
-      "break_points_total": 22,
-      "plus_minus_total": 9
+      "total_points": 141,
+      "break_points_total": 24,
+      "plus_minus_total": 7
     },
     {
       "name": "Amelie Strothoff",
       "jersey_number": 10,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Strothoff Amelie",
@@ -4339,33 +4694,76 @@
           "total_points": 14,
           "break_points": 9,
           "plus_minus": 11
+        },
+        {
+          "player": "Strothoff Amelie",
+          "jersey_number": 10,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 3,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 11,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "55%",
+            "receptions_perfect_pct": "9%",
+            "attacks_attempts": 15,
+            "attacks_errors": 4,
+            "attacks_blocked": 2,
+            "attacks_points": 3,
+            "attacks_success_pct": "20%",
+            "blocks_points": 0,
+            "receptions_positive": 6,
+            "receptions_perfect": 1
+          },
+          "total_points": 3,
+          "break_points": 2,
+          "plus_minus": -4
         }
       ],
       "totals": {
-        "serves_attempts": 94,
+        "serves_attempts": 97,
         "serves_errors": 12,
         "serves_points": 14,
-        "receptions_attempts": 86,
-        "receptions_errors": 3,
-        "receptions_positive": 39,
-        "receptions_perfect": 17,
-        "receptions_positive_pct": "45%",
-        "receptions_perfect_pct": "20%",
-        "attacks_attempts": 171,
-        "attacks_errors": 17,
-        "attacks_blocked": 36,
-        "attacks_points": 60,
-        "attacks_success_pct": "35%",
+        "receptions_attempts": 97,
+        "receptions_errors": 4,
+        "receptions_positive": 45,
+        "receptions_perfect": 18,
+        "receptions_positive_pct": "46%",
+        "receptions_perfect_pct": "19%",
+        "attacks_attempts": 186,
+        "attacks_errors": 21,
+        "attacks_blocked": 38,
+        "attacks_points": 63,
+        "attacks_success_pct": "34%",
         "blocks_points": 6
       },
-      "total_points": 126,
-      "break_points_total": 42,
-      "plus_minus_total": 24
+      "total_points": 129,
+      "break_points_total": 44,
+      "plus_minus_total": 20
     },
     {
       "name": "Franziska Heil",
       "jersey_number": 11,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Heil Franziska",
@@ -4752,6 +5150,49 @@
           "total_points": 16,
           "break_points": 3,
           "plus_minus": 10
+        },
+        {
+          "player": "Heil Franziska",
+          "jersey_number": 11,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -4778,7 +5219,7 @@
     {
       "name": "Anke Waelkens",
       "jersey_number": 12,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Waelkens Anke",
@@ -5206,6 +5647,49 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Waelkens Anke",
+          "jersey_number": 12,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -5232,7 +5716,7 @@
     {
       "name": "Brianna Ford",
       "jersey_number": 14,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Ford Brianna",
@@ -5615,11 +6099,54 @@
           "total_points": 4,
           "break_points": 1,
           "plus_minus": -5
+        },
+        {
+          "player": "Ford Brianna",
+          "jersey_number": 14,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 3,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 10,
+            "attacks_errors": 3,
+            "attacks_blocked": 1,
+            "attacks_points": 4,
+            "attacks_success_pct": "40%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 4,
+          "break_points": 1,
+          "plus_minus": -3
         }
       ],
       "totals": {
-        "serves_attempts": 72,
-        "serves_errors": 22,
+        "serves_attempts": 75,
+        "serves_errors": 25,
         "serves_points": 18,
         "receptions_attempts": 3,
         "receptions_errors": 2,
@@ -5627,21 +6154,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 158,
-        "attacks_errors": 22,
-        "attacks_blocked": 46,
-        "attacks_points": 58,
+        "attacks_attempts": 168,
+        "attacks_errors": 25,
+        "attacks_blocked": 47,
+        "attacks_points": 62,
         "attacks_success_pct": "37%",
         "blocks_points": 5
       },
-      "total_points": 125,
-      "break_points_total": 47,
-      "plus_minus_total": 22
+      "total_points": 129,
+      "break_points_total": 48,
+      "plus_minus_total": 19
     },
     {
       "name": "Lena Schultze",
       "jersey_number": 16,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Schultze Lena",
@@ -5982,10 +6509,53 @@
           "total_points": 4,
           "break_points": 2,
           "plus_minus": 3
+        },
+        {
+          "player": "Schultze Lena",
+          "jersey_number": 16,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 7,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 34,
+            "attacks_errors": 4,
+            "attacks_blocked": 0,
+            "attacks_points": 22,
+            "attacks_success_pct": "65%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 23,
+          "break_points": 10,
+          "plus_minus": 19
         }
       ],
       "totals": {
-        "serves_attempts": 6,
+        "serves_attempts": 13,
         "serves_errors": 4,
         "serves_points": 0,
         "receptions_attempts": 1,
@@ -5994,16 +6564,16 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 27,
-        "attacks_errors": 4,
+        "attacks_attempts": 61,
+        "attacks_errors": 8,
         "attacks_blocked": 2,
-        "attacks_points": 10,
-        "attacks_success_pct": "37%",
-        "blocks_points": 2
+        "attacks_points": 32,
+        "attacks_success_pct": "52%",
+        "blocks_points": 3
       },
-      "total_points": 12,
-      "break_points_total": 5,
-      "plus_minus_total": 2
+      "total_points": 35,
+      "break_points_total": 15,
+      "plus_minus_total": 21
     },
     {
       "name": "Isabel Rebecca Martin",
@@ -6336,7 +6906,7 @@
     {
       "name": "Diane Seybering",
       "jersey_number": 18,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Seybering Diane",
@@ -6763,11 +7333,54 @@
           "total_points": 9,
           "break_points": 5,
           "plus_minus": 6
+        },
+        {
+          "player": "Seybering Diane",
+          "jersey_number": 18,
+          "match_number": "2077",
+          "match_id": "777480568",
+          "kickoff": "2026-01-18T16:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480568&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7c651891-70d3-439e-a3df-e6dd1d535357",
+          "result": {
+            "score": "3:1",
+            "total_points": "97:83",
+            "sets": [
+              "21:25",
+              "26:24",
+              "25:18",
+              "25:16"
+            ],
+            "summary": "3:1 / 97:83 (21:25 26:24 25:18 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 20,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 12,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 6,
+            "attacks_success_pct": "50%",
+            "blocks_points": 4,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 10,
+          "break_points": 5,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 100,
-        "serves_errors": 24,
+        "serves_attempts": 120,
+        "serves_errors": 27,
         "serves_points": 29,
         "receptions_attempts": 24,
         "receptions_errors": 3,
@@ -6775,16 +7388,16 @@
         "receptions_perfect": 22,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "92%",
-        "attacks_attempts": 57,
-        "attacks_errors": 20,
+        "attacks_attempts": 69,
+        "attacks_errors": 21,
         "attacks_blocked": 6,
-        "attacks_points": 43,
-        "attacks_success_pct": "75%",
-        "blocks_points": 9
+        "attacks_points": 49,
+        "attacks_success_pct": "71%",
+        "blocks_points": 13
       },
-      "total_points": 2263,
-      "break_points_total": 26,
-      "plus_minus_total": 20
+      "total_points": 2273,
+      "break_points_total": 31,
+      "plus_minus_total": 26
     }
   ]
 }
