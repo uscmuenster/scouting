@@ -1,7 +1,7 @@
 {
-  "generated": "2026-01-23T04:35:19.114814+00:00",
+  "generated": "2026-01-24T04:27:01.757858+00:00",
   "team": "USC Münster",
-  "match_count": 12,
+  "match_count": 13,
   "matches": [
     {
       "match_number": "2001",
@@ -636,31 +636,84 @@
         "receptions_positive": 40,
         "receptions_perfect": 16
       }
+    },
+    {
+      "match_number": "2079",
+      "match_id": "777480093",
+      "kickoff": "2026-01-21T20:00:00+01:00",
+      "is_home": false,
+      "opponent": "ETV Hamburger Volksbank Volleys",
+      "opponent_short": "Hamburg",
+      "host": "ETV Hamburger Volksbank Volleys",
+      "location": "ETV Sporthalle Hoheluft (22529 Hamburg)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/edacdb1b-1233-4a51-8c93-dd5b8e9805b0/2079",
+      "attendance": "555",
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Weiß, Kathleen",
+          "team": "ETV Hamburger Volksbank Volleys"
+        },
+        {
+          "medal": "Gold",
+          "name": "Kömmling, Elena",
+          "team": "USC Münster"
+        }
+      ],
+      "result": {
+        "score": "3:0",
+        "total_points": "75:51",
+        "sets": [
+          "25:16",
+          "25:19",
+          "25:16"
+        ],
+        "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+      },
+      "metrics": {
+        "serves_attempts": 74,
+        "serves_errors": 4,
+        "serves_points": 8,
+        "receptions_attempts": 45,
+        "receptions_errors": 4,
+        "receptions_positive_pct": "36%",
+        "receptions_perfect_pct": "4%",
+        "attacks_attempts": 91,
+        "attacks_errors": 13,
+        "attacks_blocked": 4,
+        "attacks_points": 40,
+        "attacks_success_pct": "44%",
+        "blocks_points": 9,
+        "receptions_positive": 16,
+        "receptions_perfect": 2
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 928,
-    "serves_errors": 217,
-    "serves_points": 149,
-    "receptions_attempts": 738,
-    "receptions_errors": 84,
-    "receptions_positive": 263,
-    "receptions_perfect": 139,
+    "serves_attempts": 1002,
+    "serves_errors": 221,
+    "serves_points": 157,
+    "receptions_attempts": 783,
+    "receptions_errors": 88,
+    "receptions_positive": 279,
+    "receptions_perfect": 141,
     "receptions_positive_pct": "36%",
-    "receptions_perfect_pct": "19%",
-    "attacks_attempts": 1221,
-    "attacks_errors": 472,
-    "attacks_blocked": 159,
-    "attacks_points": 531,
-    "attacks_success_pct": "43%",
-    "blocks_points": 95
+    "receptions_perfect_pct": "18%",
+    "attacks_attempts": 1312,
+    "attacks_errors": 485,
+    "attacks_blocked": 163,
+    "attacks_points": 571,
+    "attacks_success_pct": "44%",
+    "blocks_points": 104
   },
   "player_count": 14,
   "players": [
     {
       "name": "Pippa Molenaar",
       "jersey_number": 1,
-      "match_count": 12,
+      "match_count": 13,
       "matches": [
         {
           "player": "Molenaar Pippa",
@@ -1174,16 +1227,58 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -2
+        },
+        {
+          "player": "Molenaar Pippa",
+          "jersey_number": 1,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 6,
+            "receptions_errors": 1,
+            "receptions_positive_pct": "33%",
+            "receptions_perfect_pct": "33%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 2,
+            "receptions_perfect": 2
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
         }
       ],
       "totals": {
         "serves_attempts": 15,
         "serves_errors": 11,
         "serves_points": 1,
-        "receptions_attempts": 184,
-        "receptions_errors": 20,
-        "receptions_positive": 76,
-        "receptions_perfect": 40,
+        "receptions_attempts": 190,
+        "receptions_errors": 21,
+        "receptions_positive": 78,
+        "receptions_perfect": 42,
         "receptions_positive_pct": "41%",
         "receptions_perfect_pct": "22%",
         "attacks_attempts": 4,
@@ -1195,12 +1290,12 @@
       },
       "total_points": 38,
       "break_points_total": 10,
-      "plus_minus_total": 0
+      "plus_minus_total": -1
     },
     {
       "name": "Lara-Marie Schaefer",
       "jersey_number": 2,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Schaefer Lara-Marie",
@@ -1671,6 +1766,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Schaefer Lara-Marie",
+          "jersey_number": 2,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1697,7 +1834,7 @@
     {
       "name": "Esther Spöler",
       "jersey_number": 3,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Spöler Esther",
@@ -2167,10 +2304,52 @@
           "total_points": 12,
           "break_points": 3,
           "plus_minus": 2
+        },
+        {
+          "player": "Spöler Esther",
+          "jersey_number": 3,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 9,
+            "attacks_errors": 0,
+            "attacks_blocked": 1,
+            "attacks_points": 6,
+            "attacks_success_pct": "67%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 7,
+          "break_points": 4,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 104,
+        "serves_attempts": 113,
         "serves_errors": 16,
         "serves_points": 18,
         "receptions_attempts": 17,
@@ -2179,21 +2358,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": "24%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 136,
+        "attacks_attempts": 145,
         "attacks_errors": 23,
-        "attacks_blocked": 7,
-        "attacks_points": 82,
-        "attacks_success_pct": "60%",
-        "blocks_points": 20
+        "attacks_blocked": 8,
+        "attacks_points": 88,
+        "attacks_success_pct": "61%",
+        "blocks_points": 21
       },
-      "total_points": 648,
-      "break_points_total": 94,
-      "plus_minus_total": 70
+      "total_points": 655,
+      "break_points_total": 98,
+      "plus_minus_total": 76
     },
     {
       "name": "Cecilia Malm",
       "jersey_number": 5,
-      "match_count": 12,
+      "match_count": 13,
       "matches": [
         {
           "player": "Malm Cecilia",
@@ -2707,19 +2886,61 @@
           "total_points": 8,
           "break_points": 2,
           "plus_minus": 6
+        },
+        {
+          "player": "Malm Cecilia",
+          "jersey_number": 5,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 1,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
         "serves_attempts": 95,
         "serves_errors": 19,
         "serves_points": 9,
-        "receptions_attempts": 134,
+        "receptions_attempts": 135,
         "receptions_errors": 18,
         "receptions_positive": 46,
         "receptions_perfect": 21,
         "receptions_positive_pct": "34%",
         "receptions_perfect_pct": "16%",
-        "attacks_attempts": 123,
+        "attacks_attempts": 125,
         "attacks_errors": 9,
         "attacks_blocked": 5,
         "attacks_points": 41,
@@ -2733,7 +2954,7 @@
     {
       "name": "Elena Kömmling",
       "jersey_number": 7,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Kömmling Elena",
@@ -3204,33 +3425,75 @@
           "total_points": 13,
           "break_points": 5,
           "plus_minus": 6
+        },
+        {
+          "player": "Kömmling Elena",
+          "jersey_number": 7,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 15,
+            "serves_errors": 0,
+            "serves_points": 3,
+            "receptions_attempts": 21,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "33%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 22,
+            "attacks_errors": 4,
+            "attacks_blocked": 0,
+            "attacks_points": 9,
+            "attacks_success_pct": "41%",
+            "blocks_points": 1,
+            "receptions_positive": 7,
+            "receptions_perfect": 0
+          },
+          "total_points": 13,
+          "break_points": 10,
+          "plus_minus": 9
         }
       ],
       "totals": {
-        "serves_attempts": 62,
+        "serves_attempts": 77,
         "serves_errors": 33,
-        "serves_points": 6,
-        "receptions_attempts": 121,
+        "serves_points": 9,
+        "receptions_attempts": 142,
         "receptions_errors": 16,
-        "receptions_positive": 36,
+        "receptions_positive": 43,
         "receptions_perfect": 12,
         "receptions_positive_pct": "30%",
-        "receptions_perfect_pct": "10%",
-        "attacks_attempts": 93,
-        "attacks_errors": 20,
+        "receptions_perfect_pct": "8%",
+        "attacks_attempts": 115,
+        "attacks_errors": 24,
         "attacks_blocked": 6,
-        "attacks_points": 43,
-        "attacks_success_pct": "46%",
-        "blocks_points": 4
+        "attacks_points": 52,
+        "attacks_success_pct": "45%",
+        "blocks_points": 5
       },
-      "total_points": 117,
-      "break_points_total": 19,
-      "plus_minus_total": 19
+      "total_points": 130,
+      "break_points_total": 29,
+      "plus_minus_total": 28
     },
     {
       "name": "Yina Liu",
       "jersey_number": 8,
-      "match_count": 12,
+      "match_count": 13,
       "matches": [
         {
           "player": "Liu Yina",
@@ -3744,6 +4007,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Liu Yina",
+          "jersey_number": 8,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -3770,7 +4075,7 @@
     {
       "name": "Emilia Jordan",
       "jersey_number": 9,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Jordan Emilia",
@@ -4197,11 +4502,53 @@
           "total_points": 3,
           "break_points": 2,
           "plus_minus": -2
+        },
+        {
+          "player": "Jordan Emilia",
+          "jersey_number": 9,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 6,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 4,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 2,
+            "attacks_success_pct": "50%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 3,
+          "break_points": 3,
+          "plus_minus": 1
         }
       ],
       "totals": {
-        "serves_attempts": 106,
-        "serves_errors": 32,
+        "serves_attempts": 112,
+        "serves_errors": 33,
         "serves_points": 39,
         "receptions_attempts": 6,
         "receptions_errors": 6,
@@ -4209,21 +4556,21 @@
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 31,
-        "attacks_errors": 2,
+        "attacks_attempts": 35,
+        "attacks_errors": 3,
         "attacks_blocked": 4,
-        "attacks_points": 11,
-        "attacks_success_pct": "35%",
-        "blocks_points": 9
+        "attacks_points": 13,
+        "attacks_success_pct": "37%",
+        "blocks_points": 10
       },
-      "total_points": 141,
-      "break_points_total": 24,
-      "plus_minus_total": 7
+      "total_points": 144,
+      "break_points_total": 27,
+      "plus_minus_total": 8
     },
     {
       "name": "Amelie Strothoff",
       "jersey_number": 10,
-      "match_count": 12,
+      "match_count": 13,
       "matches": [
         {
           "player": "Strothoff Amelie",
@@ -4737,28 +5084,70 @@
           "total_points": 3,
           "break_points": 2,
           "plus_minus": -4
+        },
+        {
+          "player": "Strothoff Amelie",
+          "jersey_number": 10,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 19,
+            "serves_errors": 1,
+            "serves_points": 3,
+            "receptions_attempts": 17,
+            "receptions_errors": 3,
+            "receptions_positive_pct": "41%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 22,
+            "attacks_errors": 2,
+            "attacks_blocked": 2,
+            "attacks_points": 10,
+            "attacks_success_pct": "45%",
+            "blocks_points": 1,
+            "receptions_positive": 7,
+            "receptions_perfect": 0
+          },
+          "total_points": 14,
+          "break_points": 10,
+          "plus_minus": 6
         }
       ],
       "totals": {
-        "serves_attempts": 97,
-        "serves_errors": 12,
-        "serves_points": 14,
-        "receptions_attempts": 97,
-        "receptions_errors": 4,
-        "receptions_positive": 45,
+        "serves_attempts": 116,
+        "serves_errors": 13,
+        "serves_points": 17,
+        "receptions_attempts": 114,
+        "receptions_errors": 7,
+        "receptions_positive": 52,
         "receptions_perfect": 18,
         "receptions_positive_pct": "46%",
-        "receptions_perfect_pct": "19%",
-        "attacks_attempts": 186,
-        "attacks_errors": 21,
-        "attacks_blocked": 38,
-        "attacks_points": 63,
-        "attacks_success_pct": "34%",
-        "blocks_points": 6
+        "receptions_perfect_pct": "16%",
+        "attacks_attempts": 208,
+        "attacks_errors": 23,
+        "attacks_blocked": 40,
+        "attacks_points": 73,
+        "attacks_success_pct": "35%",
+        "blocks_points": 7
       },
-      "total_points": 129,
-      "break_points_total": 44,
-      "plus_minus_total": 20
+      "total_points": 143,
+      "break_points_total": 54,
+      "plus_minus_total": 26
     },
     {
       "name": "Franziska Heil",
@@ -5219,7 +5608,7 @@
     {
       "name": "Anke Waelkens",
       "jersey_number": 12,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Waelkens Anke",
@@ -5690,33 +6079,75 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Waelkens Anke",
+          "jersey_number": 12,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 1,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 1,
+          "plus_minus": 1
         }
       ],
       "totals": {
-        "serves_attempts": 61,
+        "serves_attempts": 62,
         "serves_errors": 10,
-        "serves_points": 7,
+        "serves_points": 8,
         "receptions_attempts": 0,
         "receptions_errors": 0,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": null,
         "receptions_perfect_pct": null,
-        "attacks_attempts": 54,
+        "attacks_attempts": 55,
         "attacks_errors": 7,
         "attacks_blocked": 3,
         "attacks_points": 29,
-        "attacks_success_pct": "54%",
+        "attacks_success_pct": "53%",
         "blocks_points": 10
       },
-      "total_points": 46,
-      "break_points_total": 22,
-      "plus_minus_total": 26
+      "total_points": 47,
+      "break_points_total": 23,
+      "plus_minus_total": 27
     },
     {
       "name": "Brianna Ford",
       "jersey_number": 14,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Ford Brianna",
@@ -6142,10 +6573,52 @@
           "total_points": 4,
           "break_points": 1,
           "plus_minus": -3
+        },
+        {
+          "player": "Ford Brianna",
+          "jersey_number": 14,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 75,
+        "serves_attempts": 76,
         "serves_errors": 25,
         "serves_points": 18,
         "receptions_attempts": 3,
@@ -6168,7 +6641,7 @@
     {
       "name": "Lena Schultze",
       "jersey_number": 16,
-      "match_count": 9,
+      "match_count": 10,
       "matches": [
         {
           "player": "Schultze Lena",
@@ -6552,28 +7025,70 @@
           "total_points": 23,
           "break_points": 10,
           "plus_minus": 19
+        },
+        {
+          "player": "Schultze Lena",
+          "jersey_number": 16,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 14,
+            "serves_errors": 2,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 22,
+            "attacks_errors": 5,
+            "attacks_blocked": 1,
+            "attacks_points": 9,
+            "attacks_success_pct": "41%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 11,
+          "break_points": 6,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 13,
-        "serves_errors": 4,
-        "serves_points": 0,
+        "serves_attempts": 27,
+        "serves_errors": 6,
+        "serves_points": 1,
         "receptions_attempts": 1,
         "receptions_errors": 1,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 61,
-        "attacks_errors": 8,
-        "attacks_blocked": 2,
-        "attacks_points": 32,
-        "attacks_success_pct": "52%",
-        "blocks_points": 3
+        "attacks_attempts": 83,
+        "attacks_errors": 13,
+        "attacks_blocked": 3,
+        "attacks_points": 41,
+        "attacks_success_pct": "49%",
+        "blocks_points": 4
       },
-      "total_points": 35,
-      "break_points_total": 15,
-      "plus_minus_total": 21
+      "total_points": 46,
+      "break_points_total": 21,
+      "plus_minus_total": 24
     },
     {
       "name": "Isabel Rebecca Martin",
@@ -6906,7 +7421,7 @@
     {
       "name": "Diane Seybering",
       "jersey_number": 18,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Seybering Diane",
@@ -7376,10 +7891,52 @@
           "total_points": 10,
           "break_points": 5,
           "plus_minus": 6
+        },
+        {
+          "player": "Seybering Diane",
+          "jersey_number": 18,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": false,
+          "opponent": "ETV Hamburger Volksbank Volleys",
+          "opponent_short": "Hamburg",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "3:0",
+            "total_points": "75:51",
+            "sets": [
+              "25:16",
+              "25:19",
+              "25:16"
+            ],
+            "summary": "3:0 / 75:51 (25:16 25:19 25:16)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 9,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 4,
+            "attacks_success_pct": "44%",
+            "blocks_points": 4,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 8,
+          "break_points": 4,
+          "plus_minus": 7
         }
       ],
       "totals": {
-        "serves_attempts": 120,
+        "serves_attempts": 129,
         "serves_errors": 27,
         "serves_points": 29,
         "receptions_attempts": 24,
@@ -7388,16 +7945,16 @@
         "receptions_perfect": 22,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "92%",
-        "attacks_attempts": 69,
-        "attacks_errors": 21,
+        "attacks_attempts": 78,
+        "attacks_errors": 22,
         "attacks_blocked": 6,
-        "attacks_points": 49,
-        "attacks_success_pct": "71%",
-        "blocks_points": 13
+        "attacks_points": 53,
+        "attacks_success_pct": "68%",
+        "blocks_points": 17
       },
-      "total_points": 2273,
-      "break_points_total": 31,
-      "plus_minus_total": 26
+      "total_points": 2281,
+      "break_points_total": 35,
+      "plus_minus_total": 33
     }
   ]
 }
