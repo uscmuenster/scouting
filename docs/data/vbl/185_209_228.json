@@ -2449,23 +2449,96 @@
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 2,
       "away_team": "VC Wiesbaden",
       "club_id": "228",
       "competition_id": "185",
       "date": "23.01.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 0,
       "home_team": "Schwarz-Weiß Erfurt",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11863&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11863&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Sandbothe Elizabeth",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 12,
+          "duration": null,
+          "home_label": "Goertz Lotte (L)",
+          "home_points": -1,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Respaut Emilie",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Linke Lena",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Greskamp Antonia",
+          "home_points": 1,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Szücs Kinga",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Kovacic Isabel",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Darley Alianza",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": null,
+          "away_points": 35,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 33,
+          "set": 9
+        }
+      ],
       "match_id": "11863",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "2-2, -1-12, 3-3, 5-5, 1-1, 1-1, 6-6, 4-4, 33-35",
       "time": "18:00"
     },
     {
