@@ -1,7 +1,7 @@
 {
-  "generated": "2026-01-25T04:45:11.822869+00:00",
+  "generated": "2026-01-26T04:48:16.410694+00:00",
   "team": "ETV Hamburger Volksbank Volleys",
-  "match_count": 13,
+  "match_count": 14,
   "matches": [
     {
       "match_number": "2005",
@@ -697,31 +697,84 @@
         "receptions_positive": 16,
         "receptions_perfect": 3
       }
+    },
+    {
+      "match_number": "2089",
+      "match_id": "777480161",
+      "kickoff": "2026-01-25T16:00:00+01:00",
+      "is_home": false,
+      "opponent": "Ladies in Black Aachen",
+      "opponent_short": "Aachen",
+      "host": "Ladies in Black Aachen",
+      "location": "Neuköllner Straße (52068 Aachen)",
+      "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+      "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/31bc5ab3-b094-484b-9619-334a625bc896/2089",
+      "attendance": "1080",
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Jebens, Celine",
+          "team": "Ladies in Black Aachen"
+        },
+        {
+          "medal": "Silber",
+          "name": "Hartig, Anna",
+          "team": "ETV Hamburger Volksbank Volleys"
+        }
+      ],
+      "result": {
+        "score": "0:3",
+        "total_points": "61:77",
+        "sets": [
+          "25:27",
+          "23:25",
+          "13:25"
+        ],
+        "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+      },
+      "metrics": {
+        "serves_attempts": 62,
+        "serves_errors": 8,
+        "serves_points": 6,
+        "receptions_attempts": 68,
+        "receptions_errors": 7,
+        "receptions_positive_pct": "25%",
+        "receptions_perfect_pct": "6%",
+        "attacks_attempts": 100,
+        "attacks_errors": 8,
+        "attacks_blocked": 9,
+        "attacks_points": 28,
+        "attacks_success_pct": "28%",
+        "blocks_points": 12,
+        "receptions_positive": 17,
+        "receptions_perfect": 4
+      }
     }
   ],
   "totals": {
-    "serves_attempts": 854,
-    "serves_errors": 107,
-    "serves_points": 53,
-    "receptions_attempts": 934,
-    "receptions_errors": 132,
-    "receptions_positive": 320,
-    "receptions_perfect": 128,
+    "serves_attempts": 916,
+    "serves_errors": 115,
+    "serves_points": 59,
+    "receptions_attempts": 1002,
+    "receptions_errors": 139,
+    "receptions_positive": 337,
+    "receptions_perfect": 132,
     "receptions_positive_pct": "34%",
-    "receptions_perfect_pct": "14%",
-    "attacks_attempts": 1401,
-    "attacks_errors": 127,
-    "attacks_blocked": 111,
-    "attacks_points": 450,
+    "receptions_perfect_pct": "13%",
+    "attacks_attempts": 1501,
+    "attacks_errors": 135,
+    "attacks_blocked": 120,
+    "attacks_points": 478,
     "attacks_success_pct": "32%",
-    "blocks_points": 81
+    "blocks_points": 93
   },
   "player_count": 16,
   "players": [
     {
       "name": "Jana-Marie Meiser",
       "jersey_number": 1,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Meiser Jana-Marie",
@@ -1189,6 +1242,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Meiser Jana-Marie",
+          "jersey_number": 1,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1215,7 +1310,7 @@
     {
       "name": "Feli Anne Clemann",
       "jersey_number": 2,
-      "match_count": 6,
+      "match_count": 7,
       "matches": [
         {
           "player": "Clemann Feli Anne",
@@ -1470,6 +1565,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Clemann Feli Anne",
+          "jersey_number": 2,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -1496,7 +1633,7 @@
     {
       "name": "Lina Köster",
       "jersey_number": 3,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Köster Lina",
@@ -1963,33 +2100,75 @@
           "total_points": 9,
           "break_points": 2,
           "plus_minus": -4
+        },
+        {
+          "player": "Köster Lina",
+          "jersey_number": 3,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 3,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 28,
+            "attacks_errors": 3,
+            "attacks_blocked": 1,
+            "attacks_points": 9,
+            "attacks_success_pct": "32%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 9,
+          "break_points": 0,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 59,
-        "serves_errors": 13,
+        "serves_attempts": 68,
+        "serves_errors": 15,
         "serves_points": 4,
-        "receptions_attempts": 50,
+        "receptions_attempts": 53,
         "receptions_errors": 11,
         "receptions_positive": 7,
         "receptions_perfect": 2,
-        "receptions_positive_pct": "14%",
+        "receptions_positive_pct": "13%",
         "receptions_perfect_pct": "4%",
-        "attacks_attempts": 150,
-        "attacks_errors": 21,
-        "attacks_blocked": 19,
-        "attacks_points": 34,
-        "attacks_success_pct": "23%",
+        "attacks_attempts": 178,
+        "attacks_errors": 24,
+        "attacks_blocked": 20,
+        "attacks_points": 43,
+        "attacks_success_pct": "24%",
         "blocks_points": 7
       },
-      "total_points": 45,
+      "total_points": 54,
       "break_points_total": 14,
-      "plus_minus_total": -19
+      "plus_minus_total": -16
     },
     {
       "name": "Sarah Stiriz",
       "jersey_number": 4,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Stiriz Sarah",
@@ -2458,17 +2637,59 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Stiriz Sarah",
+          "jersey_number": 4,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 12,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "50%",
+            "receptions_perfect_pct": "17%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 6,
+            "receptions_perfect": 2
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
         "serves_attempts": 1,
         "serves_errors": 1,
         "serves_points": 1,
-        "receptions_attempts": 130,
+        "receptions_attempts": 142,
         "receptions_errors": 11,
-        "receptions_positive": 41,
-        "receptions_perfect": 19,
-        "receptions_positive_pct": "32%",
+        "receptions_positive": 47,
+        "receptions_perfect": 21,
+        "receptions_positive_pct": "33%",
         "receptions_perfect_pct": "15%",
         "attacks_attempts": 0,
         "attacks_errors": 0,
@@ -2484,7 +2705,7 @@
     {
       "name": "Anna Hartig",
       "jersey_number": 5,
-      "match_count": 13,
+      "match_count": 14,
       "matches": [
         {
           "player": "Hartig Anna",
@@ -3037,28 +3258,70 @@
           "total_points": 6,
           "break_points": 2,
           "plus_minus": 4
+        },
+        {
+          "player": "Hartig Anna",
+          "jersey_number": 5,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 12,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 15,
+            "attacks_errors": 0,
+            "attacks_blocked": 2,
+            "attacks_points": 7,
+            "attacks_success_pct": "47%",
+            "blocks_points": 5,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 13,
+          "break_points": 7,
+          "plus_minus": 11
         }
       ],
       "totals": {
-        "serves_attempts": 77,
+        "serves_attempts": 89,
         "serves_errors": 5,
-        "serves_points": 1,
+        "serves_points": 2,
         "receptions_attempts": 2,
         "receptions_errors": 12,
         "receptions_positive": 0,
         "receptions_perfect": 0,
         "receptions_positive_pct": "0%",
         "receptions_perfect_pct": "0%",
-        "attacks_attempts": 136,
+        "attacks_attempts": 151,
         "attacks_errors": 12,
-        "attacks_blocked": 13,
-        "attacks_points": 60,
+        "attacks_blocked": 15,
+        "attacks_points": 67,
         "attacks_success_pct": "44%",
-        "blocks_points": 14
+        "blocks_points": 19
       },
-      "total_points": 85,
-      "break_points_total": 26,
-      "plus_minus_total": 44
+      "total_points": 98,
+      "break_points_total": 33,
+      "plus_minus_total": 55
     },
     {
       "name": "Constanze von Meyenn",
@@ -3922,7 +4185,7 @@
     {
       "name": "Zoe Konjer",
       "jersey_number": 8,
-      "match_count": 13,
+      "match_count": 14,
       "matches": [
         {
           "player": "Konjer Zoe",
@@ -4475,10 +4738,52 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": -1
+        },
+        {
+          "player": "Konjer Zoe",
+          "jersey_number": 8,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 5,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 80,
+        "serves_attempts": 85,
         "serves_errors": 3,
         "serves_points": 6,
         "receptions_attempts": 31,
@@ -4487,11 +4792,11 @@
         "receptions_perfect": 8,
         "receptions_positive_pct": "55%",
         "receptions_perfect_pct": "26%",
-        "attacks_attempts": 58,
+        "attacks_attempts": 60,
         "attacks_errors": 4,
         "attacks_blocked": 2,
         "attacks_points": 21,
-        "attacks_success_pct": "36%",
+        "attacks_success_pct": "35%",
         "blocks_points": 1
       },
       "total_points": 28,
@@ -4501,7 +4806,7 @@
     {
       "name": "Luise Klein",
       "jersey_number": 9,
-      "match_count": 8,
+      "match_count": 9,
       "matches": [
         {
           "player": "Klein Luise",
@@ -4842,6 +5147,48 @@
           "total_points": 0,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Klein Luise",
+          "jersey_number": 9,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
@@ -4868,7 +5215,7 @@
     {
       "name": "Lena Liegert",
       "jersey_number": 10,
-      "match_count": 11,
+      "match_count": 12,
       "matches": [
         {
           "player": "Liegert Lena",
@@ -5336,11 +5683,53 @@
           "total_points": 3,
           "break_points": 2,
           "plus_minus": 3
+        },
+        {
+          "player": "Liegert Lena",
+          "jersey_number": 10,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 3,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 9,
+            "attacks_errors": 0,
+            "attacks_blocked": 1,
+            "attacks_points": 3,
+            "attacks_success_pct": "33%",
+            "blocks_points": 4,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 7,
+          "break_points": 3,
+          "plus_minus": 3
         }
       ],
       "totals": {
-        "serves_attempts": 30,
-        "serves_errors": 9,
+        "serves_attempts": 39,
+        "serves_errors": 12,
         "serves_points": 4,
         "receptions_attempts": 68,
         "receptions_errors": 7,
@@ -5348,21 +5737,21 @@
         "receptions_perfect": 18,
         "receptions_positive_pct": "53%",
         "receptions_perfect_pct": "26%",
-        "attacks_attempts": 48,
+        "attacks_attempts": 57,
         "attacks_errors": 4,
-        "attacks_blocked": 1,
-        "attacks_points": 20,
-        "attacks_success_pct": "42%",
-        "blocks_points": 2
+        "attacks_blocked": 2,
+        "attacks_points": 23,
+        "attacks_success_pct": "40%",
+        "blocks_points": 6
       },
-      "total_points": 30,
-      "break_points_total": 11,
-      "plus_minus_total": 8
+      "total_points": 37,
+      "break_points_total": 14,
+      "plus_minus_total": 11
     },
     {
       "name": "Svea Frobel",
       "jersey_number": 11,
-      "match_count": 13,
+      "match_count": 14,
       "matches": [
         {
           "player": "Frobel Svea",
@@ -5915,28 +6304,70 @@
           "total_points": 4,
           "break_points": 0,
           "plus_minus": -2
+        },
+        {
+          "player": "Frobel Svea",
+          "jersey_number": 11,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 11,
+            "serves_errors": 2,
+            "serves_points": 2,
+            "receptions_attempts": 38,
+            "receptions_errors": 5,
+            "receptions_positive_pct": "24%",
+            "receptions_perfect_pct": "3%",
+            "attacks_attempts": 27,
+            "attacks_errors": 3,
+            "attacks_blocked": 4,
+            "attacks_points": 6,
+            "attacks_success_pct": "22%",
+            "blocks_points": 1,
+            "receptions_positive": 9,
+            "receptions_perfect": 1
+          },
+          "total_points": 9,
+          "break_points": 3,
+          "plus_minus": -5
         }
       ],
       "totals": {
-        "serves_attempts": 111,
-        "serves_errors": 14,
-        "serves_points": 5,
-        "receptions_attempts": 266,
-        "receptions_errors": 29,
-        "receptions_positive": 94,
-        "receptions_perfect": 35,
-        "receptions_positive_pct": "35%",
-        "receptions_perfect_pct": "13%",
-        "attacks_attempts": 368,
-        "attacks_errors": 32,
-        "attacks_blocked": 35,
-        "attacks_points": 117,
-        "attacks_success_pct": "32%",
-        "blocks_points": 13
+        "serves_attempts": 122,
+        "serves_errors": 16,
+        "serves_points": 7,
+        "receptions_attempts": 304,
+        "receptions_errors": 34,
+        "receptions_positive": 103,
+        "receptions_perfect": 36,
+        "receptions_positive_pct": "34%",
+        "receptions_perfect_pct": "12%",
+        "attacks_attempts": 395,
+        "attacks_errors": 35,
+        "attacks_blocked": 39,
+        "attacks_points": 123,
+        "attacks_success_pct": "31%",
+        "blocks_points": 14
       },
-      "total_points": 135,
-      "break_points_total": 47,
-      "plus_minus_total": 25
+      "total_points": 144,
+      "break_points_total": 50,
+      "plus_minus_total": 20
     },
     {
       "name": "Hannah Ammerman",
@@ -6435,7 +6866,7 @@
     {
       "name": "Kathleen Weiß",
       "jersey_number": 13,
-      "match_count": 6,
+      "match_count": 7,
       "matches": [
         {
           "player": "Olliges Lena",
@@ -6692,10 +7123,52 @@
           "total_points": 2,
           "break_points": 1,
           "plus_minus": 0
+        },
+        {
+          "player": "Weißß Kathleen",
+          "jersey_number": 13,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 4,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
         }
       ],
       "totals": {
-        "serves_attempts": 42,
+        "serves_attempts": 46,
         "serves_errors": 5,
         "serves_points": 1,
         "receptions_attempts": 1,
@@ -6718,7 +7191,7 @@
     {
       "name": "Fiona Dittmann",
       "jersey_number": 14,
-      "match_count": 10,
+      "match_count": 16,
       "matches": [
         {
           "player": "Dittmann Fiona",
@@ -6976,6 +7449,92 @@
           "plus_minus": -1
         },
         {
+          "player": "Wehner Josefine",
+          "jersey_number": 16,
+          "match_number": "2042",
+          "match_id": "777480291",
+          "kickoff": "2025-11-29T18:00:00+01:00",
+          "is_home": false,
+          "opponent": "Schwarz-Weiß Erfurt",
+          "opponent_short": "Erfurt",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480291&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/14307b45-9da8-4185-92e1-74d3bf4b330e",
+          "result": {
+            "score": "1:3",
+            "total_points": "70:96",
+            "sets": [
+              "25:21",
+              "13:25",
+              "18:25",
+              "14:25"
+            ],
+            "summary": "1:3 / 70:96 (25:21 13:25 18:25 14:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": 0
+        },
+        {
+          "player": "KÖGLER Hanna",
+          "jersey_number": 16,
+          "match_number": "2047",
+          "match_id": "777480346",
+          "kickoff": "2025-12-06T19:00:00+01:00",
+          "is_home": true,
+          "opponent": "Binder Blaubären TSV Flacht",
+          "opponent_short": "Flacht",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480346&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/5daa47b1-5be7-4c48-88b3-559402f2d6c2",
+          "result": {
+            "score": "1:3",
+            "total_points": "84:97",
+            "sets": [
+              "25:22",
+              "20:25",
+              "23:25",
+              "16:25"
+            ],
+            "summary": "1:3 / 84:97 (25:22 20:25 23:25 16:25)"
+          },
+          "metrics": {
+            "serves_attempts": 13,
+            "serves_errors": 2,
+            "serves_points": 0,
+            "receptions_attempts": 31,
+            "receptions_errors": 4,
+            "receptions_positive_pct": "42%",
+            "receptions_perfect_pct": "13%",
+            "attacks_attempts": 28,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 9,
+            "attacks_success_pct": "32%",
+            "blocks_points": 1,
+            "receptions_positive": 13,
+            "receptions_perfect": 4
+          },
+          "total_points": 10,
+          "break_points": 2,
+          "plus_minus": 4
+        },
+        {
           "player": "Dittmann Fiona",
           "jersey_number": 14,
           "match_number": "2125",
@@ -7016,6 +7575,48 @@
           "total_points": 3,
           "break_points": 1,
           "plus_minus": 2
+        },
+        {
+          "player": "Wehner Josefine",
+          "jersey_number": 16,
+          "match_number": "2125",
+          "match_id": "777480470",
+          "kickoff": "2025-12-21T14:00:00+01:00",
+          "is_home": false,
+          "opponent": "VfB Suhl LOTTO Thüringen",
+          "opponent_short": "Suhl",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480470&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/7be174dd-8eb5-41ea-8b11-4cda62996541",
+          "result": {
+            "score": "0:3",
+            "total_points": "48:75",
+            "sets": [
+              "13:25",
+              "16:25",
+              "19:25"
+            ],
+            "summary": "0:3 / 48:75 (13:25 16:25 19:25)"
+          },
+          "metrics": {
+            "serves_attempts": 2,
+            "serves_errors": 1,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
         },
         {
           "player": "Dittmann Fiona",
@@ -7142,28 +7743,154 @@
           "total_points": 2,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Wehner Josefine",
+          "jersey_number": 16,
+          "match_number": "2079",
+          "match_id": "777480093",
+          "kickoff": "2026-01-21T20:00:00+01:00",
+          "is_home": true,
+          "opponent": "USC Münster",
+          "opponent_short": "Münster",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480093&hideHistoryBackButton=true",
+          "stats_url": "https://www.volleyball-bundesliga.de/uploads/24f289dd-4acd-49c0-b092-e3ca5b7cde19",
+          "result": {
+            "score": "0:3",
+            "total_points": "51:75",
+            "sets": [
+              "16:25",
+              "19:25",
+              "16:25"
+            ],
+            "summary": "0:3 / 51:75 (16:25 19:25 16:25)"
+          },
+          "metrics": {
+            "serves_attempts": 0,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 2,
+            "attacks_errors": 1,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 0,
+          "break_points": 0,
+          "plus_minus": -1
+        },
+        {
+          "player": "Dittmann Fiona",
+          "jersey_number": 14,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 9,
+            "serves_errors": 1,
+            "serves_points": 2,
+            "receptions_attempts": 12,
+            "receptions_errors": 2,
+            "receptions_positive_pct": "17%",
+            "receptions_perfect_pct": "8%",
+            "attacks_attempts": 14,
+            "attacks_errors": 2,
+            "attacks_blocked": 1,
+            "attacks_points": 2,
+            "attacks_success_pct": "14%",
+            "blocks_points": 1,
+            "receptions_positive": 2,
+            "receptions_perfect": 1
+          },
+          "total_points": 5,
+          "break_points": 3,
+          "plus_minus": -1
+        },
+        {
+          "player": "Dittmann Fiona",
+          "jersey_number": 16,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 1,
+            "serves_errors": 0,
+            "serves_points": 0,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 5,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 1,
+            "attacks_success_pct": "20%",
+            "blocks_points": 1,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 2,
+          "break_points": 1,
+          "plus_minus": 2
         }
       ],
       "totals": {
-        "serves_attempts": 17,
-        "serves_errors": 8,
-        "serves_points": 2,
-        "receptions_attempts": 34,
-        "receptions_errors": 3,
-        "receptions_positive": 7,
-        "receptions_perfect": 2,
-        "receptions_positive_pct": "21%",
-        "receptions_perfect_pct": "6%",
-        "attacks_attempts": 35,
-        "attacks_errors": 3,
-        "attacks_blocked": 2,
-        "attacks_points": 7,
-        "attacks_success_pct": "20%",
-        "blocks_points": 1
+        "serves_attempts": 42,
+        "serves_errors": 12,
+        "serves_points": 4,
+        "receptions_attempts": 77,
+        "receptions_errors": 9,
+        "receptions_positive": 22,
+        "receptions_perfect": 7,
+        "receptions_positive_pct": "29%",
+        "receptions_perfect_pct": "9%",
+        "attacks_attempts": 84,
+        "attacks_errors": 6,
+        "attacks_blocked": 3,
+        "attacks_points": 19,
+        "attacks_success_pct": "23%",
+        "blocks_points": 4
       },
-      "total_points": 10,
-      "break_points_total": 3,
-      "plus_minus_total": -6
+      "total_points": 27,
+      "break_points_total": 9,
+      "plus_minus_total": -3
     },
     {
       "name": "Alexa Sophie Thaden",
@@ -7705,7 +8432,7 @@
     {
       "name": "Louisa Krams",
       "jersey_number": 17,
-      "match_count": 10,
+      "match_count": 11,
       "matches": [
         {
           "player": "Krams Louisa",
@@ -8131,12 +8858,54 @@
           "total_points": 2,
           "break_points": 0,
           "plus_minus": 0
+        },
+        {
+          "player": "Krams Louisa",
+          "jersey_number": 17,
+          "match_number": "2089",
+          "match_id": "777480161",
+          "kickoff": "2026-01-25T16:00:00+01:00",
+          "is_home": false,
+          "opponent": "Ladies in Black Aachen",
+          "opponent_short": "Aachen",
+          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777480161&hideHistoryBackButton=true",
+          "stats_url": "https://live.volleyball-bundesliga.de/2025-26/Women/2089.pdf",
+          "result": {
+            "score": "0:3",
+            "total_points": "61:77",
+            "sets": [
+              "25:27",
+              "23:25",
+              "13:25"
+            ],
+            "summary": "0:3 / 61:77 (25:27 23:25 13:25)"
+          },
+          "metrics": {
+            "serves_attempts": 2,
+            "serves_errors": 0,
+            "serves_points": 1,
+            "receptions_attempts": 0,
+            "receptions_errors": 0,
+            "receptions_positive_pct": "0%",
+            "receptions_perfect_pct": "0%",
+            "attacks_attempts": 0,
+            "attacks_errors": 0,
+            "attacks_blocked": 0,
+            "attacks_points": 0,
+            "attacks_success_pct": "0%",
+            "blocks_points": 0,
+            "receptions_positive": 0,
+            "receptions_perfect": 0
+          },
+          "total_points": 1,
+          "break_points": 1,
+          "plus_minus": 1
         }
       ],
       "totals": {
-        "serves_attempts": 45,
+        "serves_attempts": 47,
         "serves_errors": 6,
-        "serves_points": 2,
+        "serves_points": 3,
         "receptions_attempts": 1,
         "receptions_errors": 0,
         "receptions_positive": 1,
@@ -8150,9 +8919,9 @@
         "attacks_success_pct": "35%",
         "blocks_points": 1
       },
-      "total_points": 12,
-      "break_points_total": 5,
-      "plus_minus_total": 2
+      "total_points": 13,
+      "break_points_total": 6,
+      "plus_minus_total": 3
     }
   ]
 }
