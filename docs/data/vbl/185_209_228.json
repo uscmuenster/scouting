@@ -3474,83 +3474,455 @@
       "time": "20:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 8,
       "away_team": "Dresdner SC",
       "club_id": "228",
       "competition_id": "185",
       "date": "31.01.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 3,
       "home_team": "SSC Palmberg Schwerin",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11872&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11872&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 10,
+          "duration": null,
+          "home_label": "Reesink Florien (L)",
+          "home_points": -1,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "ten Brinke Marije",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Vos Iris",
+          "home_points": -1,
+          "set": 3
+        },
+        {
+          "away_label": null,
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Stuut Britte Mayke",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Grozer Leana",
+          "home_points": -3,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Hölzig Annegret",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Kohn Hannah",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Kirchhoff Mia",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Artyshuk Anna",
+          "home_points": -1,
+          "set": 9
+        },
+        {
+          "away_label": null,
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Kok Helena",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": null,
+          "away_points": 26,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 28,
+          "set": 11
+        }
+      ],
       "match_id": "11872",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 1",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "-1-10, 2-3, -1-1, 5-6, -3-4, 1-5, 6-1, 3-4, -1-2, 4-2, 28-26",
       "time": "17:15"
     },
     {
-      "away_sets": null,
+      "away_sets": 3,
       "away_team": "USC Münster",
       "club_id": "228",
       "competition_id": "185",
       "date": "31.01.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 1,
       "home_team": "Ladies in Black Aachen",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11875&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11875&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": ".",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Jebens Celine",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Zander Marit",
+          "home_points": -1,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Glaab Corina",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Mavrommatis Zoi",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Ilieva Tsvetelina",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Miljkovic Milica",
+          "home_points": 4,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Struka Karmena",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 25,
+          "duration": null,
+          "home_label": "Jost Kacey (L)",
+          "home_points": -1,
+          "set": 8
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Ambrosius Lea",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": null,
+          "away_points": 16,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 14,
+          "set": 10
+        }
+      ],
       "match_id": "11875",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "0 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "6-6, -1-3, 3-3, 1-1, 4-4, 4-1, 5-5, -1-25, 2-2, 14-16",
       "time": "18:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 3,
       "away_team": "Schwarz-Weiß Erfurt",
       "club_id": "228",
       "competition_id": "185",
       "date": "31.01.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 3,
       "home_team": "Allianz MTV Stuttgart",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11874&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11874&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Slacanin Leilani",
+          "home_points": 5,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Gross Jasmine",
+          "home_points": 5,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 0,
+          "duration": null,
+          "home_label": "Bamba Yurika (L)",
+          "home_points": 2,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Grote Lydia",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Stautz Antonia",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 8,
+          "duration": null,
+          "home_label": "Mottis Fabiana (L)",
+          "home_points": -1,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Holthaus Eleanor Joyce",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Koulberg Anna",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Varela Lucia",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Shaffmaster Melani",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Mogensen Mikala",
+          "home_points": 1,
+          "set": 11
+        },
+        {
+          "away_label": null,
+          "away_points": 38,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 24,
+          "set": 12
+        }
+      ],
       "match_id": "11874",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "3 - 0",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "5-1, 5-5, 2-0, 6-6, 1-1, -1-8, 4-4, 2-2, 5-2, 3-3, 1-6, 24-38",
       "time": "19:00"
     },
     {
-      "away_sets": null,
+      "away_sets": 6,
       "away_team": "Skurios Volleys Borken",
       "club_id": "228",
       "competition_id": "185",
       "date": "31.01.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 6,
       "home_team": "ETV Hamburger Volksbank Volleys",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11876&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11876&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 17,
+          "duration": null,
+          "home_label": "Meiser Jana-Marie (L)",
+          "home_points": -3,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Köster Lina",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 38,
+          "duration": null,
+          "home_label": "Stiriz Sarah (L)",
+          "home_points": 8,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Hartig Anna",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "von Meyenn Constanze",
+          "home_points": -2,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Körtzinger Leonie",
+          "home_points": 5,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Konjer Zoe",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Liegert Lena",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Frobel Svea",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Weiß Kathleen",
+          "home_points": 1,
+          "set": 10
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Dittmann Fiona",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Krams Louisa",
+          "home_points": 6,
+          "set": 12
+        },
+        {
+          "away_label": null,
+          "away_points": 24,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 22,
+          "set": 13
+        }
+      ],
       "match_id": "11876",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "1 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "-3-17, 5-4, 8-38, 1-6, -2-2, 5-2, 2-2, 4-3, 3-2, 1-4, 6-1, 6-1, 22-24",
       "time": "19:30"
     },
     {
