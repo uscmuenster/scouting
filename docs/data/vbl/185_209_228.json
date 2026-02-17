@@ -8566,23 +8566,104 @@
       "time": "19:30"
     },
     {
-      "away_sets": null,
+      "away_sets": 3,
       "away_team": "Schwarz-Weiß Erfurt",
       "club_id": "228",
       "competition_id": "185",
       "date": "15.02.2026",
-      "has_leg_data": false,
-      "home_sets": null,
+      "has_leg_data": true,
+      "home_sets": 7,
       "home_team": "ETV Hamburger Volksbank Volleys",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11940&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11940&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [],
+      "legs": [
+        {
+          "away_label": "-",
+          "away_points": 2,
+          "duration": null,
+          "home_label": "Köster Lina",
+          "home_points": 3,
+          "set": 3
+        },
+        {
+          "away_label": "-",
+          "away_points": 23,
+          "duration": null,
+          "home_label": "Stiriz Sarah (L)",
+          "home_points": -1,
+          "set": 4
+        },
+        {
+          "away_label": ".",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Hartig Anna",
+          "home_points": 2,
+          "set": 2
+        },
+        {
+          "away_label": "-",
+          "away_points": 3,
+          "duration": null,
+          "home_label": "Körtzinger Leonie",
+          "home_points": 4,
+          "set": 4
+        },
+        {
+          "away_label": "-",
+          "away_points": 5,
+          "duration": null,
+          "home_label": "Konjer Zoe",
+          "home_points": 6,
+          "set": 6
+        },
+        {
+          "away_label": "-",
+          "away_points": 6,
+          "duration": null,
+          "home_label": "Frobel Svea",
+          "home_points": 1,
+          "set": 1
+        },
+        {
+          "away_label": "-",
+          "away_points": -1,
+          "duration": null,
+          "home_label": "Weiß Kathleen",
+          "home_points": 2,
+          "set": 7
+        },
+        {
+          "away_label": ".",
+          "away_points": 4,
+          "duration": null,
+          "home_label": "Thaden Alexa Sophie",
+          "home_points": 5,
+          "set": 5
+        },
+        {
+          "away_label": "-",
+          "away_points": 1,
+          "duration": null,
+          "home_label": "Faross Lilly",
+          "home_points": 2,
+          "set": 9
+        },
+        {
+          "away_label": null,
+          "away_points": 16,
+          "duration": null,
+          "home_label": "TOTALS",
+          "home_points": 14,
+          "set": 10
+        }
+      ],
       "match_id": "11940",
       "match_number": null,
       "phase_id": "209",
-      "result": "-",
+      "result": "0 - 3",
       "set_results": null,
-      "set_scores": null,
+      "set_scores": "3-2, -1-23, 2-1, 4-3, 6-5, 1-6, 2--1, 5-4, 2-1, 14-16",
       "time": "15:30"
     },
     {
