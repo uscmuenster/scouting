@@ -9342,7 +9342,7 @@
         },
         {
           "away_label": "-",
-          "away_points": 17,
+          "away_points": 18,
           "duration": null,
           "home_label": "Hansen Ditte Kjær (L)",
           "home_points": -1,
@@ -9414,7 +9414,7 @@
         },
         {
           "away_label": null,
-          "away_points": 25,
+          "away_points": 26,
           "duration": null,
           "home_label": "TOTALS",
           "home_points": 27,
@@ -9426,7 +9426,7 @@
       "phase_id": "209",
       "result": "3 - 0",
       "set_results": null,
-      "set_scores": "3-3, 4-2, -1-17, 5-5, 1-5, 6-6, 2--1, 6-4, 3-1, -1-2, 3-3, 27-25",
+      "set_scores": "3-3, 4-2, -1-18, 5-5, 1-5, 6-6, 2--1, 6-4, 3-1, -1-2, 3-3, 27-26",
       "time": "19:30"
     },
     {
