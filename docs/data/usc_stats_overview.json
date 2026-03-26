@@ -1,5 +1,5 @@
 {
-  "generated": "2026-03-25T05:23:15.343193+00:00",
+  "generated": "2026-03-26T05:26:51.821060+00:00",
   "team": "USC Münster",
   "match_count": 2,
   "matches": [
@@ -59,11 +59,6 @@
           "medal": "Silber",
           "name": "Neuhaus, Frauke",
           "team": "Binder Blaubären TSV Flacht"
-        },
-        {
-          "medal": "Gold",
-          "name": "Ford, Brianna",
-          "team": "USC Münster"
         }
       ],
       "result": {
@@ -112,7 +107,7 @@
     "attacks_success_pct": "43%",
     "blocks_points": 16
   },
-  "player_count": 13,
+  "player_count": 12,
   "players": [
     {
       "name": "Pippa Molenaar",
@@ -1183,113 +1178,6 @@
       "total_points": 16,
       "break_points_total": 8,
       "plus_minus_total": 10
-    },
-    {
-      "name": "Brianna Ford",
-      "jersey_number": 14,
-      "match_count": 2,
-      "matches": [
-        {
-          "player": "Ford Brianna",
-          "jersey_number": 14,
-          "match_number": "2001",
-          "match_id": null,
-          "kickoff": "1975-06-25T00:00:00+01:00",
-          "is_home": false,
-          "opponent": "SSC Palmberg Schwerin",
-          "opponent_short": "Schwerin",
-          "info_url": null,
-          "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
-          "result": {
-            "score": "3:2",
-            "total_points": null,
-            "sets": [],
-            "summary": "3:2"
-          },
-          "metrics": {
-            "serves_attempts": 20,
-            "serves_errors": 4,
-            "serves_points": 5,
-            "receptions_attempts": 1,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 43,
-            "attacks_errors": 5,
-            "attacks_blocked": 6,
-            "attacks_points": 14,
-            "attacks_success_pct": "33%",
-            "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
-          },
-          "total_points": 19,
-          "break_points": 7,
-          "plus_minus": 4
-        },
-        {
-          "player": "FORD Brianna",
-          "jersey_number": 14,
-          "match_number": "2011",
-          "match_id": "777479989",
-          "kickoff": "2025-10-15T19:30:00+02:00",
-          "is_home": false,
-          "opponent": "Binder Blaubären TSV Flacht",
-          "opponent_short": "Flacht",
-          "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=777479989&hideHistoryBackButton=true",
-          "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
-          "result": {
-            "score": "3:0",
-            "total_points": "75:49",
-            "sets": [
-              "25:14",
-              "25:15",
-              "25:20"
-            ],
-            "summary": "3:0 / 75:49 (25:14 25:15 25:20)"
-          },
-          "metrics": {
-            "serves_attempts": 10,
-            "serves_errors": 2,
-            "serves_points": 1,
-            "receptions_attempts": 0,
-            "receptions_errors": 0,
-            "receptions_positive_pct": "0%",
-            "receptions_perfect_pct": "0%",
-            "attacks_attempts": 29,
-            "attacks_errors": 1,
-            "attacks_blocked": 1,
-            "attacks_points": 16,
-            "attacks_success_pct": "55%",
-            "blocks_points": 0,
-            "receptions_positive": 0,
-            "receptions_perfect": 0
-          },
-          "total_points": 17,
-          "break_points": 10,
-          "plus_minus": 13
-        }
-      ],
-      "totals": {
-        "serves_attempts": 30,
-        "serves_errors": 6,
-        "serves_points": 6,
-        "receptions_attempts": 1,
-        "receptions_errors": 0,
-        "receptions_positive": 0,
-        "receptions_perfect": 0,
-        "receptions_positive_pct": "0%",
-        "receptions_perfect_pct": "0%",
-        "attacks_attempts": 72,
-        "attacks_errors": 6,
-        "attacks_blocked": 7,
-        "attacks_points": 30,
-        "attacks_success_pct": "42%",
-        "blocks_points": 0
-      },
-      "total_points": 36,
-      "break_points_total": 17,
-      "plus_minus_total": 17
     },
     {
       "name": "Lena Schultze",
