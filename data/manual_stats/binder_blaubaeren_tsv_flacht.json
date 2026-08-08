@@ -1,0 +1,32 @@
+{
+  "team": "Binder Blaubären TSV Flacht",
+  "aliases": [
+    "Binder Blaubären Flacht"
+  ],
+  "matches": [
+    {
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
+      "serve": {
+        "attempts": 50,
+        "errors": 13,
+        "points": 2
+      },
+      "reception": {
+        "attempts": 61,
+        "errors": 5,
+        "positive_pct": "21%",
+        "perfect_pct": "8%"
+      },
+      "attack": {
+        "attempts": 72,
+        "errors": 9,
+        "blocked": 7,
+        "points": 19,
+        "success_pct": "26%"
+      },
+      "block": {
+        "points": 6
+      }
+    }
+  ]
+}
