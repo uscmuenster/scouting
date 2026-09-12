@@ -1,0 +1,24 @@
+{
+  "name": "Scouting USC Münster",
+  "short_name": "USC Scouting",
+  "description": "Aggregierte Spielerinnen-Statistiken des USC Münster aus den offiziellen VBL-PDFs.",
+  "lang": "de",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0f766e",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
