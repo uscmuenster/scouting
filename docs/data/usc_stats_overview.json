@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-10T10:26:34.339127+00:00",
+  "generated": "2026-10-11T10:22:20.541825+00:00",
   "team": "USC Münster",
   "match_count": 2,
   "matches": [
@@ -14,9 +14,20 @@
       "location": "Sporthalle Berg Fidel (48153 Münster)",
       "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=781909934&hideHistoryBackButton=true",
       "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
-      "scoresheet_url": null,
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/c7543162-7dd2-4306-9647-50161b6ebb5e/2005",
       "attendance": "2124",
-      "mvps": [],
+      "mvps": [
+        {
+          "medal": "Silber",
+          "name": "Dvoracek, Maia",
+          "team": "Dresdner SC"
+        },
+        {
+          "medal": "Gold",
+          "name": "Bamba, Yurika",
+          "team": "Allianz MTV Stuttgart"
+        }
+      ],
       "result": {
         "score": "3:2",
         "total_points": "106:106",
