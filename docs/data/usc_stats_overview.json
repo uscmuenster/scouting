@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-14T09:19:22.971317+00:00",
+  "generated": "2026-10-15T08:38:09.743144+00:00",
   "team": "USC Münster",
   "match_count": 1,
   "matches": [
@@ -14,9 +14,20 @@
       "location": "Heckengäusporthalle II (71287 Weissach)",
       "info_url": "https://www.volleyball-bundesliga.de/popup/matchSeries/matchDetails.xhtml?matchId=781909977&hideHistoryBackButton=true",
       "stats_url": "https://www.volleyball-bundesliga.de/uploads/19bb6c96-f1cc-4867-9058-0864849ec964",
-      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/ab4891bf-921b-4fe1-8aaa-97f2b9acb6d9/2011",
+      "scoresheet_url": "https://distributor.sams-score.de/scoresheet/pdf/2778be66-2555-4b43-9081-0fb0039c527d/2011",
       "attendance": "433",
-      "mvps": [],
+      "mvps": [
+        {
+          "medal": "Gold",
+          "name": "Murmann, Julia",
+          "team": "VC Wiesbaden"
+        },
+        {
+          "medal": "Silber",
+          "name": "Ilieva, Tsvetelina",
+          "team": "Ladies in Black Aachen"
+        }
+      ],
       "result": {
         "score": "3:0",
         "total_points": "75:49",
