@@ -1,0 +1,53 @@
+{
+  "team": "SSC Palmberg Schwerin",
+  "matches": [
+    {
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/70a7c2ba-97bc-4478-8e8e-e55ec764d2e6",
+      "serve": {
+        "attempts": 107,
+        "errors": 19,
+        "points": 15
+      },
+      "reception": {
+        "attempts": 86,
+        "errors": 14,
+        "positive_pct": "33%",
+        "perfect_pct": "15%"
+      },
+      "attack": {
+        "attempts": 129,
+        "errors": 10,
+        "blocked": 9,
+        "points": 50,
+        "success_pct": "39%"
+      },
+      "block": {
+        "points": 8
+      }
+    },
+    {
+      "stats_url": "https://www.volleyball-bundesliga.de/uploads/831866c1-9e16-46f8-827c-4b0dd011928b",
+      "serve": {
+        "attempts": 74,
+        "errors": 6,
+        "points": 10
+      },
+      "reception": {
+        "attempts": 37,
+        "errors": 3,
+        "positive_pct": "51%",
+        "perfect_pct": "24%"
+      },
+      "attack": {
+        "attempts": 78,
+        "errors": 10,
+        "blocked": 3,
+        "points": 37,
+        "success_pct": "47%"
+      },
+      "block": {
+        "points": 11
+      }
+    }
+  ]
+}
