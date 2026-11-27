@@ -1691,120 +1691,23 @@
       "time": "18:00"
     },
     {
-      "away_sets": 3,
+      "away_sets": null,
       "away_team": "Dresdner SC",
       "club_id": "228",
       "competition_id": "185",
       "date": "21.01.2026",
-      "has_leg_data": true,
-      "home_sets": 3,
+      "has_leg_data": false,
+      "home_sets": null,
       "home_team": "VC Wiesbaden",
       "info_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11850&ID=185&CID=228&PID=209&type=LegList",
       "leg_list_url": "https://vbl-web.dataproject.com/MatchStatistics.aspx?mID=11850&ID=185&CID=228&PID=209&type=LegList",
-      "legs": [
-        {
-          "away_label": "-",
-          "away_points": 2,
-          "duration": null,
-          "home_label": "López Rey Cayetana",
-          "home_points": 2,
-          "set": 2
-        },
-        {
-          "away_label": "-",
-          "away_points": 1,
-          "duration": null,
-          "home_label": "van der Pijl Pleun",
-          "home_points": 3,
-          "set": 3
-        },
-        {
-          "away_label": "-",
-          "away_points": 1,
-          "duration": null,
-          "home_label": "Weinmann Hanna",
-          "home_points": 1,
-          "set": 1
-        },
-        {
-          "away_label": "-",
-          "away_points": 4,
-          "duration": null,
-          "home_label": "Dordevic Jovana",
-          "home_points": 4,
-          "set": 4
-        },
-        {
-          "away_label": "-",
-          "away_points": 6,
-          "duration": null,
-          "home_label": "Broekstra Laura",
-          "home_points": 6,
-          "set": 6
-        },
-        {
-          "away_label": "-",
-          "away_points": -2,
-          "duration": null,
-          "home_label": "Konijnenberg Sanne",
-          "home_points": 3,
-          "set": 6
-        },
-        {
-          "away_label": "-",
-          "away_points": 5,
-          "duration": null,
-          "home_label": "Boom Dagmar",
-          "home_points": 5,
-          "set": 5
-        },
-        {
-          "away_label": "-",
-          "away_points": 45,
-          "duration": null,
-          "home_label": "Bietau Lilly (L)",
-          "home_points": 22,
-          "set": 8
-        },
-        {
-          "away_label": "-",
-          "away_points": 3,
-          "duration": null,
-          "home_label": "Rieger Marlene Katharina",
-          "home_points": 3,
-          "set": 3
-        },
-        {
-          "away_label": "-",
-          "away_points": 3,
-          "duration": null,
-          "home_label": "Clayton Hannah",
-          "home_points": 2,
-          "set": 10
-        },
-        {
-          "away_label": "-",
-          "away_points": 1,
-          "duration": null,
-          "home_label": "Fernandez Gayoso Jimena",
-          "home_points": 2,
-          "set": 11
-        },
-        {
-          "away_label": "-",
-          "away_points": 8,
-          "duration": null,
-          "home_label": "TOTALS",
-          "home_points": 6,
-          "set": 12
-        }
-      ],
+      "legs": [],
       "match_id": "11850",
       "match_number": null,
       "phase_id": "209",
       "result": "0 - 3",
       "set_results": null,
-      "set_scores": "2-2, 3-1, 1-1, 4-4, 6-6, 3--2, 5-5, 22-45, 3-3, 2-3, 2-1, 6-8",
+      "set_scores": null,
       "time": "19:30"
     },
     {
